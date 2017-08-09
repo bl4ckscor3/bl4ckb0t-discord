@@ -1,11 +1,17 @@
 package bl4ckscor3.discord.bl4ckb0t;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.github.sheigutn.pushbullet.Pushbullet;
 
@@ -17,59 +23,93 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 
 /**
+ * v1.1: - Added upgrade counting in #extruders
  * v1.0: - Initial release with CSGO update notifications and -calc for WolframAlpha calculations
  */
 public class Main
 {
+	private static final File UPGRADE_COUNT_FILE = new File(Main.getJarLocation() + File.separator + "upgradecount.txt");
+	
 	public static void main(String[] args)
 	{
 		try
 		{
 			IDiscordClient client = new ClientBuilder().withToken(Tokens.DISCORD).build();
-
-			client.login();
+			
+			if(!UPGRADE_COUNT_FILE.exists())
+			{
+				UPGRADE_COUNT_FILE.createNewFile();
+				FileUtils.writeLines(UPGRADE_COUNT_FILE, Arrays.asList(new String[] {"received-Vauff:0", "received-bl4ckscor3:0"}));
+			}
+			
 			client.getDispatcher().registerListener(new Main());
+			client.login();
 		}
-		catch (Throwable t)
+		catch(Throwable t)
 		{
 			t.printStackTrace();
 		}
 	}
-
+	
 	@EventSubscriber
-	public void onMessageReceived(MessageReceivedEvent event) throws MalformedURLException, IOException
+	public void onMessageReceived(MessageReceivedEvent event) throws MalformedURLException, IOException, URISyntaxException
 	{
 		String msg = event.getMessage().getContent();
 		
-		if((msg.startsWith("-calc")) || (msg.startsWith("-eval")) || (msg.startsWith("-calculate")) || (msg.startsWith("-evaluate")))
+		if(event.getChannel().getID().equals(IDs.EXTRUDERS))
 		{
-			String[] args = msg.split(" ");
-			String input = "";
+			IUser mentioned = null;
 			
-			for(int i = 1; i < args.length; i++)
+			if(event.getMessage().getMentions().size() > 0)
+				mentioned = event.getMessage().getMentions().get(0);
+			
+			if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention().replace("!", "") + "'s extruder.*_") && (mentioned.getID().equals(IDs.VAUFF) || mentioned.getID().equals(IDs.BL4CKSCOR3)))
 			{
-				input = input + args[i] + " ";
+				List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
+				int index = mentioned.getID().equals(IDs.VAUFF) ? 0 : 1;
+				
+				contents.set(index, "received-" + (index == 0 ? "Vauff" : "bl4ckscor3") + ":" + (Integer.parseInt(contents.get(index).split(":")[1]) + 1));
+				FileUtils.writeLines(UPGRADE_COUNT_FILE, contents);
+				return;
 			}
+			else if(event.getAuthor().getID().equals(IDs.MAUNZ) && msg.toLowerCase().contains("was pushed to the steam client!"))
+			{
+				new Pushbullet(Tokens.PUSHBULLET).pushNote("New CS:GO update!", msg.toLowerCase().contains("beta") ? "Beta" : "Release");
 			
-			evaluate(event, input.trim());
+				List<IUser> users = event.getChannel().getUsersHere();
+				String bl4uff = "";
+				
+				for(IUser user : users)
+				{
+					if(user.isBot())
+						continue;
+					bl4uff += user.mention() + ", ";
+				}
+				
+				event.getChannel().sendMessage(bl4uff + "^");
+				return;
+			}
 		}
-		else if ((event.getChannel().getID().equals(IDs.EXTRUDERS)) && (event.getAuthor().getID().equals(IDs.MAUNZ)) && (msg.toLowerCase().contains("was pushed to the steam client!")))
+		
+		String[] args = msg.split(" ");
+		String input = "";
+		
+		for(int i = 1; i < args.length; i++)
 		{
-			new Pushbullet(Tokens.PUSHBULLET).pushNote("New CS:GO update!", msg.toLowerCase().contains("beta") ? "Beta" : "Release");
+			input += args[i] + " ";
+		}
+			
+		if(msg.startsWith("-calc") || msg.startsWith("-eval") || msg.startsWith("-calculate") || msg.startsWith("-evaluate"))
+			evaluate(event, input.trim());
+		else if(msg.startsWith("-upgrades") && event.getChannel().getName().equals(IDs.EXTRUDERS))
+		{
+			List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
+			int index = event.getAuthor().getID().equals(IDs.VAUFF) ? 0 : 1;
 
-			List<IUser> users = event.getChannel().getUsersHere();
-			String bl4uff = "";
-			
-			for(IUser user : users)
-			{
-				if(!user.isBot())
-					bl4uff = bl4uff + user.mention() + ", ";
-			}
-			
-			event.getChannel().sendMessage(bl4uff + "^");
+			event.getChannel().sendMessage((index == 0 ? "bl4ckscor3" : "Vauff") + " upgraded your extruder " + contents.get(index).split(":")[1] + " times ( ͡° ͜ʖ ͡°)");
 		}
 	}
-
+	
 	/**
 	 * Queries WolframAlpha
 	 * @param event The MessageEvent the command that triggered this got sent in
@@ -77,7 +117,7 @@ public class Main
 	 */
 	private void evaluate(MessageReceivedEvent event, String input) throws MalformedURLException, IOException
 	{
-		BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://api.wolframalpha.com/v2/query?appid=" + Tokens.WOLFRAM_ALPHA + "&input=" + input.trim().replace("+", "%2B").replace(' ', '+').replace(',', '.')).openStream()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://api.wolframalpha.com/v2/query?appid=" + Tokens.WOLFRAM_ALPHA +"&input=" + input.trim().replace("+", "%2B").replace(' ', '+').replace(',', '.')).openStream()));
 		String line = "";
 		IChannel channel = event.getChannel();
 
@@ -142,5 +182,24 @@ public class Main
 		}
 
 		channel.sendMessage(result);
+	}
+	
+	/**
+	 * Gets the path of the running jar file
+	 */
+	public static String getJarLocation()
+	{
+		String path = "-";
+		
+		try
+		{
+			path = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
+
+			if(path.endsWith(".jar"))
+				path = path.substring(0, path.lastIndexOf(File.separator));
+		}
+		catch(URISyntaxException e){}
+		
+		return path;
 	}
 }

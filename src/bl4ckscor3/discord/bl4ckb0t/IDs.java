@@ -4,7 +4,9 @@ package bl4ckscor3.discord.bl4ckb0t;
 public class IDs
 {
 	/* Client IDs */
+	public static final String BL4CKSCOR3 = "230001507481681920";
 	public static final String MAUNZ = "230780946142593025";
+	public static final String VAUFF = "129448521861431296";
 	
 	/* Channel IDs */
 	public static final String EXTRUDERS = "329007159167680512";
