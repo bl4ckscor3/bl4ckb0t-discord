@@ -5,13 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+
+import com.github.sheigutn.pushbullet.Pushbullet;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IUser;
 
+/**
+ * v1.0: - Initial release with CSGO update notifications and -calc for WolframAlpha calculations
+ */
 public class Main
 {
 	public static void main(String[] args)
@@ -45,6 +52,21 @@ public class Main
 			}
 			
 			evaluate(event, input.trim());
+		}
+		else if ((event.getChannel().getID().equals(IDs.EXTRUDERS)) && (event.getAuthor().getID().equals(IDs.MAUNZ)) && (msg.toLowerCase().contains("was pushed to the steam client!")))
+		{
+			new Pushbullet(Tokens.PUSHBULLET).pushNote("New CS:GO update!", msg.toLowerCase().contains("beta") ? "Beta" : "Release");
+
+			List<IUser> users = event.getChannel().getUsersHere();
+			String bl4uff = "";
+			
+			for(IUser user : users)
+			{
+				if(!user.isBot())
+					bl4uff = bl4uff + user.mention() + ", ";
+			}
+			
+			event.getChannel().sendMessage(bl4uff + "^");
 		}
 	}
 
