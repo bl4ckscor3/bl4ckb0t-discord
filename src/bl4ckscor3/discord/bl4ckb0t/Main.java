@@ -23,8 +23,9 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
 
 /**
- * v1.1: - Added upgrade counting in #extruders
- * v1.0: - Initial release with CSGO update notifications and -calc for WolframAlpha calculations
+ * v1.1.1:	- Added 'funny' playing text
+ * v1.1: 	- Added upgrade counting in #extruders
+ * v1.0: 	- Initial release with CSGO update notifications and -calc for WolframAlpha calculations
  */
 public class Main
 {
@@ -44,6 +45,7 @@ public class Main
 			
 			client.getDispatcher().registerListener(new Main());
 			client.login();
+			client.changePlayingText("with bl4ckscor3");
 		}
 		catch(Throwable t)
 		{
