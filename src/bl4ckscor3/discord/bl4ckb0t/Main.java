@@ -10,6 +10,8 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
@@ -18,6 +20,7 @@ import com.github.sheigutn.pushbullet.Pushbullet;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
+import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IUser;
@@ -45,12 +48,19 @@ public class Main
 			
 			client.getDispatcher().registerListener(new Main());
 			client.login();
-			client.changePlayingText("with bl4ckscor3");
 		}
 		catch(Throwable t)
 		{
 			t.printStackTrace();
 		}
+	}
+	
+	@EventSubscriber
+	public void onReady(ReadyEvent event)
+	{
+		Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(() -> {
+			event.getClient().changePlayingText("with bl4ckscor3");
+		}, 0, 5, TimeUnit.MINUTES);
 	}
 	
 	@EventSubscriber
