@@ -10,8 +10,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
 
@@ -22,10 +20,17 @@ import sx.blah.discord.api.IDiscordClient;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.obj.IChannel;
+import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
 /**
+ * v1.2:	- Mavenized to fix the bot not mentioning and notifying after a CS:GO update
+ * 			- Removed playing text timer
+ * 			- Added program argument for development (-dev)
+ * 			- Added error logging
+ * 			- Added command to exit the bot
  * v1.1.1:	- Added 'funny' playing text
  * v1.1: 	- Added upgrade counting in #extruders
  * v1.0: 	- Initial release with CSGO update notifications and -calc for WolframAlpha calculations
@@ -33,92 +38,127 @@ import sx.blah.discord.handle.obj.IUser;
 public class Main
 {
 	private static final File UPGRADE_COUNT_FILE = new File(Main.getJarLocation() + File.separator + "upgradecount.txt");
-	
+	private static boolean dev;
+	private static IDiscordClient client;
+	private static IMessage exitVerification;
+
 	public static void main(String[] args)
 	{
+		dev = args.length >= 1 && args[0].equalsIgnoreCase("-dev");
+
 		try
 		{
-			IDiscordClient client = new ClientBuilder().withToken(Tokens.DISCORD).build();
-			
+			client = new ClientBuilder().withToken(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD).build();
+
 			if(!UPGRADE_COUNT_FILE.exists())
 			{
 				UPGRADE_COUNT_FILE.createNewFile();
 				FileUtils.writeLines(UPGRADE_COUNT_FILE, Arrays.asList(new String[] {"received-Vauff:0", "received-bl4ckscor3:0"}));
 			}
-			
+
 			client.getDispatcher().registerListener(new Main());
 			client.login();
 		}
 		catch(Throwable t)
 		{
-			t.printStackTrace();
+			t.printStackTrace();	
 		}
 	}
-	
+
 	@EventSubscriber
 	public void onReady(ReadyEvent event)
 	{
-		Executors.newScheduledThreadPool(1).scheduleWithFixedDelay(() -> {
-			event.getClient().changePlayingText("with bl4ckscor3");
-		}, 0, 5, TimeUnit.MINUTES);
+		event.getClient().changePlayingText("with bl4ckscor3");
 	}
-	
+
 	@EventSubscriber
 	public void onMessageReceived(MessageReceivedEvent event) throws MalformedURLException, IOException, URISyntaxException
 	{
-		String msg = event.getMessage().getContent();
-		
-		if(event.getChannel().getID().equals(IDs.EXTRUDERS))
+		try
 		{
-			IUser mentioned = null;
-			
-			if(event.getMessage().getMentions().size() > 0)
-				mentioned = event.getMessage().getMentions().get(0);
-			
-			if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention().replace("!", "") + "'s extruder.*_") && (mentioned.getID().equals(IDs.VAUFF) || mentioned.getID().equals(IDs.BL4CKSCOR3)))
+			String msg = event.getMessage().getContent();
+
+			if(msg.equals("-exit") && event.getAuthor().getID().equals(IDs.BL4CKSCOR3))
+			{
+				exitVerification = event.getChannel().sendMessage("Sure?");
+				exitVerification.addReaction("✅");
+				Thread.sleep(250);
+				exitVerification.addReaction("❌");
+				return;
+			}
+
+			if(event.getChannel().getID().equals(IDs.EXTRUDERS))
+			{
+				IUser mentioned = null;
+
+				if(event.getMessage().getMentions().size() > 0)
+					mentioned = event.getMessage().getMentions().get(0);
+
+				if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention().replace("!", "") + "'s extruder.*_") && (mentioned.getID().equals(IDs.VAUFF) || mentioned.getID().equals(IDs.BL4CKSCOR3)))
+				{
+					List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
+					int index = mentioned.getID().equals(IDs.VAUFF) ? 0 : 1;
+
+					contents.set(index, "received-" + (index == 0 ? "Vauff" : "bl4ckscor3") + ":" + (Integer.parseInt(contents.get(index).split(":")[1]) + 1));
+					FileUtils.writeLines(UPGRADE_COUNT_FILE, contents);
+					return;
+				}
+				else if(event.getAuthor().getID().equals(IDs.MAUNZ) && msg.toLowerCase().contains("was pushed to the steam client!"))
+				{
+					new Pushbullet(Tokens.PUSHBULLET).pushNote("New CS:GO update!", msg.toLowerCase().contains("beta") ? "Beta" : "Release");
+
+					List<IUser> users = event.getChannel().getUsersHere();
+					String bl4uff = "";
+
+					for(IUser user : users)
+					{
+						if(user.isBot())
+							continue;
+						bl4uff += user.mention() + ", ";
+					}
+
+					event.getChannel().sendMessage((bl4uff + "^").replace(", ^", "^"));
+					return;
+				}
+			}
+
+			String[] args = msg.split(" ");
+			String input = "";
+
+			for(int i = 1; i < args.length; i++)
+			{
+				input += args[i] + " ";
+			}
+
+			if(msg.startsWith("-calc") || msg.startsWith("-eval") || msg.startsWith("-calculate") || msg.startsWith("-evaluate"))
+				evaluate(event, input.trim());
+			else if(msg.startsWith("-upgrades")/* && event.getChannel().getName().equals(IDs.EXTRUDERS)*/)
 			{
 				List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
-				int index = mentioned.getID().equals(IDs.VAUFF) ? 0 : 1;
-				
-				contents.set(index, "received-" + (index == 0 ? "Vauff" : "bl4ckscor3") + ":" + (Integer.parseInt(contents.get(index).split(":")[1]) + 1));
-				FileUtils.writeLines(UPGRADE_COUNT_FILE, contents);
-				return;
-			}
-			else if(event.getAuthor().getID().equals(IDs.MAUNZ) && msg.toLowerCase().contains("was pushed to the steam client!"))
-			{
-				new Pushbullet(Tokens.PUSHBULLET).pushNote("New CS:GO update!", msg.toLowerCase().contains("beta") ? "Beta" : "Release");
-			
-				List<IUser> users = event.getChannel().getUsersHere();
-				String bl4uff = "";
-				
-				for(IUser user : users)
-				{
-					if(user.isBot())
-						continue;
-					bl4uff += user.mention() + ", ";
-				}
-				
-				event.getChannel().sendMessage(bl4uff + "^");
-				return;
-			}
-		}
-		
-		String[] args = msg.split(" ");
-		String input = "";
-		
-		for(int i = 1; i < args.length; i++)
-		{
-			input += args[i] + " ";
-		}
-			
-		if(msg.startsWith("-calc") || msg.startsWith("-eval") || msg.startsWith("-calculate") || msg.startsWith("-evaluate"))
-			evaluate(event, input.trim());
-		else if(msg.startsWith("-upgrades") && event.getChannel().getName().equals(IDs.EXTRUDERS))
-		{
-			List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
-			int index = event.getAuthor().getID().equals(IDs.VAUFF) ? 0 : 1;
+				int index = event.getAuthor().getID().equals(IDs.VAUFF) ? 0 : 1;
 
-			event.getChannel().sendMessage((index == 0 ? "bl4ckscor3" : "Vauff") + " upgraded your extruder " + contents.get(index).split(":")[1] + " times ( ͡° ͜ʖ ͡°)");
+				event.getChannel().sendMessage((index == 0 ? "bl4ckscor3" : "Vauff") + " upgraded your extruder " + contents.get(index).split(":")[1] + " times ( ͡° ͜ʖ ͡°)");
+			}
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@EventSubscriber
+	public void onReactionAdd(ReactionAddEvent event)
+	{
+		if(event.getMessage().getID().equals(exitVerification.getID()) && event.getUser().getID().equals(IDs.BL4CKSCOR3))
+		{
+			if(event.getReaction().toString().equals("✅"))
+			{
+				exitVerification.delete();
+				client.logout();
+				System.exit(0);
+			}
+			else if(event.getReaction().toString().equals("❌"))
+				exitVerification.delete();
 		}
 	}
 	
@@ -158,7 +198,7 @@ public class Main
 			reader.close();
 			return;
 		}
-		
+
 		try
 		{
 			//skipping lines to the line with the result
@@ -170,11 +210,11 @@ public class Main
 			reader.close();
 			return;
 		}
-		
+
 		reader.close();
-		
+
 		String result;
-		
+
 		try
 		{
 			result = line.split(">")[1].split("<")[0];
@@ -185,7 +225,7 @@ public class Main
 			reader.close();
 			return;
 		}
-		
+
 		if(result.matches("[0-9]+/[0-9]+.*"))
 		{
 			evaluate(event, input + " in decimal");
@@ -195,14 +235,14 @@ public class Main
 
 		channel.sendMessage(result);
 	}
-	
+
 	/**
 	 * Gets the path of the running jar file
 	 */
 	public static String getJarLocation()
 	{
 		String path = "-";
-		
+
 		try
 		{
 			path = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
@@ -211,7 +251,7 @@ public class Main
 				path = path.substring(0, path.lastIndexOf(File.separator));
 		}
 		catch(URISyntaxException e){}
-		
+
 		return path;
 	}
 }

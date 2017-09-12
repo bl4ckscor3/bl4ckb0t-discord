@@ -11,4 +11,5 @@ public class IDs
 	/* Channel IDs */
 	public static final String EXTRUDERS = "329007159167680512";
 	public static final String BOT_TESTING = "252537749859598338";
+	public static final String TESTING = "357166022169591810";
 }
