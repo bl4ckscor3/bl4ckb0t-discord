@@ -21,18 +21,24 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
+import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
 /**
+ * v1.2.1:	- Updated to Discord4J 2.9
+ * 
  * v1.2:	- Mavenized to fix the bot not mentioning and notifying after a CS:GO update
  * 			- Removed playing text timer
  * 			- Added program argument for development (-dev)
  * 			- Added error logging
  * 			- Added command to exit the bot
+ * 
  * v1.1.1:	- Added 'funny' playing text
+ * 
  * v1.1: 	- Added upgrade counting in #extruders
+ * 
  * v1.0: 	- Initial release with CSGO update notifications and -calc for WolframAlpha calculations
  */
 public class Main
@@ -78,32 +84,32 @@ public class Main
 		{
 			String msg = event.getMessage().getContent();
 
-			if(msg.equals("-exit") && event.getAuthor().getID().equals(IDs.BL4CKSCOR3))
+			if(msg.equals("-exit") && (event.getAuthor().getLongID() == IDs.BL4CKSCOR3 || event.getAuthor().getLongID() == IDs.VAUFF))
 			{
 				exitVerification = event.getChannel().sendMessage("Sure?");
-				exitVerification.addReaction("✅");
+				exitVerification.addReaction(ReactionEmoji.of("✅"));
 				Thread.sleep(250);
-				exitVerification.addReaction("❌");
+				exitVerification.addReaction(ReactionEmoji.of("❌"));
 				return;
 			}
 
-			if(event.getChannel().getID().equals(IDs.EXTRUDERS))
+			if(event.getChannel().getLongID() == IDs.EXTRUDERS)
 			{
 				IUser mentioned = null;
 
 				if(event.getMessage().getMentions().size() > 0)
 					mentioned = event.getMessage().getMentions().get(0);
 
-				if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention().replace("!", "") + "'s extruder.*_") && (mentioned.getID().equals(IDs.VAUFF) || mentioned.getID().equals(IDs.BL4CKSCOR3)))
+				if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention().replace("!", "") + "'s extruder.*_") && (mentioned.getLongID() == IDs.VAUFF || mentioned.getLongID() == IDs.BL4CKSCOR3))
 				{
 					List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
-					int index = mentioned.getID().equals(IDs.VAUFF) ? 0 : 1;
+					int index = mentioned.getLongID() == IDs.VAUFF ? 0 : 1;
 
 					contents.set(index, "received-" + (index == 0 ? "Vauff" : "bl4ckscor3") + ":" + (Integer.parseInt(contents.get(index).split(":")[1]) + 1));
 					FileUtils.writeLines(UPGRADE_COUNT_FILE, contents);
 					return;
 				}
-				else if(event.getAuthor().getID().equals(IDs.MAUNZ) && msg.toLowerCase().contains("was pushed to the steam client!"))
+				else if(event.getAuthor().getLongID() == IDs.MAUNZ && msg.toLowerCase().contains("was pushed to the steam client!"))
 				{
 					new Pushbullet(Tokens.PUSHBULLET).pushNote("New CS:GO update!", msg.toLowerCase().contains("beta") ? "Beta" : "Release");
 
@@ -114,10 +120,10 @@ public class Main
 					{
 						if(user.isBot())
 							continue;
-						bl4uff += user.mention() + ", ";
+						bl4uff += user.mention() + " ";
 					}
 
-					event.getChannel().sendMessage((bl4uff + "^").replace(", ^", "^"));
+					event.getChannel().sendMessage((bl4uff + "^"));
 					return;
 				}
 			}
@@ -135,7 +141,7 @@ public class Main
 			else if(msg.startsWith("-upgrades")/* && event.getChannel().getName().equals(IDs.EXTRUDERS)*/)
 			{
 				List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
-				int index = event.getAuthor().getID().equals(IDs.VAUFF) ? 0 : 1;
+				int index = event.getAuthor().getLongID() == IDs.VAUFF ? 0 : 1;
 
 				event.getChannel().sendMessage((index == 0 ? "bl4ckscor3" : "Vauff") + " upgraded your extruder " + contents.get(index).split(":")[1] + " times ( ͡° ͜ʖ ͡°)");
 			}
@@ -149,15 +155,15 @@ public class Main
 	@EventSubscriber
 	public void onReactionAdd(ReactionAddEvent event)
 	{
-		if(event.getMessage().getID().equals(exitVerification.getID()) && event.getUser().getID().equals(IDs.BL4CKSCOR3))
+		if(event.getMessage().getLongID() == exitVerification.getLongID() && (event.getUser().getLongID() == IDs.BL4CKSCOR3 || event.getUser().getLongID() == IDs.VAUFF))
 		{
-			if(event.getReaction().toString().equals("✅"))
+			if(event.getReaction().getEmoji().toString().equals("✅"))
 			{
 				exitVerification.delete();
 				client.logout();
 				System.exit(0);
 			}
-			else if(event.getReaction().toString().equals("❌"))
+			else if(event.getReaction().getEmoji().toString().equals("❌"))
 				exitVerification.delete();
 		}
 	}
