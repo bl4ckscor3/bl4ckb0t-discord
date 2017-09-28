@@ -26,7 +26,8 @@ import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
-/**
+/**v1.2.2:	- Fixed -upgrades being usable in all channels
+ * 
  * v1.2.1:	- Updated to Discord4J 2.9
  * 
  * v1.2:	- Mavenized to fix the bot not mentioning and notifying after a CS:GO update
@@ -138,7 +139,7 @@ public class Main
 
 			if(msg.startsWith("-calc") || msg.startsWith("-eval") || msg.startsWith("-calculate") || msg.startsWith("-evaluate"))
 				evaluate(event, input.trim());
-			else if(msg.startsWith("-upgrades")/* && event.getChannel().getName().equals(IDs.EXTRUDERS)*/)
+			else if(msg.startsWith("-upgrades") && event.getChannel().getLongID() == IDs.EXTRUDERS)
 			{
 				List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
 				int index = event.getAuthor().getLongID() == IDs.VAUFF ? 0 : 1;
