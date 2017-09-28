@@ -27,6 +27,7 @@ import sx.blah.discord.handle.obj.IMessage;
 import sx.blah.discord.handle.obj.IUser;
 
 /**v1.2.2:	- Fixed -upgrades being usable in all channels
+ * 			- Fixed rare case where upgrades would not count towards the total
  * 
  * v1.2.1:	- Updated to Discord4J 2.9
  * 
@@ -101,7 +102,7 @@ public class Main
 				if(event.getMessage().getMentions().size() > 0)
 					mentioned = event.getMessage().getMentions().get(0);
 
-				if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention().replace("!", "") + "'s extruder.*_") && (mentioned.getLongID() == IDs.VAUFF || mentioned.getLongID() == IDs.BL4CKSCOR3))
+				if(mentioned != null && msg.toLowerCase().matches("_upgrades " + mentioned.mention() + "'s extruder.*_") && (mentioned.getLongID() == IDs.VAUFF || mentioned.getLongID() == IDs.BL4CKSCOR3))
 				{
 					List<String> contents = FileUtils.readLines(UPGRADE_COUNT_FILE, Charset.defaultCharset());
 					int index = mentioned.getLongID() == IDs.VAUFF ? 0 : 1;
