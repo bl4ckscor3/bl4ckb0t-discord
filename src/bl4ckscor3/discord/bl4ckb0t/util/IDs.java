@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t;
+package bl4ckscor3.discord.bl4ckb0t.util;
 
 public class IDs
 {

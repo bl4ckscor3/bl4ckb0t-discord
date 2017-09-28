@@ -3,6 +3,7 @@
 /bl4ckb0t-discord/
 /packages/
 /target/
+*.log
 .classpath
 .project
 .settings
