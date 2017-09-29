@@ -19,8 +19,11 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
+import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 
 /**
+ * v1.3.1:	- Potentially fixed disappearing playing text
+ * 
  * v1.3:	- Added logging
  * 			- Backend rewrite
  * 			- Fixed -upgrades being usable in all channels
@@ -78,6 +81,16 @@ public class Main
 	public void onReady(ReadyEvent event)
 	{
 		event.getClient().changePlayingText("with bl4ckscor3");
+	}
+	
+	@EventSubscriber
+	public void onPresenceUpdate(PresenceUpdateEvent event)
+	{
+		if(event.getUser().getLongID() == client.getOurUser().getLongID())
+		{
+			if(!event.getOldPresence().getPlayingText().equals(event.getNewPresence().getPlayingText()))
+				event.getClient().changePlayingText("with bl4ckscor3");
+		}
 	}
 
 	@EventSubscriber
