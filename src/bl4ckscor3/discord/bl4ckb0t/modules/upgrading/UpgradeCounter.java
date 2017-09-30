@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules;
+package bl4ckscor3.discord.bl4ckb0t.modules.upgrading;
 
 import java.io.File;
 import java.io.IOException;
@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 
+import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

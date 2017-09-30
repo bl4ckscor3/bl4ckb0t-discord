@@ -4,6 +4,8 @@ import java.io.File;
 import java.net.URISyntaxException;
 
 import bl4ckscor3.discord.bl4ckb0t.Main;
+import sx.blah.discord.api.internal.json.objects.EmbedObject;
+import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IMessage;
 
@@ -82,5 +84,27 @@ public class Utilities
 		}
 
 		return result;
+	}
+	
+	/**
+	 * Sends a message to the channel of the event
+	 * @param event The event holding the channel
+	 * @param message The message to be sent
+	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent message
+	 */
+	public static IMessage sendMessage(MessageReceivedEvent event, String message)
+	{
+		return event.getChannel().sendMessage(message);
+	}
+	
+	/**
+	 * Sends an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to the channel of the event
+	 * @param event The event holding the channel
+	 * @param eo The {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to be sent
+	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent {@link sx.blah.discord.api.internal.json.objects.EmbedObject}
+	 */
+	public static IMessage sendMessage(MessageReceivedEvent event, EmbedObject eo)
+	{
+		return event.getChannel().sendMessage(eo);
 	}
 }

@@ -6,6 +6,7 @@ import com.github.sheigutn.pushbullet.Pushbullet;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.Tokens;
+import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IUser;
 
@@ -26,7 +27,7 @@ public class CSGONotification extends AbstractModule
 			bl4uff += user.mention() + " ";
 		}
 
-		event.getChannel().sendMessage((bl4uff + "^"));
+		Utilities.sendMessage(event, bl4uff + "^");
 	}
 
 	@Override
