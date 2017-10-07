@@ -8,8 +8,8 @@ import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.modules.CSGONotification;
 import bl4ckscor3.discord.bl4ckb0t.modules.Evaluate;
 import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
-import bl4ckscor3.discord.bl4ckb0t.modules.UpgradeCounter;
-import bl4ckscor3.discord.bl4ckb0t.modules.Upgrades;
+import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.UpgradeCounter;
+import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.Upgrades;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.Tokens;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
@@ -19,6 +19,7 @@ import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.ReadyEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
+import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
 import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 
 /**
@@ -78,22 +79,6 @@ public class Main
 	}
 
 	@EventSubscriber
-	public void onReady(ReadyEvent event)
-	{
-		event.getClient().changePlayingText("with bl4ckscor3");
-	}
-	
-	@EventSubscriber
-	public void onPresenceUpdate(PresenceUpdateEvent event)
-	{
-		if(event.getUser().getLongID() == client.getOurUser().getLongID())
-		{
-			if(!event.getOldPresence().getPlayingText().equals(event.getNewPresence().getPlayingText()))
-				event.getClient().changePlayingText("with bl4ckscor3");
-		}
-	}
-
-	@EventSubscriber
 	public void onMessageReceived(MessageReceivedEvent event) throws MalformedURLException, IOException, URISyntaxException
 	{
 		try
@@ -131,6 +116,28 @@ public class Main
 		{
 			e.printStackTrace();
 		}
+	}
+	
+	@EventSubscriber
+	public void onReady(ReadyEvent event)
+	{
+		event.getClient().changePlayingText("with bl4ckscor3");
+	}
+	
+	@EventSubscriber
+	public void onPresenceUpdate(PresenceUpdateEvent event)
+	{
+		if(event.getUser().getLongID() == client.getOurUser().getLongID())
+		{
+			if(!event.getOldPresence().getPlayingText().equals(event.getNewPresence().getPlayingText()))
+				event.getClient().changePlayingText("with bl4ckscor3");
+		}
+	}
+
+	@EventSubscriber
+	public void onResumed(ResumedEvent event)
+	{
+		event.getClient().changePlayingText("with bl4ckscor3");
 	}
 	
 	/**
