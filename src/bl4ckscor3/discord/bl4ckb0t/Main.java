@@ -23,6 +23,8 @@ import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
 import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 
 /**
+ * v1.3.2:  - Added fallback to WolframAlpha query
+ * 
  * v1.3.1:	- Potentially fixed disappearing playing text
  * 
  * v1.3:	- Added logging
