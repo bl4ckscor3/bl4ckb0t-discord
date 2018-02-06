@@ -21,29 +21,33 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
 import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
+import sx.blah.discord.handle.impl.events.user.UserUpdateEvent;
+import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.4:	- Added notification when the SecurityCraft server is down
+ *
  * v1.3.2:  - Added fallback to WolframAlpha query
- * 
+ *
  * v1.3.1:	- Potentially fixed disappearing playing text
- * 
+ *
  * v1.3:	- Added logging
  * 			- Backend rewrite
  * 			- Fixed -upgrades being usable in all channels
  * 			- Fixed rare case where upgrades would not count towards the total
- * 
+ *
  * v1.2.1:	- Updated to Discord4J 2.9
- * 
+ *
  * v1.2:	- Mavenized to fix the bot not mentioning and notifying after a CS:GO update
  * 			- Removed playing text timer
  * 			- Added program argument for development (-dev)
  * 			- Added error logging
  * 			- Added command to exit the bot
- * 
+ *
  * v1.1.1:	- Added 'funny' playing text
- * 
+ *
  * v1.1: 	- Added upgrade counting in #extruders
- * 
+ *
  * v1.0: 	- Initial release with CSGO update notifications and -calc for WolframAlpha calculations
  */
 public class Main
@@ -70,13 +74,13 @@ public class Main
 			{
 				m.init();
 			}
-			
+
 			client.getDispatcher().registerListener(new Main());
 			client.login();
 		}
 		catch(Throwable t)
 		{
-			t.printStackTrace();	
+			t.printStackTrace();
 		}
 	}
 
@@ -119,13 +123,20 @@ public class Main
 			e.printStackTrace();
 		}
 	}
-	
+
+	@EventSubscriber
+	public void onUserUpdate(UserUpdateEvent event)
+	{
+		if(event.getNewUser().getLongID() == IDs.SCSERVERBOT && event.getNewUser().getPresence().getStatus() == StatusType.OFFLINE)
+			client.getChannelByID(IDs.SERVER_STAFF).sendMessage("@everyone - Server went down again!");
+	}
+
 	@EventSubscriber
 	public void onReady(ReadyEvent event)
 	{
 		event.getClient().changePlayingText("with bl4ckscor3");
 	}
-	
+
 	@EventSubscriber
 	public void onPresenceUpdate(PresenceUpdateEvent event)
 	{
@@ -141,7 +152,7 @@ public class Main
 	{
 		event.getClient().changePlayingText("with bl4ckscor3");
 	}
-	
+
 	/**
 	 *  @return the client
 	 */
