@@ -8,17 +8,17 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.Reactio
 
 public abstract class AbstractModule
 {
-	/** 
+	/**
 	 * Holds all messages as keys which await a reaction by a specific user.
 	 * The values hold an instance of {@link Await}
 	 */
 	public static final HashMap<Long,Await> AWAITED = new HashMap<Long,Await>();
-	
+
 	/**
 	 * Initializes this module. This method is called before the bot connects to Discord
 	 */
 	public void init() throws Exception {}
-	
+
 	/**
 	 * Executes this module
 	 */
@@ -29,7 +29,7 @@ public abstract class AbstractModule
 	 * @return true if the event triggers this module, false otherwise
 	 */
 	public abstract boolean triggeredBy(MessageReceivedEvent event);
-	
+
 	/**
 	 * @return An array of channel IDs in which this command is allowed to be executed
 	 */
@@ -37,7 +37,7 @@ public abstract class AbstractModule
 	{
 		return null;
 	}
-	
+
 	/**
 	 * @return true if this command can only be executed by Vauff and bl4ckscor3, false otherwise
 	 */
@@ -45,7 +45,7 @@ public abstract class AbstractModule
 	{
 		return false;
 	}
-	
+
 	/**
 	 * Sets up this command to await a reaction by the user who triggered this command
 	 * @param messageID The message which should get reacted on
@@ -55,7 +55,7 @@ public abstract class AbstractModule
 	{
 		AWAITED.put(messageID, new Await(userID, this));
 	}
-	
+
 	/**
 	 * Gets called when a reaction is added to a message defined prior in {@link AbstractCommand#waitForReaction(String, String)}
 	 * @param event The event holding information about the added reaction

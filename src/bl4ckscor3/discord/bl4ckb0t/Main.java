@@ -21,7 +21,6 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
 import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
-import sx.blah.discord.handle.impl.events.user.UserUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
@@ -125,13 +124,6 @@ public class Main
 	}
 
 	@EventSubscriber
-	public void onUserUpdate(UserUpdateEvent event)
-	{
-		if(event.getNewUser().getLongID() == IDs.SCSERVERBOT && event.getNewUser().getPresence().getStatus() == StatusType.OFFLINE)
-			client.getChannelByID(IDs.SERVER_STAFF).sendMessage("@everyone - Server went down again!");
-	}
-
-	@EventSubscriber
 	public void onReady(ReadyEvent event)
 	{
 		event.getClient().changePlayingText("with bl4ckscor3");
@@ -145,6 +137,8 @@ public class Main
 			if(!event.getOldPresence().getPlayingText().equals(event.getNewPresence().getPlayingText()))
 				event.getClient().changePlayingText("with bl4ckscor3");
 		}
+		else if(event.getUser().getLongID() == IDs.SCSERVERBOT && event.getNewPresence().getStatus() == StatusType.OFFLINE)
+			client.getChannelByID(IDs.SERVER_STAFF).sendMessage("@everyone - Server went down again!");
 	}
 
 	@EventSubscriber
