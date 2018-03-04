@@ -21,6 +21,8 @@ public abstract class AbstractModule
 
 	/**
 	 * Executes this module
+	 * @param content The event that triggered this module
+	 * @param args The arguments of the command, without the command itself
 	 */
 	public abstract void exe(MessageReceivedEvent event, String[] args) throws Exception;
 

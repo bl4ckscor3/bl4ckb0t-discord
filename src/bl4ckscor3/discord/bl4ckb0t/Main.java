@@ -8,6 +8,7 @@ import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.modules.CSGONotification;
 import bl4ckscor3.discord.bl4ckb0t.modules.Evaluate;
 import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
+import bl4ckscor3.discord.bl4ckb0t.modules.OsuAcc;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.UpgradeCounter;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.Upgrades;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
@@ -24,6 +25,8 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.5:	- Added -osuacc (-oa) to calculate the accuracy with a given amount of 300s/100s/50s and misses
+ *
  * v1.4:	- Added notification when the SecurityCraft server is down
  *
  * v1.3.2:  - Added fallback to WolframAlpha query
@@ -57,6 +60,7 @@ public class Main
 			new CSGONotification(),
 			new Evaluate(),
 			new Exit(),
+			new OsuAcc(),
 			new UpgradeCounter(),
 			new Upgrades()
 	};
