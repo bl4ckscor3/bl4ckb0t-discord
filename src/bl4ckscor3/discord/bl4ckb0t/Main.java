@@ -9,6 +9,7 @@ import bl4ckscor3.discord.bl4ckb0t.modules.CSGONotification;
 import bl4ckscor3.discord.bl4ckb0t.modules.Evaluate;
 import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
 import bl4ckscor3.discord.bl4ckb0t.modules.OsuAcc;
+import bl4ckscor3.discord.bl4ckb0t.modules.Prick;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.UpgradeCounter;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.Upgrades;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
@@ -25,6 +26,8 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.6		- Added a 5% chance to add an automatic reaction to Raqbit's messages
+ * 			- Added -prick to turn that on and off
  * v1.5:	- Added -osuacc (-oa) to calculate the accuracy with a given amount of 300s/100s/50s and misses
  *
  * v1.4:	- Added notification when the SecurityCraft server is down
@@ -61,6 +64,7 @@ public class Main
 			new Evaluate(),
 			new Exit(),
 			new OsuAcc(),
+			new Prick(),
 			new UpgradeCounter(),
 			new Upgrades()
 	};
