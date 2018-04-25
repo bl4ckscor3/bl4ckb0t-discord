@@ -4,7 +4,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.IReactable;
+import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.api.events.EventSubscriber;
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
@@ -146,7 +146,7 @@ public class Round implements IReactable
 			Utilities.react(roundMessage, "🎲", "⛔");
 			waitForReaction(roundMessage.getLongID(), players.getCurrentPlayer().getUser().getLongID());
 			removal = Executors.newScheduledThreadPool(1).schedule(() -> {
-				AWAITED.remove(roundMessage.getLongID());
+				AWAITED_REACTIONS.remove(roundMessage.getLongID());
 				Utilities.sendMessage(channel, "No decision in time. Removing **" + players.getCurrentPlayer().getUser().getName() + "** from the table.");
 				leave(players.getCurrentPlayer().getUser());
 

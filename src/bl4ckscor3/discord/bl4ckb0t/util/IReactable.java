@@ -1,8 +1,7 @@
-package bl4ckscor3.discord.bl4ckb0t.modules;
+package bl4ckscor3.discord.bl4ckb0t.util;
 
 import java.util.HashMap;
 
-import bl4ckscor3.discord.bl4ckb0t.util.Await;
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 
 public interface IReactable
@@ -11,7 +10,7 @@ public interface IReactable
 	 * Holds all messages as keys which await a reaction by a specific user.
 	 * The values hold an instance of {@link Await}
 	 */
-	public static final HashMap<Long,Await> AWAITED = new HashMap<Long,Await>();
+	public static final HashMap<Long,Await> AWAITED_REACTIONS = new HashMap<Long,Await>();
 
 	/**
 	 * Sets up this IReactable to await a reaction by the user who triggered this IReactable
@@ -20,7 +19,7 @@ public interface IReactable
 	 */
 	public default void waitForReaction(long messageID, long userID)
 	{
-		AWAITED.put(messageID, new Await(userID, this));
+		AWAITED_REACTIONS.put(messageID, new Await(userID, this));
 	}
 
 	/**

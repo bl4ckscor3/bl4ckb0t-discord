@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>bl4ckb0t-discord</groupId>
 	<artifactId>bl4ckb0t-discord</artifactId>
-	<version>1.7</version>
+	<version>1.8</version>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>

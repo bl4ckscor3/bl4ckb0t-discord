@@ -1,6 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.modules;
 
 import bl4ckscor3.discord.bl4ckb0t.Main;
+import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;

@@ -1,7 +1,5 @@
 package bl4ckscor3.discord.bl4ckb0t.util;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.IReactable;
-
 /**
  * Holds information about message that needs a reaction to continue further execution
  */

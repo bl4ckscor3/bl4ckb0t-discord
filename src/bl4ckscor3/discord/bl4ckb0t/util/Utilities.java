@@ -9,6 +9,7 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
 import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
+import sx.blah.discord.util.RateLimitException;
 
 public class Utilities
 {
@@ -95,7 +96,20 @@ public class Utilities
 	 */
 	public static IMessage sendMessage(MessageReceivedEvent event, String message)
 	{
-		return event.getChannel().sendMessage(message);
+		try
+		{
+			return event.getChannel().sendMessage(message);
+		}
+		catch(RateLimitException e)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch(InterruptedException e1){}
+
+			return event.getChannel().sendMessage(message);
+		}
 	}
 
 	/**
@@ -106,7 +120,20 @@ public class Utilities
 	 */
 	public static IMessage sendMessage(IChannel channel, String message)
 	{
-		return channel.sendMessage(message);
+		try
+		{
+			return channel.sendMessage(message);
+		}
+		catch(RateLimitException e)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch(InterruptedException e1){}
+
+			return channel.sendMessage(message);
+		}
 	}
 
 	/**
@@ -117,7 +144,20 @@ public class Utilities
 	 */
 	public static IMessage sendMessage(MessageReceivedEvent event, EmbedObject eo)
 	{
-		return event.getChannel().sendMessage(eo);
+		try
+		{
+			return event.getChannel().sendMessage(eo);
+		}
+		catch(RateLimitException e)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch(InterruptedException e1){}
+
+			return event.getChannel().sendMessage(eo);
+		}
 	}
 
 	/**
@@ -128,6 +168,19 @@ public class Utilities
 	 */
 	public static IMessage sendMessage(IChannel channel, EmbedObject eo)
 	{
-		return channel.sendMessage(eo);
+		try
+		{
+			return channel.sendMessage(eo);
+		}
+		catch(RateLimitException e)
+		{
+			try
+			{
+				Thread.sleep(1000);
+			}
+			catch(InterruptedException e1){}
+
+			return channel.sendMessage(eo);
+		}
 	}
 }

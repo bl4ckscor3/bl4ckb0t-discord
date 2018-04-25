@@ -3,17 +3,20 @@ package bl4ckscor3.discord.bl4ckb0t;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.modules.Evaluate;
 import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
-import bl4ckscor3.discord.bl4ckb0t.modules.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.modules.OsuAcc;
 import bl4ckscor3.discord.bl4ckb0t.modules.Prick;
 import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.BlackJack;
+import bl4ckscor3.discord.bl4ckb0t.modules.hangman.Hangman;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.UpgradeCounter;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.Upgrades;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
+import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
+import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
 import bl4ckscor3.discord.bl4ckb0t.util.Tokens;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.api.ClientBuilder;
@@ -27,6 +30,10 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.8		- Added -hangman
+ * 			- Added interface to allow waiting for DMs
+ * 			- Messages get resent after being rate limited
+ *
  * v1.7		- Added -blackjack (-bj) command
  *			- Removed CSGO update notifier as it depended on Maunz, who no longer has that feature
  *			- Internal changes
@@ -68,6 +75,7 @@ public class Main
 			new BlackJack(),
 			new Evaluate(),
 			new Exit(),
+			new Hangman(),
 			new OsuAcc(),
 			new Prick(),
 			new UpgradeCounter(),
@@ -108,9 +116,20 @@ public class Main
 					if(!m.requiresPermission() || (event.getAuthor().getLongID() == IDs.BL4CKSCOR3 || event.getAuthor().getLongID() == IDs.VAUFF))
 					{
 						if((dev && m.allowedChannels() != null && event.getChannel().getLongID() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getLongID())))
+						{
 							m.exe(event, Utilities.toArgs(event.getMessage().getContent()));
+							return;
+						}
 					}
 				}
+			}
+
+			if(event.getChannel().isPrivate() && IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getLongID()))
+			{
+				HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getLongID());
+
+				((IRequestDM)info.get("instance")).onDMReceived(event, info);
+				IRequestDM.AWAITED_DMS.remove(event.getAuthor().getLongID());
 			}
 		}
 		catch(Exception e)
@@ -124,10 +143,10 @@ public class Main
 	{
 		try
 		{
-			if(IReactable.AWAITED.containsKey(event.getMessage().getLongID()) && event.getUser().getLongID() == IReactable.AWAITED.get(event.getMessage().getLongID()).getUserID())
+			if(IReactable.AWAITED_REACTIONS.containsKey(event.getMessage().getLongID()) && event.getUser().getLongID() == IReactable.AWAITED_REACTIONS.get(event.getMessage().getLongID()).getUserID())
 			{
-				IReactable.AWAITED.get(event.getMessage().getLongID()).getReactable().onReactionAdd(event);
-				IReactable.AWAITED.remove(event.getMessage().getLongID());
+				IReactable.AWAITED_REACTIONS.get(event.getMessage().getLongID()).getReactable().onReactionAdd(event);
+				IReactable.AWAITED_REACTIONS.remove(event.getMessage().getLongID());
 			}
 		}
 		catch(Exception e)
