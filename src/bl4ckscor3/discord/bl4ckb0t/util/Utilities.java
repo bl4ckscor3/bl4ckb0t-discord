@@ -7,6 +7,7 @@ import bl4ckscor3.discord.bl4ckb0t.Main;
 import sx.blah.discord.api.internal.json.objects.EmbedObject;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
+import sx.blah.discord.handle.obj.IChannel;
 import sx.blah.discord.handle.obj.IMessage;
 
 public class Utilities
@@ -29,7 +30,7 @@ public class Utilities
 
 		return path;
 	}
-	
+
 	/**
 	 * Reacts to the given message with all given emojis
 	 * @param msg The message to react to
@@ -50,7 +51,7 @@ public class Utilities
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Checks if a given array contains a given value
 	 * @param a The array to check
@@ -64,10 +65,10 @@ public class Utilities
 			if(l == v)
 				return true;
 		}
-		
+
 		return false;
 	}
-	
+
 	/**
 	 * Splits a command into its arguments, leaving out the command itself
 	 * @param line The string to split
@@ -85,7 +86,7 @@ public class Utilities
 
 		return result;
 	}
-	
+
 	/**
 	 * Sends a message to the channel of the event
 	 * @param event The event holding the channel
@@ -96,7 +97,18 @@ public class Utilities
 	{
 		return event.getChannel().sendMessage(message);
 	}
-	
+
+	/**
+	 * Sends a message to the channel
+	 * @param channel The {@link sx.blah.discord.handle.obj.IChannel} to send the message to
+	 * @param message The message to be sent
+	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent message
+	 */
+	public static IMessage sendMessage(IChannel channel, String message)
+	{
+		return channel.sendMessage(message);
+	}
+
 	/**
 	 * Sends an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to the channel of the event
 	 * @param event The event holding the channel
@@ -106,5 +118,16 @@ public class Utilities
 	public static IMessage sendMessage(MessageReceivedEvent event, EmbedObject eo)
 	{
 		return event.getChannel().sendMessage(eo);
+	}
+
+	/**
+	 * Sends an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to the channel
+	 * @param channel The {@link sx.blah.discord.handle.obj.IChannel} to send the message to
+	 * @param eo The {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to be sent
+	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent {@link sx.blah.discord.api.internal.json.objects.EmbedObject}
+	 */
+	public static IMessage sendMessage(IChannel channel, EmbedObject eo)
+	{
+		return channel.sendMessage(eo);
 	}
 }

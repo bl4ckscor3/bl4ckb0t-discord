@@ -5,11 +5,12 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 
 import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
-import bl4ckscor3.discord.bl4ckb0t.modules.CSGONotification;
 import bl4ckscor3.discord.bl4ckb0t.modules.Evaluate;
 import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
+import bl4ckscor3.discord.bl4ckb0t.modules.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.modules.OsuAcc;
 import bl4ckscor3.discord.bl4ckb0t.modules.Prick;
+import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.BlackJack;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.UpgradeCounter;
 import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.Upgrades;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
@@ -26,7 +27,11 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
- * v1.6		- Added a 5% chance to add an automatic reaction to Raqbit's messages
+ * v1.7		- Added -blackjack (-bj) command
+ *			- Removed CSGO update notifier as it depended on Maunz, who no longer has that feature
+ *			- Internal changes
+ *
+ * v1.6		- Added a ~~5%~~1% chance to add an automatic reaction to Raqbit's messages
  * 			- Added -prick to turn that on and off
  * v1.5:	- Added -osuacc (-oa) to calculate the accuracy with a given amount of 300s/100s/50s and misses
  *
@@ -60,7 +65,7 @@ public class Main
 	private static boolean dev;
 	private static IDiscordClient client;
 	private static final AbstractModule[] MODULES = {
-			new CSGONotification(),
+			new BlackJack(),
 			new Evaluate(),
 			new Exit(),
 			new OsuAcc(),
@@ -119,10 +124,10 @@ public class Main
 	{
 		try
 		{
-			if(AbstractModule.AWAITED.containsKey(event.getMessage().getLongID()) && event.getUser().getLongID() == AbstractModule.AWAITED.get(event.getMessage().getLongID()).getUserID())
+			if(IReactable.AWAITED.containsKey(event.getMessage().getLongID()) && event.getUser().getLongID() == IReactable.AWAITED.get(event.getMessage().getLongID()).getUserID())
 			{
-				AbstractModule.AWAITED.get(event.getMessage().getLongID()).getCommand().onReactionAdd(event);
-				AbstractModule.AWAITED.remove(event.getMessage().getLongID());
+				IReactable.AWAITED.get(event.getMessage().getLongID()).getReactable().onReactionAdd(event);
+				IReactable.AWAITED.remove(event.getMessage().getLongID());
 			}
 		}
 		catch(Exception e)

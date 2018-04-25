@@ -6,13 +6,13 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.obj.IMessage;
 
-public class Exit extends AbstractModule
+public class Exit extends AbstractModule implements IReactable
 {
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
 		IMessage msg = event.getChannel().sendMessage("Sure?");
-		
+
 		waitForReaction(msg.getLongID(), event.getAuthor().getLongID());
 		Utilities.react(msg, "✅", "❌");
 	}
@@ -22,13 +22,13 @@ public class Exit extends AbstractModule
 	{
 		return event.getMessage().getContent().toLowerCase().equals("-exit");
 	}
-	
+
 	@Override
 	public boolean requiresPermission()
 	{
 		return true;
 	}
-	
+
 	@Override
 	public void onReactionAdd(ReactionAddEvent event)
 	{
