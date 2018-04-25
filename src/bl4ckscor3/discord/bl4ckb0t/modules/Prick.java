@@ -19,7 +19,7 @@ public class Prick extends AbstractModule
 			enabled = !enabled;
 			event.getMessage().addReaction(ReactionEmoji.of(enabled ? "✅" : "❌"));
 		}
-		else if(enabled && rand.nextInt(100) < 5)
+		else if(enabled && rand.nextInt(1000) < 10)
 			event.getMessage().addReaction(ReactionEmoji.of("coctus", IDs.COCTUS));
 	}
 
