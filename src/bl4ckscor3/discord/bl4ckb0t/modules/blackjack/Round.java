@@ -40,10 +40,7 @@ public class Round implements IReactable
 	public void start()
 	{
 		if(hasStarted || players.isEmpty())
-		{
-			System.out.println(hasStarted + " - " + players.isEmpty());
 			return;
-		}
 
 		isStarting = false;
 		hasStarted = true;

@@ -33,6 +33,7 @@ import sx.blah.discord.handle.obj.StatusType;
  * v1.8		- Added -hangman
  * 			- Added interface to allow waiting for DMs
  * 			- Messages get resent after being rate limited
+ * 			- Potential fix for Black Jack soft locking
  *
  * v1.7		- Added -blackjack (-bj) command
  *			- Removed CSGO update notifier as it depended on Maunz, who no longer has that feature

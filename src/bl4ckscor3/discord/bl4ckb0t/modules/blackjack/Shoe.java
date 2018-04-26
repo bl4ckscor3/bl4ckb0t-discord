@@ -1,7 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t.modules.blackjack;
 
 import java.util.LinkedList;
-import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class Shoe
@@ -23,15 +22,10 @@ public class Shoe
 	 */
 	public Card pull()
 	{
-		try
-		{
-			return shoe.removeFirst();
-		}
-		catch(NoSuchElementException e)
-		{
+		if(shoe.size() == 0)
 			reset();
-			return shoe.removeFirst();
-		}
+
+		return shoe.removeFirst();
 	}
 
 	/**
