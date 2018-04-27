@@ -7,6 +7,7 @@ public class Word
 {
 	public char[] word;
 	public boolean[] guessed;
+	public char[] used = new char[26];
 	public int hangman = -1;
 
 	/**
@@ -48,6 +49,25 @@ public class Word
 		return correct;
 	}
 
+	/**
+	 * toString method for the used array in this class
+	 * @return The used array to string, stripped out of all null characters, characters are seperated by spaces
+	 */
+	public String usedToString()
+	{
+		String result = "";
+
+		for(int i = 0; i < used.length; i++)
+		{
+			if(used[i] == '\0')
+				continue;
+
+			result += used[i] + " ";
+		}
+
+		return result;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -61,6 +81,10 @@ public class Word
 				result += "\\_ ";
 		}
 
+		String used = usedToString();
+
+		if(!used.equals(""))
+			result += System.lineSeparator() + "Guessed letters: " + usedToString();
 		return result;
 	}
 }

@@ -30,6 +30,10 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.8.1	- Added restriction to hangman words so only letters are allowed
+ * 			- Hangman messages now show already guessed letters
+ * 			- Already guessed letters can no longer be guessed
+ *
  * v1.8		- Added -hangman
  * 			- Added interface to allow waiting for DMs
  * 			- Messages get resent after being rate limited

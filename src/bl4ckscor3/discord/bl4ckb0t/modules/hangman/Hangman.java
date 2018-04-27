@@ -2,6 +2,8 @@ package bl4ckscor3.discord.bl4ckb0t.modules.hangman;
 
 import java.util.HashMap;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
@@ -38,11 +40,19 @@ public class Hangman extends AbstractModule implements IRequestDM
 			if(words.containsKey(channel))
 			{
 				Word word = words.get(channel);
+				char guess = event.getMessage().getContent().charAt(1);
+				String sentence = "";
 
-				if(!word.guess(event.getMessage().getContent().charAt(1)))
+				if(ArrayUtils.contains(word.used, guess))
 				{
-					String sentence = "";
+					Utilities.sendMessage(channel, "You already guessed this!" + System.lineSeparator() + word.toString());
+					return;
+				}
+				else
+					word.used[Character.toUpperCase(guess) - 65] = guess;
 
+				if(!word.guess(guess))
+				{
 					switch(word.hangman)
 					{
 						case 0: sentence = "The hill has been built."; break;
@@ -70,6 +80,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 						}
 					}
 
+					sentence += System.lineSeparator() + word.toString();
 					Utilities.sendMessage(channel, sentence);
 				}
 				else
@@ -85,13 +96,15 @@ public class Hangman extends AbstractModule implements IRequestDM
 						}
 					}
 
-					Utilities.sendMessage(channel, word.toString());
+					sentence += word.toString();
 
 					if(won)
 					{
 						words.remove(channel);
-						Utilities.sendMessage(channel, "You win! A new word can now be submitted.");
+						sentence += System.lineSeparator() + "You win! A new word can now be submitted.";
 					}
+
+					Utilities.sendMessage(channel, sentence);
 				}
 			}
 		}
@@ -100,10 +113,13 @@ public class Hangman extends AbstractModule implements IRequestDM
 	@Override
 	public void onDMReceived(MessageReceivedEvent event, HashMap<String,Object> info)
 	{
-		if(event.getMessage().getContent().contains(" "))
+		for(char c : event.getMessage().getContent().toLowerCase().toCharArray())
 		{
-			Utilities.sendMessage(event.getChannel(), "No spaces allowed.");
-			return;
+			if(!Character.isAlphabetic(c))
+			{
+				Utilities.sendMessage(event.getChannel(), "Only letters are allowed.");
+				return;
+			}
 		}
 
 		IChannel channel = (IChannel)info.get("channel");
@@ -116,7 +132,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().startsWith("-hangman") ||
+		return event.getMessage().getContent().equals("-hangman") ||
 				(event.getMessage().getContent().startsWith(".") && event.getMessage().getContent().toCharArray().length == 2);
 	}
 }
