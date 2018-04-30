@@ -13,6 +13,8 @@ import sx.blah.discord.util.RateLimitException;
 
 public class Utilities
 {
+	public static final int RATE_LIMIT_DELAY = 2000; //in ms
+
 	/**
 	 * Gets the path of the running jar file
 	 */
@@ -104,7 +106,7 @@ public class Utilities
 		{
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(RATE_LIMIT_DELAY);
 			}
 			catch(InterruptedException e1){}
 
@@ -128,7 +130,7 @@ public class Utilities
 		{
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(RATE_LIMIT_DELAY);
 			}
 			catch(InterruptedException e1){}
 
@@ -152,7 +154,7 @@ public class Utilities
 		{
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(RATE_LIMIT_DELAY);
 			}
 			catch(InterruptedException e1){}
 
@@ -176,7 +178,7 @@ public class Utilities
 		{
 			try
 			{
-				Thread.sleep(1000);
+				Thread.sleep(RATE_LIMIT_DELAY);
 			}
 			catch(InterruptedException e1){}
 

@@ -140,22 +140,6 @@ public class Players extends ArrayList<Player>
 		return false;
 	}
 
-	//	/**
-	//	 * Gets the {@link bl4ckscor3.discord.b4ckb0t.modules.blackjack.Player} associated with the {@link sx.blah.discord.handle.obj.IUser}
-	//	 * @param u The {@link sx.blah.discord.handle.obj.IUser} to get the {@link bl4ckscor3.discord.b4ckb0t.modules.blackjack.Player} of
-	//	 * @return The corresponding {@link bl4ckscor3.discord.b4ckb0t.modules.blackjack.Player}, null if there is none
-	//	 */
-	//	public Player get(IUser u)
-	//	{
-	//		for(Player p : this)
-	//		{
-	//			if(p.getUser().equals(u))
-	//				return p;
-	//		}
-	//
-	//		return null;
-	//	}
-
 	/**
 	 * Checks if this list contains a {@link sx.blah.discord.handle.obj.IUser} and removes the corresponding player
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} to check and remove

@@ -2,10 +2,10 @@ package bl4ckscor3.discord.bl4ckb0t.modules.blackjack;
 
 public class Card
 {
-	private Ranks rank;
-	private Suits suit;
+	private Rank rank;
+	private Suit suit;
 	private boolean cuttingCard = false;
-	
+
 	/**
 	 * Sets this card to be a cutting card
 	 */
@@ -13,34 +13,34 @@ public class Card
 	{
 		cuttingCard = true;
 	}
-	
+
 	/**
 	 * Initializes a new playing card
 	 * @param r The rank of the card
 	 * @param s The suit of the card
 	 */
-	public Card(Ranks r, Suits s)
+	public Card(Rank r, Suit s)
 	{
 		rank = r;
 		suit = s;
 	}
-	
+
 	/**
 	 * @return The card's rank
 	 */
-	public Ranks getRank()
+	public Rank getRank()
 	{
 		return rank;
 	}
-	
+
 	/**
 	 * @return The card's suit
 	 */
-	public Suits getSuit()
+	public Suit getSuit()
 	{
 		return suit;
 	}
-	
+
 	/**
 	 * @return True if this card is a cutting card, false otherwise
 	 */
@@ -48,7 +48,7 @@ public class Card
 	{
 		return cuttingCard;
 	}
-	
+
 	/**
 	 * @return This card's value
 	 */
@@ -56,14 +56,14 @@ public class Card
 	{
 		return rank.value;
 	}
-	
+
 	@Override
 	public String toString()
 	{
 		return !isCuttingCard() ? suit.toString() + " " + rank.toString() : "Cutting Card";
 	}
-	
-	public static enum Ranks
+
+	public static enum Rank
 	{
 		TWO(2, "2"),
 		THREE(3, "3"),
@@ -78,11 +78,11 @@ public class Card
 		QUEEN(10, "Q"),
 		KING(10, "K"),
 		ACE(11, "A"); //ace can also be 1, but that is handled in the game logic
-		
+
 		private int value;
 		private String string;
-		
-		Ranks(int v, String r)
+
+		Rank(int v, String r)
 		{
 			value = v;
 			string = r;
@@ -92,28 +92,28 @@ public class Card
 		{
 			return value;
 		}
-		
+
 		@Override
 		public String toString()
 		{
 			return string;
 		}
 	}
-	
-	public static enum Suits
+
+	public static enum Suit
 	{
 		HEARTS("♥️"),
 		CLUBS("♣️"),
 		DIAMONDS("♦️"),
 		SPADES("♠️");
-		
+
 		private String string;
-		
-		Suits(String r)
+
+		Suit(String r)
 		{
 			string = r;
 		}
-		
+
 		@Override
 		public String toString()
 		{

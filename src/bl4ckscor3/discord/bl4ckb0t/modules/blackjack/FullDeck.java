@@ -3,8 +3,8 @@ package bl4ckscor3.discord.bl4ckb0t.modules.blackjack;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Ranks;
-import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Suits;
+import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Rank;
+import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Suit;
 
 public class FullDeck
 {
@@ -25,9 +25,9 @@ public class FullDeck
 	{
 		deck.clear(); //just to be safe
 
-		for(Suits s : Suits.values())
+		for(Suit s : Suit.values())
 		{
-			for(Ranks r : Ranks.values())
+			for(Rank r : Rank.values())
 			{
 				deck.add(new Card(r, s));
 			}
