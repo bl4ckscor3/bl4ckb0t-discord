@@ -30,6 +30,11 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.8.2	- Added support for multiple words in hangman
+ * 			- Increased rate limit retry delay
+ * 			- Fixed black jack round not ending properly when all players have a blackjack
+ * 			- Small black jack display changes
+ *
  * v1.8.1	- Added restriction to hangman words so only letters are allowed
  * 			- Hangman messages now show already guessed letters
  * 			- Already guessed letters can no longer be guessed

@@ -115,7 +115,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 	{
 		for(char c : event.getMessage().getContent().toLowerCase().toCharArray())
 		{
-			if(!Character.isAlphabetic(c))
+			if(!Character.isAlphabetic(c) && c != ' ')
 			{
 				Utilities.sendMessage(event.getChannel(), "Only letters are allowed.");
 				return;
@@ -133,6 +133,6 @@ public class Hangman extends AbstractModule implements IRequestDM
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
 		return event.getMessage().getContent().equals("-hangman") ||
-				(event.getMessage().getContent().startsWith(".") && event.getMessage().getContent().toCharArray().length == 2);
+				(event.getMessage().getContent().startsWith(".") && event.getMessage().getContent().toCharArray().length == 2 && Character.isAlphabetic(event.getMessage().getContent().charAt(1)));
 	}
 }

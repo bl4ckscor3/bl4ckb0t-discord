@@ -77,6 +77,8 @@ public class Word
 		{
 			if(guessed[i])
 				result += word[i] + " ";
+			else if(word[i] == ' ')
+				result += "  ";
 			else
 				result += "\\_ ";
 		}
