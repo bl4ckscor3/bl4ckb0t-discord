@@ -6,6 +6,7 @@ public enum Status
 	IDLE("⏰"), //waiting for turn
 	ACTIVE("◀"), //has to take turn
 	STAND("✅"), //done, no more card change or has won
+	BJ("👑"), //blackjack!!
 	BUST("❌"), //lost the game
 	DRAW("🤝"), // tied the game
 	DEALING("🎰"); //dealer

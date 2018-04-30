@@ -4,6 +4,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
+import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Rank;
+import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Suit;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -46,6 +48,8 @@ public class Round implements IReactable
 		hasStarted = true;
 
 		players.get(0).setActive();
+		players.getDealer().addCard(new Card(Rank.ACE, Suit.CLUBS));
+		players.getDealer().addCard(new Card(Rank.TEN, Suit.CLUBS));
 
 		for(int i = 0; i < 2; i++)
 		{
@@ -58,11 +62,15 @@ public class Round implements IReactable
 		}
 
 		boolean dealerHasBlackJack = players.getDealer().getCards().value() == 21;
+		int playerBlackJacks = 0;
 
 		for(Player p : players)
 		{
 			if(p.getCards().value() == 21)
-				p.setStatus(Status.STAND);
+			{
+				p.setStatus(Status.BJ);
+				playerBlackJacks++;
+			}
 		}
 
 		while(players.getCurrentPlayer().getCards().value() == 21)
@@ -72,6 +80,11 @@ public class Round implements IReactable
 		}
 
 		if(dealerHasBlackJack)
+		{
+			players.getDealer().setStatus(Status.BJ);
+			endGame();
+		}
+		else if(playerBlackJacks == players.size())
 			endGame();
 		else
 			updateMessage();
@@ -148,15 +161,7 @@ public class Round implements IReactable
 				leave(players.getCurrentPlayer().getUser());
 
 				if(!players.isEmpty())
-				{
 					updateMessage();
-
-					if(roundMessage == null) //i don't know why this is here
-					{
-						endGame();
-						removal.cancel(false);
-					}
-				}
 				else
 				{
 					Utilities.sendMessage(channel, "All players have left, the table is empty.");
@@ -256,8 +261,6 @@ public class Round implements IReactable
 
 		if(dealerVal > 21)
 			players.getDealer().setStatus(Status.BUST);
-		else
-			players.getDealer().setStatus(Status.STAND);
 
 		for(Player p : players)
 		{
