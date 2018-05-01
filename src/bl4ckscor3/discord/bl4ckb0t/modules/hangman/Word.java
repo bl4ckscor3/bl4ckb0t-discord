@@ -21,7 +21,7 @@ public class Word
 
 		for(int i = 0; i < word.length; i++)
 		{
-			guessed[i] = false;
+			guessed[i] = word[i] == ' ';
 		}
 	}
 
