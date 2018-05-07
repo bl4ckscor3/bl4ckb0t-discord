@@ -4,8 +4,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Rank;
-import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.Card.Suit;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.api.events.EventSubscriber;
@@ -48,8 +46,6 @@ public class Round implements IReactable
 		hasStarted = true;
 
 		players.get(0).setActive();
-		players.getDealer().addCard(new Card(Rank.ACE, Suit.CLUBS));
-		players.getDealer().addCard(new Card(Rank.TEN, Suit.CLUBS));
 
 		for(int i = 0; i < 2; i++)
 		{
