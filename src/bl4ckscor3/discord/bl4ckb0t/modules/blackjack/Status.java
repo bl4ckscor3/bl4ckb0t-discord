@@ -8,7 +8,7 @@ public enum Status
 	STAND("✅"), //done, no more card change or has won
 	BJ("👑"), //blackjack!!
 	BUST("❌"), //lost the game
-	DRAW("🤝"), // tied the game
+	TIE("🤝"), // tied the game
 	DEALING("🎰"); //dealer
 
 	private String emoji;

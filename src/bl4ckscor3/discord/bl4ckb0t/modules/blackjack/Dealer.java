@@ -24,7 +24,7 @@ public class Dealer extends Player
 	 */
 	public void setStatus(Status s)
 	{
-		if(s != Status.DRAW && s != Status.IDLE && s != Status.STAND && s != Status.WAITING && s != Status.ACTIVE)
+		if(s != Status.TIE && s != Status.IDLE && s != Status.STAND && s != Status.WAITING && s != Status.ACTIVE)
 			status = s;
 	}
 

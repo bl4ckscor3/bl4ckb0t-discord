@@ -265,7 +265,7 @@ public class Round implements IReactable
 			else if(p.getCards().value() < dealerVal && players.getDealer().getStatus() != Status.BUST)
 				p.setStatus(Status.BUST);
 			else if(p.getCards().value() == dealerVal)
-				p.setStatus(Status.DRAW);
+				p.setStatus(Status.TIE);
 		}
 
 		Utilities.sendMessage(channel, players.build(true));
