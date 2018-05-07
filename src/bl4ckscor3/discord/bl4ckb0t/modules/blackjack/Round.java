@@ -78,6 +78,13 @@ public class Round implements IReactable
 		if(dealerHasBlackJack)
 		{
 			players.getDealer().setStatus(Status.BJ);
+
+			for(Player p : players)
+			{
+				if(p.getStatus() == Status.BJ)
+					p.setStatus(Status.TIE);
+			}
+
 			endGame();
 		}
 		else if(playerBlackJacks == players.size())

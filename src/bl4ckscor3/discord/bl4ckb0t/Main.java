@@ -30,6 +30,9 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v1.8.3	- Fixed black jack not working
+ * 			- Fixed players with a blackjack not getting tied with the dealer if he has a blackjack
+ *
  * v1.8.2	- Added support for multiple words in hangman
  * 			- Increased rate limit retry delay
  * 			- Fixed black jack round not ending properly when all players have a blackjack
