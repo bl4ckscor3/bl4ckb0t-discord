@@ -30,28 +30,31 @@ import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
 import sx.blah.discord.handle.obj.StatusType;
 
 /**
- * v1.8.3	- Fixed black jack not working
+ * v1.8.4:	- Added support for all characters to hangman, but still, only characters from the English alphabet can be guessed
+ * 			- Added way of guessing the complete word (ignores all characters that are not a letter): -hangman guessingThisWord
+ *
+ * v1.8.3:	- Fixed black jack not working
  * 			- Fixed players with a blackjack not getting tied with the dealer if he has a blackjack
  *
- * v1.8.2	- Added support for multiple words in hangman
+ * v1.8.2:	- Added support for multiple words in hangman
  * 			- Increased rate limit retry delay
  * 			- Fixed black jack round not ending properly when all players have a blackjack
  * 			- Small black jack display changes
  *
- * v1.8.1	- Added restriction to hangman words so only letters are allowed
+ * v1.8.1:	- Added restriction to hangman words so only letters are allowed
  * 			- Hangman messages now show already guessed letters
  * 			- Already guessed letters can no longer be guessed
  *
- * v1.8		- Added -hangman
+ * v1.8:	- Added -hangman
  * 			- Added interface to allow waiting for DMs
  * 			- Messages get resent after being rate limited
  * 			- Potential fix for Black Jack soft locking
  *
- * v1.7		- Added -blackjack (-bj) command
+ * v1.7:	- Added -blackjack (-bj) command
  *			- Removed CSGO update notifier as it depended on Maunz, who no longer has that feature
  *			- Internal changes
  *
- * v1.6		- Added a ~~5%~~1% chance to add an automatic reaction to Raqbit's messages
+ * v1.6:	- Added a ~~5%~~1% chance to add an automatic reaction to Raqbit's messages
  * 			- Added -prick to turn that on and off
  * v1.5:	- Added -osuacc (-oa) to calculate the accuracy with a given amount of 300s/100s/50s and misses
  *

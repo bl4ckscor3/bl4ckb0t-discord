@@ -185,4 +185,22 @@ public class Utilities
 			return channel.sendMessage(eo);
 		}
 	}
+
+	/**
+	 * Filters the alphabetic characters out of the input and returns them in order of appearance as a String
+	 * @param The input to filter
+	 * @return The alphabetic parts of the given input, defined by {@link Character#isAlphabetic(int)}
+	 */
+	public static String alphabetic(String input)
+	{
+		String result = "";
+
+		for(char c : input.toCharArray())
+		{
+			if(Character.isAlphabetic(c))
+				result += c;
+		}
+
+		return result;
+	}
 }

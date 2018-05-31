@@ -21,12 +21,12 @@ public class Word
 
 		for(int i = 0; i < word.length; i++)
 		{
-			guessed[i] = word[i] == ' ';
+			guessed[i] = !Character.isAlphabetic(word[i]);
 		}
 	}
 
 	/**
-	 * Checks wether the given character is in the word array and sets all positions x in the guessed array to true if it is at position x in the word array
+	 * Checks wether the given character is in the word array and sets all positions x in the guessed array to true if it is at position x in the word array. Does not increase hangman
 	 * @param c The character to check
 	 * @return true if the character was present in the word array, false otherwise
 	 */
@@ -43,10 +43,22 @@ public class Word
 			}
 		}
 
-		if(!correct)
-			hangman++;
-
 		return correct;
+	}
+
+	/**
+	 * @return The word as it was sent in the direct message
+	 */
+	public String getWord()
+	{
+		String word = "";
+
+		for(char c : this.word)
+		{
+			word += c;
+		}
+
+		return word;
 	}
 
 	/**
@@ -75,12 +87,15 @@ public class Word
 
 		for(int i = 0; i < word.length; i++)
 		{
-			if(guessed[i])
-				result += word[i] + " ";
+			if(Character.isAlphabetic(word[i]))
+			{
+				if(guessed[i])
+					result += word[i] + " ";
+				else
+					result += "\\_ ";
+			}
 			else if(word[i] == ' ')
 				result += "  ";
-			else
-				result += "\\_ ";
 		}
 
 		String used = usedToString();
