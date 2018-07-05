@@ -23,6 +23,10 @@ import sx.blah.discord.handle.obj.StatusType;
 
 /**
  * v2.0		- The bot now works based on modules. Each feature is a seperate .jar file which can get loaded at runtime
+ * 			- Removed Upgrading
+ * 			- Update Discord4J
+ * 			- Remove an unused dependency
+ * 			- Internal changes
  *
  * v1.8.4:	- Added support for all characters to hangman, but still, only characters from the English alphabet can be guessed
  * 			- Added way of guessing the complete word (ignores all characters that are not a letter): -hangman guessingThisWord
