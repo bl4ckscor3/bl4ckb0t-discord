@@ -18,6 +18,8 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
 import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
+import sx.blah.discord.handle.obj.ActivityType;
+import sx.blah.discord.handle.obj.StatusType;
 
 /**
  * v2.0		- The bot now works based on modules. Each feature is a seperate .jar file which can get loaded at runtime
@@ -156,7 +158,7 @@ public class Main
 	@EventSubscriber
 	public void onReady(ReadyEvent event)
 	{
-		event.getClient().changePlayingText("with bl4ckscor3");
+		event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
 	}
 
 	@EventSubscriber
@@ -164,15 +166,15 @@ public class Main
 	{
 		if(event.getUser().getLongID() == client.getOurUser().getLongID())
 		{
-			if(!event.getOldPresence().getPlayingText().equals(event.getNewPresence().getPlayingText()))
-				event.getClient().changePlayingText("with bl4ckscor3");
+			if(!event.getOldPresence().getText().equals(event.getNewPresence().getText()))
+				event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
 		}
 	}
 
 	@EventSubscriber
 	public void onResumed(ResumedEvent event)
 	{
-		event.getClient().changePlayingText("with bl4ckscor3");
+		event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
 	}
 
 	/**
