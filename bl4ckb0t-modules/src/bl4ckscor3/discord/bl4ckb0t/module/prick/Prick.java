@@ -23,7 +23,7 @@ public class Prick extends AbstractModule
 		if(event.getAuthor().getLongID() == IDs.BL4CKSCOR3 && event.getMessage().getContent().startsWith("-prick"))
 		{
 			enabled = !enabled;
-			event.getMessage().addReaction(ReactionEmoji.of(enabled ? "✅" : "❌"));
+			event.getMessage().addReaction(ReactionEmoji.of("coctus", IDs.COCTUS));
 		}
 		else if(enabled && rand.nextInt(1000) < 10)
 			event.getMessage().addReaction(ReactionEmoji.of("coctus", IDs.COCTUS));
