@@ -98,20 +98,7 @@ public class Utilities
 	 */
 	public static IMessage sendMessage(MessageReceivedEvent event, String message)
 	{
-		try
-		{
-			return event.getChannel().sendMessage(message);
-		}
-		catch(RateLimitException e)
-		{
-			try
-			{
-				Thread.sleep(RATE_LIMIT_DELAY);
-			}
-			catch(InterruptedException e1){}
-
-			return event.getChannel().sendMessage(message);
-		}
+		return sendMessage(event.getChannel(), message);
 	}
 
 	/**
@@ -146,20 +133,7 @@ public class Utilities
 	 */
 	public static IMessage sendMessage(MessageReceivedEvent event, EmbedObject eo)
 	{
-		try
-		{
-			return event.getChannel().sendMessage(eo);
-		}
-		catch(RateLimitException e)
-		{
-			try
-			{
-				Thread.sleep(RATE_LIMIT_DELAY);
-			}
-			catch(InterruptedException e1){}
-
-			return event.getChannel().sendMessage(eo);
-		}
+		return sendMessage(event.getChannel(), eo);
 	}
 
 	/**
@@ -191,7 +165,7 @@ public class Utilities
 	 * @param The input to filter
 	 * @return The alphabetic parts of the given input, defined by {@link Character#isAlphabetic(int)}
 	 */
-	public static String alphabetic(String input)
+	public static String filterAlphabetic(String input)
 	{
 		String result = "";
 

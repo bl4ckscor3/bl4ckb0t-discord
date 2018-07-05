@@ -1,7 +1,8 @@
-package bl4ckscor3.discord.bl4ckb0t.modules;
+package bl4ckscor3.discord.bl4ckb0t.module.prick;
 
 import java.util.Random;
 
+import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;
@@ -10,6 +11,11 @@ public class Prick extends AbstractModule
 {
 	public final Random rand = new Random();
 	public boolean enabled = true;
+
+	public Prick(String name)
+	{
+		super(name);
+	}
 
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception

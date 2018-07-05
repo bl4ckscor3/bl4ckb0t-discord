@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules;
+package bl4ckscor3.discord.bl4ckb0t.module.evaluate;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Tokens;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
@@ -13,11 +14,16 @@ import sx.blah.discord.handle.obj.IChannel;
 
 public class Evaluate extends AbstractModule
 {
+	public Evaluate(String name)
+	{
+		super(name);
+	}
+
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws MalformedURLException, IOException
 	{
 		String input = "";
-		
+
 		for(int i = 0; i < args.length; i++)
 		{
 			input += args[i] + " ";
@@ -98,9 +104,9 @@ public class Evaluate extends AbstractModule
 		if(result.matches("[0-9]+/[0-9]+.*"))
 		{
 			String decimalResult = evaluate(event, input + " in decimal");
-			
+
 			reader.close();
-			
+
 			if(!decimalResult.startsWith("Error: "))
 				return decimalResult;
 		}

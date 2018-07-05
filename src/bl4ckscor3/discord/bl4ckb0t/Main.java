@@ -6,14 +6,6 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 
 import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
-import bl4ckscor3.discord.bl4ckb0t.modules.Evaluate;
-import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
-import bl4ckscor3.discord.bl4ckb0t.modules.OsuAcc;
-import bl4ckscor3.discord.bl4ckb0t.modules.Prick;
-import bl4ckscor3.discord.bl4ckb0t.modules.blackjack.BlackJack;
-import bl4ckscor3.discord.bl4ckb0t.modules.hangman.Hangman;
-import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.UpgradeCounter;
-import bl4ckscor3.discord.bl4ckb0t.modules.upgrading.Upgrades;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
@@ -27,9 +19,10 @@ import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedE
 import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
 import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
 import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
-import sx.blah.discord.handle.obj.StatusType;
 
 /**
+ * v2.0		- The bot now works based on modules. Each feature is a seperate .jar file which can get loaded at runtime
+ *
  * v1.8.4:	- Added support for all characters to hangman, but still, only characters from the English alphabet can be guessed
  * 			- Added way of guessing the complete word (ignores all characters that are not a letter): -hangman guessingThisWord
  *
@@ -87,16 +80,7 @@ public class Main
 {
 	private static boolean dev;
 	private static IDiscordClient client;
-	private static final AbstractModule[] MODULES = {
-			new BlackJack(),
-			new Evaluate(),
-			new Exit(),
-			new Hangman(),
-			new OsuAcc(),
-			new Prick(),
-			new UpgradeCounter(),
-			new Upgrades()
-	};
+	public static ModuleManager manager;
 
 	public static void main(String[] args)
 	{
@@ -104,13 +88,12 @@ public class Main
 
 		try
 		{
-			client = new ClientBuilder().withToken(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD).build();
+			ClientBuilder builder = new ClientBuilder().withToken(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD);
 
-			for(AbstractModule m : MODULES)
-			{
-				m.init();
-			}
-
+			manager = new ModuleManager(builder);
+			manager.initPrivate();
+			manager.initPublic();
+			client = builder.build();
 			client.getDispatcher().registerListener(new Main());
 			client.login();
 		}
@@ -125,11 +108,11 @@ public class Main
 	{
 		try
 		{
-			for(AbstractModule m : MODULES)
+			for(AbstractModule m : ModuleManager.MODULES)
 			{
 				if(m.triggeredBy(event))
 				{
-					if(!m.requiresPermission() || (event.getAuthor().getLongID() == IDs.BL4CKSCOR3 || event.getAuthor().getLongID() == IDs.VAUFF))
+					if(!m.requiresPermission() || (m.requiresPermission() && event.getAuthor().getLongID() == IDs.BL4CKSCOR3))
 					{
 						if((dev && m.allowedChannels() != null && event.getChannel().getLongID() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getLongID())))
 						{
@@ -185,8 +168,6 @@ public class Main
 			if(!event.getOldPresence().getPlayingText().equals(event.getNewPresence().getPlayingText()))
 				event.getClient().changePlayingText("with bl4ckscor3");
 		}
-		else if(event.getUser().getLongID() == IDs.SCSERVERBOT && event.getNewPresence().getStatus() == StatusType.OFFLINE)
-			client.getChannelByID(IDs.SERVER_STAFF).sendMessage("@everyone - Server went down again!");
 	}
 
 	@EventSubscriber

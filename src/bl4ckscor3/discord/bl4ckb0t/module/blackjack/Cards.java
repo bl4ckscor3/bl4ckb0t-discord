@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules.blackjack;
+package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
 import java.util.ArrayList;
 import java.util.Arrays;

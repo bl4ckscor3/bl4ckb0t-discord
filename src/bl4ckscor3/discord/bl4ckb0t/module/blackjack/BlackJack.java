@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules.blackjack;
+package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
 import java.util.HashMap;
 
@@ -11,6 +11,11 @@ import sx.blah.discord.handle.obj.IChannel;
 public class BlackJack extends AbstractModule
 {
 	public HashMap<IChannel,Round> rounds = new HashMap<IChannel,Round>();
+
+	public BlackJack(String name)
+	{
+		super(name);
+	}
 
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception

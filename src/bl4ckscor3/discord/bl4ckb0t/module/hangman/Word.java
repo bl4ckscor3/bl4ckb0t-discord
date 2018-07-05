@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules.hangman;
+package bl4ckscor3.discord.bl4ckb0t.module.hangman;
 
 /**
  * A hangman-style word. Holds the word itself, which letters of it have already been guessed, and the state of the hangman.

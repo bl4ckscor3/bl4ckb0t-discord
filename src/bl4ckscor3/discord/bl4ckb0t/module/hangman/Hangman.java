@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules.hangman;
+package bl4ckscor3.discord.bl4ckb0t.module.hangman;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -15,6 +15,11 @@ public class Hangman extends AbstractModule implements IRequestDM
 {
 	public HashMap<IChannel,Word> words = new HashMap<IChannel,Word>();
 
+	public Hangman(String name)
+	{
+		super(name);
+	}
+
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
@@ -27,8 +32,8 @@ public class Hangman extends AbstractModule implements IRequestDM
 				if(args.length != 0)
 				{
 					Word word = words.get(channel);
-					String alphabeticWord = Utilities.alphabetic(word.getWord());
-					String alphabeticGuess = Utilities.alphabetic(Arrays.toString(args).replace(",", "").replace("[", "").replace("]", "")).toLowerCase();
+					String alphabeticWord = Utilities.filterAlphabetic(word.getWord());
+					String alphabeticGuess = Utilities.filterAlphabetic(Arrays.toString(args).replace(",", "").replace("[", "").replace("]", "")).toLowerCase();
 
 					if(alphabeticWord.length() == alphabeticGuess.length())
 					{

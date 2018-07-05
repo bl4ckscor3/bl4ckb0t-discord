@@ -1,13 +1,31 @@
 package bl4ckscor3.discord.bl4ckb0t.modules;
 
+import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 public abstract class AbstractModule
 {
+	/**The name of the module. For public modules it's the file name, private modules have their name predefined*/
+	private String name;
+
+	/**
+	 * Constructor
+	 * @param n The name of the module
+	 */
+	public AbstractModule(String name)
+	{
+		this.name = name;
+	}
+
 	/**
 	 * Initializes this module. This method is called before the bot connects to Discord
 	 */
-	public void init() throws Exception {}
+	public void onEnable(ClientBuilder builder){}
+
+	/**
+	 * Gets called when the module gets disabled. Should be used to remove any Listeners
+	 */
+	public void onDisable(){}
 
 	/**
 	 * Executes this module
@@ -37,4 +55,14 @@ public abstract class AbstractModule
 	{
 		return false;
 	}
+
+	/**
+	 * Gets the name of this module
+	 * @return The name of this module
+	 */
+	public final String getName()
+	{
+		return name;
+	}
 }
+

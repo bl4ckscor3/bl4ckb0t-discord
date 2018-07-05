@@ -9,6 +9,11 @@ import sx.blah.discord.handle.obj.IMessage;
 
 public class Exit extends AbstractModule implements IReactable
 {
+	public Exit(String name)
+	{
+		super(name);
+	}
+
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
