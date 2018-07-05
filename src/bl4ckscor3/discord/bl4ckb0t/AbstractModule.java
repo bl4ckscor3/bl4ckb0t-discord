@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules;
+package bl4ckscor3.discord.bl4ckb0t;
 
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

@@ -1,6 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t.module.osuacc;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 

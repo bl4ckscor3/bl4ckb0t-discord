@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import org.apache.commons.lang3.ArrayUtils;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;

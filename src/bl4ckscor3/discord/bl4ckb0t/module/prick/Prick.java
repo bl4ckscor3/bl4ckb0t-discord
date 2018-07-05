@@ -2,7 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.prick;
 
 import java.util.Random;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.impl.obj.ReactionEmoji;

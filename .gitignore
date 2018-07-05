@@ -1,11 +1,7 @@
-/.vs/
 /bin/
-/bl4ckb0t-discord/
-/packages/
 /target/
 *.log
 .classpath
 .project
 .settings
-bl4ckb0t-discord.sln
 Tokens.*

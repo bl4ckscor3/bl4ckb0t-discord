@@ -7,9 +7,8 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
 
-import bl4ckscor3.discord.bl4ckb0t.modules.AbstractModule;
-import bl4ckscor3.discord.bl4ckb0t.modules.Exit;
-import bl4ckscor3.discord.bl4ckb0t.modules.ModuleManagement;
+import bl4ckscor3.discord.bl4ckb0t.privatemodules.Exit;
+import bl4ckscor3.discord.bl4ckb0t.privatemodules.ModuleManagement;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.api.ClientBuilder;
 

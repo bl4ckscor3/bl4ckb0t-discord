@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.modules;
+package bl4ckscor3.discord.bl4ckb0t.privatemodules;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,6 +9,7 @@ import java.nio.channels.ReadableByteChannel;
 
 import org.apache.commons.io.FilenameUtils;
 
+import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.ModuleManager;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
