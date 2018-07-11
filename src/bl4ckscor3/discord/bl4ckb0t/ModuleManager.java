@@ -76,9 +76,12 @@ public class ModuleManager
 			return 0;
 
 		String main = "bl4ckscor3.discord.bl4ckb0t.module." + name.toLowerCase() + "." + name;
+		URLClassLoader loader = null;
 
-		try(URLClassLoader loader = URLClassLoader.newInstance(new URL[]{url}, getClass().getClassLoader()))
+		try
 		{
+			loader = URLClassLoader.newInstance(new URL[]{url}, getClass().getClassLoader());
+
 			AbstractModule module = Class.forName(main, true, loader).asSubclass(AbstractModule.class).getDeclaredConstructor(String.class).newInstance(name);
 
 			module.onEnable(builder);
@@ -108,6 +111,11 @@ public class ModuleManager
 			System.out.println("  AbstractModule " + name + " could not be loaded due to an error. Is it even a module?");
 			e.printStackTrace();
 			return -1;
+		}
+		finally
+		{
+			if(loader != null)
+				loader.close();
 		}
 	}
 

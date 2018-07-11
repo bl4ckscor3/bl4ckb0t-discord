@@ -8,6 +8,7 @@ public class IDs
 	public static final long VAUFF = 129448521861431296L;
 	public static final long SCSERVERBOT = 330030868502413312L;
 	public static final long RAQBIT = 140370465699921920L;
+	public static final long AKINO_GERMANY = 201697251519627264L;
 
 	/* Channel IDs */
 	public static final long EXTRUDERS = 429600069151358986L;

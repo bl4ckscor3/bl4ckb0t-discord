@@ -57,7 +57,7 @@ public class Main
 			{
 				if(m.triggeredBy(event))
 				{
-					if(!m.requiresPermission() || (m.requiresPermission() && event.getAuthor().getLongID() == IDs.BL4CKSCOR3))
+					if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getLongID() == IDs.BL4CKSCOR3 || event.getAuthor().getLongID() == IDs.AKINO_GERMANY)))
 					{
 						if((dev && m.allowedChannels() != null && event.getChannel().getLongID() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getLongID())))
 						{
