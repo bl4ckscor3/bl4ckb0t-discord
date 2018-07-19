@@ -24,14 +24,14 @@ public class FahrenheitToCelsius extends AbstractModule
 
 		for(String s : msg.split(" "))
 		{
-			if(s.matches("-?[0-9]*°?f"))
+			if(s.matches("-?[0-9]+(\\.[0-9]+)?°?f"))
 			{
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
 				result += System.lineSeparator() + (even ? "" : "") + number + "°F ->" + " " + ONE_DECIMAL_PLACE.format((number - 32) / 1.8D).replace(",", ".") + "°C";
 				even = !even;
 			}
-			else if(s.matches("-?[0-9]*°?c"))
+			else if(s.matches("-?[0-9]+(\\.[0-9]+)?°?c"))
 			{
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
@@ -46,6 +46,6 @@ public class FahrenheitToCelsius extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().matches("(.* +-?[0-9]+°?(f|c) +.*|-?[0-9]+°?(f|c) +.*|.* +-?[0-9]+°?(f|c)|-?[0-9]+°?(f|c))");
+		return event.getMessage().getContent().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)°?(f|c) +.*|-?[0-9]+(\\.[0-9]+)°?(f|c) +.*|.* +-?[0-9]+(\\.[0-9]+)°?(f|c)|-?[0-9]+(\\.[0-9]+)°?(f|c))");
 	}
 }
