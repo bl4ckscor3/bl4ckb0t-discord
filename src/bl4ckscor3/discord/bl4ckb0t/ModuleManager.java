@@ -98,25 +98,22 @@ public class ModuleManager
 		}
 		catch(ClassCastException e)
 		{
-			System.out.println("  " + name + ": Main class does not extend bl4ckscor3.bot.bl4ckb0t.AbstractModule");
-			return -1;
+			System.err.println("  " + name + ": Main class does not extend bl4ckscor3.bot.bl4ckb0t.AbstractModule");
 		}
 		catch(ClassNotFoundException e)
 		{
-			System.out.println("  " + name + ": Couldn't find main class " + main);
-			return -1;
+			System.err.println("  " + name + ": Couldn't find main class " + main);
 		}
 		catch(Exception e)
 		{
-			System.out.println("  AbstractModule " + name + " could not be loaded due to an error. Is it even a module?");
+			System.err.println("  AbstractModule " + name + " could not be loaded due to an error. Is it even a module?");
 			e.printStackTrace();
-			return -1;
 		}
-		finally
-		{
-			if(loader != null)
-				loader.close();
-		}
+
+		if(loader != null)
+			loader.close();
+
+		return -1;
 	}
 
 	/**
