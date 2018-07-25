@@ -1,7 +1,7 @@
 # bl4ckb0t-discord
-A stripped down version of http://github.com/bl4ckscor3/bl4ckb0t for Discord
+A Discord version of http://github.com/bl4ckscor3/bl4ckb0t (for IRC)
 
-Required libraries:
+Required libraries (or import as Maven project):
 
-- Discord4J by austinv11 (https://github.com/austinv11/Discord4J)
-- pushbullet-java-8 by Sheigutn (https://github.com/Sheigutn/pushbullet-java-8)
+- Discord4J by austinv11 (https://github.com/austinv11/Discord4J) and its dependencies
+- log4j + additions

@@ -9,12 +9,12 @@ import java.util.concurrent.TimeUnit;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
-import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
 public class Forge113Check extends AbstractModule
 {
+	public static final long BL4CKSCOR3 = 230001507481681920L;
 	private static final long EXPULSERS = 401899796564279296L;
 	private static final long GEFORCE = 225350861138821122L;
 	private ScheduledFuture sf;
@@ -42,7 +42,7 @@ public class Forge113Check extends AbstractModule
 
 						if(s.contains("1.13"))
 						{
-							Main.client().getChannelByID(EXPULSERS).sendMessage("<@" + IDs.BL4CKSCOR3 + ">, <@" + GEFORCE + ">: Minecraft Forge 1.13 is out! :D");
+							Main.client().getChannelByID(EXPULSERS).sendMessage("<@" + BL4CKSCOR3 + ">, <@" + GEFORCE + ">: Minecraft Forge 1.13 is out! :D");
 							sf.cancel(true);
 						}
 						else

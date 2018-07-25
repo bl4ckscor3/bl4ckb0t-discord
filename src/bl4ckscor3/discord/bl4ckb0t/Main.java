@@ -53,6 +53,15 @@ public class Main
 	{
 		try
 		{
+			if(event.getChannel().isPrivate() && IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getLongID()))
+			{
+				HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getLongID());
+
+				((IRequestDM)info.get("instance")).onDMReceived(event, info);
+				IRequestDM.AWAITED_DMS.remove(event.getAuthor().getLongID());
+				return;
+			}
+
 			for(AbstractModule m : ModuleManager.MODULES)
 			{
 				if(m.triggeredBy(event))
@@ -60,21 +69,11 @@ public class Main
 					if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getLongID() == IDs.BL4CKSCOR3 || event.getAuthor().getLongID() == IDs.AKINO_GERMANY)))
 					{
 						if((dev && m.allowedChannels() != null && event.getChannel().getLongID() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getLongID())))
-						{
-							m.exe(event, Utilities.toArgs(event.getMessage().getContent()));
-							return;
-						}
+							m.exe(event, Utilities.toArgs(event.getMessage().getContent())); //no return to allow for modulesto fire after other modules
 					}
 				}
 			}
 
-			if(event.getChannel().isPrivate() && IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getLongID()))
-			{
-				HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getLongID());
-
-				((IRequestDM)info.get("instance")).onDMReceived(event, info);
-				IRequestDM.AWAITED_DMS.remove(event.getAuthor().getLongID());
-			}
 		}
 		catch(Exception e)
 		{
@@ -122,7 +121,7 @@ public class Main
 	}
 
 	/**
-	 *  @return the client
+	 *  @return The client
 	 */
 	public static IDiscordClient client()
 	{

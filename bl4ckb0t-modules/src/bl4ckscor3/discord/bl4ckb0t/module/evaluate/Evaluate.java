@@ -7,7 +7,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
-import bl4ckscor3.discord.bl4ckb0t.util.Tokens;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 import sx.blah.discord.handle.obj.IChannel;
