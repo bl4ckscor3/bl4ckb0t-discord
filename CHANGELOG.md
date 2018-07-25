@@ -1,4 +1,5 @@
 v2.0.1: - Fix only one module firing when multiple modules could have fired
+		- Fix modules not reloadable
 
 v2.0:	- The bot now works based on modules. Each feature is a seperate .jar file which can get loaded at runtime
  		- Removed Upgrading

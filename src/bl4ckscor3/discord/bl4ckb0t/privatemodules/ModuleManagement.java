@@ -47,13 +47,6 @@ public class ModuleManagement extends AbstractModule
 								return;
 							}
 
-							if(!f.renameTo(new File(f.getAbsolutePath() + ".disabled")))
-							{
-								Utilities.sendMessage(channel, "There was a problem while disabling the module.");
-								System.out.println("Renaming the file did not work!");
-								return;
-							}
-
 							inner:
 								for(AbstractModule m : ModuleManager.MODULES)
 								{
@@ -61,9 +54,17 @@ public class ModuleManagement extends AbstractModule
 									{
 										ModuleManager.MODULES.remove(m);
 										m.onDisable();
+										m.closeLoader();
 										break inner;
 									}
 								}
+
+							if(!f.renameTo(new File(f.getAbsolutePath() + ".disabled")))
+							{
+								Utilities.sendMessage(channel, "There was a problem while disabling the module.");
+								System.out.println("Renaming the file did not work!");
+								return;
+							}
 
 							Utilities.sendMessage(channel, "Module has been successfully disabled.");
 							return;

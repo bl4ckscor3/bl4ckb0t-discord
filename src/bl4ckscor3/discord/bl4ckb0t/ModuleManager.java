@@ -84,6 +84,7 @@ public class ModuleManager
 
 			AbstractModule module = Class.forName(main, true, loader).asSubclass(AbstractModule.class).getDeclaredConstructor(String.class).newInstance(name);
 
+			module.setLoader(loader);
 			module.onEnable(builder);
 
 			if(MODULES.contains(module))

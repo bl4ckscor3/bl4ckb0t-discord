@@ -1,5 +1,8 @@
 package bl4ckscor3.discord.bl4ckb0t;
 
+import java.io.IOException;
+import java.net.URLClassLoader;
+
 import sx.blah.discord.api.ClientBuilder;
 import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
 
@@ -7,6 +10,7 @@ public abstract class AbstractModule
 {
 	/**The name of the module. For public modules it's the file name, private modules have their name predefined*/
 	private String name;
+	private URLClassLoader loader;
 
 	/**
 	 * Constructor
@@ -63,6 +67,26 @@ public abstract class AbstractModule
 	public final String getName()
 	{
 		return name;
+	}
+
+	public final void setLoader(URLClassLoader loader)
+	{
+		this.loader = loader;
+	}
+
+	public final void closeLoader()
+	{
+		if(loader != null)
+		{
+			try
+			{
+				loader.close();
+			}
+			catch(IOException e)
+			{
+				e.printStackTrace();
+			}
+		}
 	}
 }
 
