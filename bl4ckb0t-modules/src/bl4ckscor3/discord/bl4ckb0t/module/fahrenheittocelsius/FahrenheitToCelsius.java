@@ -18,7 +18,6 @@ public class FahrenheitToCelsius extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		System.out.println("hi");
 		String msg = event.getMessage().getContent().toLowerCase();
 		String result = "```json";
 		boolean even = false;
