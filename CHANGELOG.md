@@ -1,3 +1,6 @@
+v2.0.2: - Add "restart" as an alias to reloading a module
+		- Fix ConcurrentModificationException when loading modules
+
 v2.0.1: - Fix only one module firing when multiple modules could have fired
 		- Fix modules not being reloadable
 
