@@ -108,7 +108,7 @@ public class ModuleManagement extends AbstractModule
 
 					Utilities.sendMessage(channel, "This module is a private module or doesn't exist.");
 					break;
-				case "reload":
+				case "reload": case "restart":
 					exe(event, new String[]{"disable", args[1]});
 					exe(event, new String[]{"enable", args[1]});
 					break;
