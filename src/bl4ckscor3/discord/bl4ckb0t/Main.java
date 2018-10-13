@@ -3,6 +3,7 @@ package bl4ckscor3.discord.bl4ckb0t;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
@@ -62,7 +63,7 @@ public class Main
 				return;
 			}
 
-			for(AbstractModule m : ModuleManager.MODULES)
+			for(AbstractModule m : (ArrayList<AbstractModule>)ModuleManager.MODULES.clone())
 			{
 				if(m.triggeredBy(event))
 				{
