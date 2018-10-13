@@ -14,6 +14,7 @@ import sx.blah.discord.handle.obj.IChannel;
 public class Hangman extends AbstractModule implements IRequestDM
 {
 	public HashMap<IChannel,Word> words = new HashMap<IChannel,Word>();
+	public static final String ALREADY_GUESSING = "This channel already has a word being guessed at the moment.";
 
 	public Hangman(String name)
 	{
@@ -54,7 +55,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 					return;
 				}
 
-				Utilities.sendMessage(channel, "This channel already has a word being guessed at the moment.");
+				Utilities.sendMessage(channel, ALREADY_GUESSING);
 				return;
 			}
 
@@ -156,10 +157,16 @@ public class Hangman extends AbstractModule implements IRequestDM
 	public void onDMReceived(MessageReceivedEvent event, HashMap<String,Object> info)
 	{
 		IChannel channel = (IChannel)info.get("channel");
-		Word word = new Word(event.getMessage().getContent().toLowerCase());
 
-		words.put(channel, word);
-		Utilities.sendMessage(channel, "New hangman game started by " + event.getAuthor().mention() + ": " + word.toString());
+		if(words.containsKey(channel))
+		{
+			Word word = new Word(event.getMessage().getContent().toLowerCase());
+
+			words.put(channel, word);
+			Utilities.sendMessage(channel, "New hangman game started by " + event.getAuthor().mention() + ": " + word.toString());
+		}
+		else
+			Utilities.sendMessage(channel, ALREADY_GUESSING);
 	}
 
 	@Override
