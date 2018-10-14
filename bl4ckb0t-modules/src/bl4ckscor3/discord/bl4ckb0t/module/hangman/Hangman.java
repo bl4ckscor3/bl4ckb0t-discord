@@ -158,7 +158,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 	{
 		IChannel channel = (IChannel)info.get("channel");
 
-		if(words.containsKey(channel))
+		if(!words.containsKey(channel))
 		{
 			Word word = new Word(event.getMessage().getContent().toLowerCase());
 
