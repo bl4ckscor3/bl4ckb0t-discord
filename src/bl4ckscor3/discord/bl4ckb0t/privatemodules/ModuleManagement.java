@@ -119,6 +119,10 @@ public class ModuleManagement extends AbstractModule
 						URL link = new URL(args[1]);
 						ReadableByteChannel rbc = Channels.newChannel(link.openStream());
 						FileOutputStream stream = new FileOutputStream(Utilities.getJarLocation() + "/modules/" + name); //the substring call removes all parameters of the link
+						File disabled = new File(Utilities.getJarLocation() + "/modules/" + name + ".disabled");
+
+						if(disabled.exists()) //delete disabled file just in case
+							disabled.delete();
 
 						stream.getChannel().transferFrom(rbc, 0, Integer.MAX_VALUE); //maximum download of a 2gb file
 						stream.close();
