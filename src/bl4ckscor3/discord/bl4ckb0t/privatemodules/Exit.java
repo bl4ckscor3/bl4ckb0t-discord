@@ -27,7 +27,7 @@ public class Exit extends AbstractModule implements IReactable
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().equals("-exit");
+		return event.getMessage().getContent().toLowerCase().equals("-exit") || event.getMessage().getContent().toLowerCase().equals("-stop");
 	}
 
 	@Override

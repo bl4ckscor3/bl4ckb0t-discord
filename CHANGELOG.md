@@ -1,3 +1,4 @@
+v2.0.3: - Add "stop" as an alias to "exit"
 v2.0.2: - Add "restart" as an alias to reloading a module
 		- Fix ConcurrentModificationException when loading modules
 
