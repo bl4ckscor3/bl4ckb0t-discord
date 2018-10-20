@@ -84,15 +84,14 @@ public class ModuleManager
 
 			AbstractModule module = Class.forName(main, true, loader).asSubclass(AbstractModule.class).getDeclaredConstructor(String.class).newInstance(name);
 
-			module.setLoader(loader);
-			module.onEnable(builder);
-
 			if(MODULES.contains(module))
 			{
 				System.out.println("Tried to load already loaded module.");
 				return 0;
 			}
 
+			module.setLoader(loader);
+			module.onEnable(builder);
 			MODULES.add(module);
 			System.out.println("  Loaded module " + name);
 			return 1;
