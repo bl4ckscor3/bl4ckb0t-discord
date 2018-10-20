@@ -8,6 +8,7 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 
 import bl4ckscor3.discord.bl4ckb0t.privatemodules.Exit;
+import bl4ckscor3.discord.bl4ckb0t.privatemodules.Info;
 import bl4ckscor3.discord.bl4ckb0t.privatemodules.ModuleManagement;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import sx.blah.discord.api.ClientBuilder;
@@ -45,6 +46,7 @@ public class ModuleManager
 	{
 		AbstractModule[] privateModules = {
 				new Exit("Exit"),
+				new Info("Info"),
 				new ModuleManagement("ModuleManagement")
 		};
 

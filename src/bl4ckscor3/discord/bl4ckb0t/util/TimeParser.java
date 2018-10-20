@@ -1,4 +1,4 @@
-package bl4ckscor3.discord.bl4ckb0t.module.remind;
+package bl4ckscor3.discord.bl4ckb0t.util;
 
 public class TimeParser
 {

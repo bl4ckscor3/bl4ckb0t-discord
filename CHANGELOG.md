@@ -1,4 +1,5 @@
-v2.0.3: - Add "stop" as an alias to "exit"
+v2.1:   - Add Info module
+		- Add "stop" as an alias to "exit"
 		- Fix disabled module not getting deleted when loading a new version of the same module
 		- Possibly fix some modules not loading new version when already enabled
 
