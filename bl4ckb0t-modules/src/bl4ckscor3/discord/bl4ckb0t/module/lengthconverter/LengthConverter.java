@@ -49,6 +49,9 @@ public class LengthConverter extends AbstractModule
 			}
 			else if(s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)m"))
 			{
+				if(event.getGuild().getLongID() == 357166022169591809L) //disable in bl4ck's Testing Range
+					return;
+
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
 				result += System.lineSeparator() + number + "m ->" + " " + ONE_DECIMAL_PLACE.format(number * M_TO_FT_FACTOR).replace(",", ".") + "ft";
