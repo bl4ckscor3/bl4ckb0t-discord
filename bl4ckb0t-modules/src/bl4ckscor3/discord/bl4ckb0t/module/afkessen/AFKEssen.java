@@ -2,7 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.afkessen;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class AFKEssen extends AbstractModule
 {
@@ -22,7 +22,7 @@ public class AFKEssen extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().matches("afk[öÖäÄüÜßA-Za-z]*essen");
+		return event.getMessage().getContentRaw().matches("afk[öÖäÄüÜßA-Za-z]*essen");
 	}
 
 	@Override

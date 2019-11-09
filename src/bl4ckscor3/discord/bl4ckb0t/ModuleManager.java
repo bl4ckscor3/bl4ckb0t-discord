@@ -11,14 +11,14 @@ import bl4ckscor3.discord.bl4ckb0t.privatemodules.Exit;
 import bl4ckscor3.discord.bl4ckb0t.privatemodules.Info;
 import bl4ckscor3.discord.bl4ckb0t.privatemodules.ModuleManagement;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.api.ClientBuilder;
+import net.dv8tion.jda.api.JDABuilder;
 
 public class ModuleManager
 {
-	public static final ArrayList<AbstractModule> MODULES = new ArrayList<AbstractModule>();
-	private ClientBuilder builder;
+	public static final ArrayList<AbstractModule> MODULES = new ArrayList<>();
+	private JDABuilder builder;
 
-	public ModuleManager(ClientBuilder c)
+	public ModuleManager(JDABuilder c)
 	{
 		builder = c;
 	}

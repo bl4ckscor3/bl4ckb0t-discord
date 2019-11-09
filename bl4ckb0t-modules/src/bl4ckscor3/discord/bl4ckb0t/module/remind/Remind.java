@@ -7,9 +7,9 @@ import java.util.ArrayList;
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Remind extends AbstractModule
 {
@@ -21,7 +21,7 @@ public class Remind extends AbstractModule
 	}
 
 	@Override
-	public void onEnable(ClientBuilder builder)
+	public void onEnable(JDABuilder builder)
 	{
 		try
 		{
@@ -36,7 +36,7 @@ public class Remind extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		IChannel channel = event.getChannel();
+		MessageChannel channel = event.getChannel();
 
 		if(args.length == 0)
 			return;
@@ -50,7 +50,7 @@ public class Remind extends AbstractModule
 
 				for(Reminder r : reminders)
 				{
-					if(r.getIssuedUser() != event.getAuthor().getLongID())
+					if(r.getIssuedUser() != event.getAuthor().getIdLong())
 						continue;
 
 					reminder = true;
@@ -83,9 +83,9 @@ public class Remind extends AbstractModule
 					{
 						if(args.length >= 2 && args[1].equals("stop"))
 						{
-							if(event.getAuthor().getLongID() == r.getIssuedUser())
+							if(event.getAuthor().getIdLong() == r.getIssuedUser())
 							{
-								if(channel.getLongID() == r.getIssuedChannel().getLongID())
+								if(channel.getIdLong() == r.getIssuedChannel().getIdLong())
 								{
 									r.stop();
 									Utilities.sendMessage(channel, String.format("Reminder with ID %s successfully stopped.", r.getId()));
@@ -99,7 +99,7 @@ public class Remind extends AbstractModule
 							return;
 						}
 
-						if(event.getAuthor().getLongID() == r.getIssuedUser())
+						if(event.getAuthor().getIdLong() == r.getIssuedUser())
 							Utilities.sendMessage(channel, String.format("Time left for \"%s\": %s", r.getEvent(), TimeParser.longToString(r.getRemainingTime(), "%sd %sh %sm %ss")));
 						else
 							Utilities.sendMessage(channel, "This is not your reminder.");
@@ -134,7 +134,7 @@ public class Remind extends AbstractModule
 					return;
 				}
 
-				Reminder reminder = new Reminder(event.getAuthor().getLongID(), channel, ev, timeDue, false);
+				Reminder reminder = new Reminder(event.getAuthor().getIdLong(), channel, ev, timeDue, false);
 
 				Utilities.sendMessage(channel, String.format("I'll remind you! (ID: %s)", reminder.getId()));
 				reminders.add(reminder);
@@ -145,6 +145,6 @@ public class Remind extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().startsWith("-remind");
+		return event.getMessage().getContentRaw().startsWith("-remind");
 	}
 }

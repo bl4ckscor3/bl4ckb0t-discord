@@ -7,9 +7,9 @@ import org.jsoup.nodes.Document;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.util.EmbedBuilder;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Weather extends AbstractModule
 {
@@ -22,7 +22,7 @@ public class Weather extends AbstractModule
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
 		String city = "";
-		IChannel channel = event.getChannel();
+		MessageChannel channel = event.getChannel();
 
 		for(String s : args)
 		{
@@ -39,13 +39,13 @@ public class Weather extends AbstractModule
 		{
 			Document doc = Jsoup.connect("http://api.openweathermap.org/data/2.5/weather?q=" + city.trim() + "&mode=xml&APPID=" + Tokens.OPEN_WEATHER_MAP).ignoreContentType(true).get();
 
-			Utilities.sendMessage(channel, new EmbedBuilder().withTitle("__" + doc.select("city").attr("name") + ", " + doc.select("country").text() + "__")
-					.appendField(":sunny: Temperature", getTemperature(doc), false)
-					.appendField(":droplet: Humidity", doc.select("humidity").attr("value") + doc.select("humidity").attr("unit"), false)
-					.appendField(":compression: Pressure", doc.select("pressure").attr("value") + doc.select("pressure").attr("unit"), false)
-					.appendField(":dash: Wind", getWindSpeed(doc), false)
-					.appendField(":timer: Last updated", doc.select("lastupdate").attr("value").replace("T", " "), false)
-					.withFooterText("Powered by OpenWeatherMap").build());
+			Utilities.sendMessage(channel, new EmbedBuilder().setTitle("__" + doc.select("city").attr("name") + ", " + doc.select("country").text() + "__")
+					.addField(":sunny: Temperature", getTemperature(doc), false)
+					.addField(":droplet: Humidity", doc.select("humidity").attr("value") + doc.select("humidity").attr("unit"), false)
+					.addField(":compression: Pressure", doc.select("pressure").attr("value") + doc.select("pressure").attr("unit"), false)
+					.addField(":dash: Wind", getWindSpeed(doc), false)
+					.addField(":timer: Last updated", doc.select("lastupdate").attr("value").replace("T", " "), false)
+					.setFooter("Powered by OpenWeatherMap").build());
 		}
 		catch(Exception e)
 		{
@@ -82,7 +82,7 @@ public class Weather extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		String message = event.getMessage().getContent();
+		String message = event.getMessage().getContentRaw();
 
 		return (message.startsWith("-weather") || message.startsWith("-w")) && Utilities.toArgs(message).length > 0;
 	}

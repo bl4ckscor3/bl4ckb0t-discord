@@ -1,33 +1,32 @@
 package bl4ckscor3.discord.bl4ckb0t;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
 import bl4ckscor3.discord.bl4ckb0t.util.Tokens;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.api.IDiscordClient;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.ReadyEvent;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
-import sx.blah.discord.handle.impl.events.shard.ResumedEvent;
-import sx.blah.discord.handle.impl.events.user.PresenceUpdateEvent;
-import sx.blah.discord.handle.obj.ActivityType;
-import sx.blah.discord.handle.obj.StatusType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.ChannelType;
+import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.ResumedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
-public class Main
+public class Main extends ListenerAdapter
 {
 	private static boolean dev;
-	private static IDiscordClient client;
+	private static JDA client;
 	public static ModuleManager manager;
-	public static final String VERSION = "v2.1";
+	public static final String VERSION = "v3.0";
+	public static final Main INSTANCE = new Main();
 
 	public static void main(String[] args)
 	{
@@ -35,14 +34,13 @@ public class Main
 
 		try
 		{
-			ClientBuilder builder = new ClientBuilder().withToken(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD);
+			JDABuilder builder = new JDABuilder(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD);
 
 			manager = new ModuleManager(builder);
 			manager.initPrivate();
 			manager.initPublic();
+			builder.addEventListeners(INSTANCE);
 			client = builder.build();
-			client.getDispatcher().registerListener(new Main());
-			client.login();
 		}
 		catch(Throwable t)
 		{
@@ -50,28 +48,33 @@ public class Main
 		}
 	}
 
-	@EventSubscriber
-	public void onMessageReceived(MessageReceivedEvent event) throws MalformedURLException, IOException, URISyntaxException
+	@Override
+	public void onPrivateMessageReceived(PrivateMessageReceivedEvent event)
+	{
+		if(IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getIdLong()))
+		{
+			IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong()).onDMReceived(event);
+			IRequestDM.AWAITED_DMS.remove(event.getAuthor().getIdLong());
+			return;
+		}
+	}
+
+	@Override
+	public void onMessageReceived(MessageReceivedEvent event)
 	{
 		try
 		{
-			if(event.getChannel().isPrivate() && IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getLongID()))
-			{
-				HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getLongID());
-
-				((IRequestDM)info.get("instance")).onDMReceived(event, info);
-				IRequestDM.AWAITED_DMS.remove(event.getAuthor().getLongID());
+			if(event.getChannel().getType() == ChannelType.PRIVATE)
 				return;
-			}
 
-			for(AbstractModule m : (ArrayList<AbstractModule>)ModuleManager.MODULES.clone())
+			for(AbstractModule m : (ArrayList<AbstractModule>)ModuleManager.MODULES.clone()) //.clone to counteract ConcurrentModificationException
 			{
 				if(m.triggeredBy(event))
 				{
-					if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getLongID() == IDs.BL4CKSCOR3 || event.getAuthor().getLongID() == IDs.AKINO_GERMANY)))
+					if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY)))
 					{
-						if((dev && m.allowedChannels() != null && event.getChannel().getLongID() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getLongID())))
-							m.exe(event, Utilities.toArgs(event.getMessage().getContent())); //no return to allow for modulesto fire after other modules
+						if((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
+							m.exe(event, Utilities.toArgs(event.getMessage().getContentRaw())); //no return to allow for modulesto fire after other modules
 					}
 				}
 			}
@@ -82,15 +85,15 @@ public class Main
 		}
 	}
 
-	@EventSubscriber
-	public void onReactionAdd(ReactionAddEvent event)
+	@Override
+	public void onMessageReactionAdd(MessageReactionAddEvent event)
 	{
 		try
 		{
-			if(IReactable.AWAITED_REACTIONS.containsKey(event.getMessage().getLongID()) && event.getUser().getLongID() == IReactable.AWAITED_REACTIONS.get(event.getMessage().getLongID()).getUserID())
+			if(IReactable.AWAITED_REACTIONS.containsKey(event.getMessageIdLong()) && event.getUser().getIdLong() == IReactable.AWAITED_REACTIONS.get(event.getMessageIdLong()).getUserID())
 			{
-				IReactable.AWAITED_REACTIONS.get(event.getMessage().getLongID()).getReactable().onReactionAdd(event);
-				IReactable.AWAITED_REACTIONS.remove(event.getMessage().getLongID());
+				IReactable.AWAITED_REACTIONS.get(event.getMessageIdLong()).getReactable().onReactionAdd(event);
+				IReactable.AWAITED_REACTIONS.remove(event.getMessageIdLong());
 			}
 		}
 		catch(Exception e)
@@ -99,32 +102,36 @@ public class Main
 		}
 	}
 
-	@EventSubscriber
+
+
+	@Override
 	public void onReady(ReadyEvent event)
 	{
-		event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
+		updatePresence();
 	}
 
-	@EventSubscriber
-	public void onPresenceUpdate(PresenceUpdateEvent event)
+	@Override
+	public void onGenericUserPresence(GenericUserPresenceEvent event)
 	{
-		if(event.getUser().getLongID() == client.getOurUser().getLongID())
-		{
-			if(!event.getOldPresence().getText().equals(event.getNewPresence().getText()))
-				event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
-		}
+		if(event.getMember().getIdLong() == client.getSelfUser().getIdLong())
+			updatePresence();
 	}
 
-	@EventSubscriber
-	public void onResumed(ResumedEvent event)
+	@Override
+	public void onResume(ResumedEvent event)
 	{
-		event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
+		updatePresence();
+	}
+
+	public void updatePresence()
+	{
+		client.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("with bl4ckscor3"));
 	}
 
 	/**
 	 *  @return The client
 	 */
-	public static IDiscordClient client()
+	public static JDA client()
 	{
 		return client;
 	}

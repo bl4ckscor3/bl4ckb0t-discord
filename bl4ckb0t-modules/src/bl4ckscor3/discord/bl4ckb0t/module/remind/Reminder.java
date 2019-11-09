@@ -15,14 +15,14 @@ import org.apache.commons.io.FileUtils;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
 
 public class Reminder
 {
 	public static int latestId = 1;
 	private int id;
 	private long issuedUser;
-	private IChannel issuedChannel;
+	private MessageChannel issuedChannel;
 	private String ev;
 	private ScheduledFuture<?> thread;
 	private File f;
@@ -35,7 +35,7 @@ public class Reminder
 	 * @param timeDue How long to wait between issuing the Reminder and reminding the person
 	 * @param load Whether or not the reminder gets loaded from a saved reminder
 	 */
-	public Reminder(long user, IChannel channel, String e, long timeDue, boolean load) throws URISyntaxException, IOException
+	public Reminder(long user, MessageChannel channel, String e, long timeDue, boolean load) throws URISyntaxException, IOException
 	{
 		id = latestId++;
 
@@ -72,7 +72,7 @@ public class Reminder
 		if(!load)
 		{
 			lines.add("issuedUser: " + issuedUser);
-			lines.add("issuedChannel: " + issuedChannel.getLongID());
+			lines.add("issuedChannel: " + issuedChannel.getIdLong());
 			lines.add("event: " + ev);
 			lines.add("timeDue: " + (System.currentTimeMillis() + timeDue));
 			FileUtils.writeLines(f, lines);
@@ -100,7 +100,7 @@ public class Reminder
 	/**
 	 * @return The channel this Reminder got issued from
 	 */
-	public IChannel getIssuedChannel()
+	public MessageChannel getIssuedChannel()
 	{
 		return issuedChannel;
 	}
@@ -145,7 +145,7 @@ public class Reminder
 		{
 			List<String> lines = FileUtils.readLines(f, Charset.defaultCharset());
 			long user = Long.parseLong(lines.get(0).split(": ")[1]);
-			IChannel channel = Main.client().getChannelByID(Long.parseLong(lines.get(1).split(": ")[1]));
+			MessageChannel channel = Main.client().getTextChannelById(Long.parseLong(lines.get(1).split(": ")[1]));
 			String e = lines.get(2).split(": ")[1];
 			long timeDue = Long.parseLong(lines.get(3).split(": ")[1]) - System.currentTimeMillis();
 			Reminder r = new Reminder(user, channel, e, timeDue, true);

@@ -2,14 +2,14 @@ package bl4ckscor3.discord.bl4ckb0t.util;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.util.function.Consumer;
 
 import bl4ckscor3.discord.bl4ckb0t.Main;
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.obj.ReactionEmoji;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.util.RateLimitException;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.requests.RestAction;
 
 public class Utilities
 {
@@ -39,19 +39,11 @@ public class Utilities
 	 * @param msg The message to react to
 	 * @param emojis The emojis to react with
 	 */
-	public static void react(IMessage msg, String... emojis)
+	public static void react(Message msg, String... emojis)
 	{
-		try
+		for(String s : emojis)
 		{
-			for(String s : emojis)
-			{
-				msg.addReaction(ReactionEmoji.of(s));
-				Thread.sleep(250);
-			}
-		}
-		catch(InterruptedException e)
-		{
-			e.printStackTrace();
+			msg.addReaction(s).queue();
 		}
 	}
 
@@ -94,46 +86,30 @@ public class Utilities
 	 * Sends a message to the channel of the event
 	 * @param event The event holding the channel
 	 * @param message The message to be sent
-	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent message
 	 */
-	public static IMessage sendMessage(MessageReceivedEvent event, String message)
+	public static void sendMessage(MessageReceivedEvent event, String message)
 	{
-		return sendMessage(event.getChannel(), message);
+		sendMessage(event.getChannel(), message);
 	}
 
 	/**
 	 * Sends a message to the channel
-	 * @param channel The {@link sx.blah.discord.handle.obj.IChannel} to send the message to
+	 * @param channel The {@link MessageChannel} to send the message to
 	 * @param message The message to be sent
-	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent message
 	 */
-	public static IMessage sendMessage(IChannel channel, String message)
+	public static void sendMessage(MessageChannel channel, String message)
 	{
-		try
-		{
-			return channel.sendMessage(message);
-		}
-		catch(RateLimitException e)
-		{
-			try
-			{
-				Thread.sleep(RATE_LIMIT_DELAY);
-			}
-			catch(InterruptedException e1){}
-
-			return channel.sendMessage(message);
-		}
+		channel.sendMessage(message).queue();
 	}
 
 	/**
 	 * Sends an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to the channel of the event
 	 * @param event The event holding the channel
-	 * @param eo The {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to be sent
-	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent {@link sx.blah.discord.api.internal.json.objects.EmbedObject}
+	 * @param embed The {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to be sent
 	 */
-	public static IMessage sendMessage(MessageReceivedEvent event, EmbedObject eo)
+	public static void sendMessage(MessageReceivedEvent event, MessageEmbed embed)
 	{
-		return sendMessage(event.getChannel(), eo);
+		sendMessage(event.getChannel(), embed);
 	}
 
 	/**
@@ -142,22 +118,26 @@ public class Utilities
 	 * @param eo The {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to be sent
 	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent {@link sx.blah.discord.api.internal.json.objects.EmbedObject}
 	 */
-	public static IMessage sendMessage(IChannel channel, EmbedObject eo)
+	public static void sendMessage(MessageChannel channel, MessageEmbed embed)
 	{
-		try
-		{
-			return channel.sendMessage(eo);
-		}
-		catch(RateLimitException e)
-		{
-			try
-			{
-				Thread.sleep(RATE_LIMIT_DELAY);
-			}
-			catch(InterruptedException e1){}
+		channel.sendMessage(embed).queue();
+	}
 
-			return channel.sendMessage(eo);
-		}
+	/**
+	 * Sends an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to the channel
+	 * @param channel The {@link sx.blah.discord.handle.obj.IChannel} to send the message to
+	 * @param eo The {@link sx.blah.discord.api.internal.json.objects.EmbedObject} to be sent
+	 * @param success See {@link RestAction#queue(Consumer)}
+	 * @return An {@link sx.blah.discord.handle.obj.IMessage} representation of the sent {@link sx.blah.discord.api.internal.json.objects.EmbedObject}
+	 */
+	public static void sendMessage(MessageChannel channel, MessageEmbed embed, Consumer<? super Message> success)
+	{
+		channel.sendMessage(embed).queue(success);
+	}
+
+	public static void deleteMessage(MessageChannel channel, long messageID)
+	{
+		channel.deleteMessageById(messageID).queue();
 	}
 
 	/**

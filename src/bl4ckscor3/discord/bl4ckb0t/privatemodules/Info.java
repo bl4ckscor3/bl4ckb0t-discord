@@ -10,8 +10,8 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.util.EmbedBuilder;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Info extends AbstractModule
 {
@@ -23,18 +23,19 @@ public class Info extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		Utilities.sendMessage(event, new EmbedBuilder().withColor(new Color(new Random().nextInt(0xFFFFFF)))
-				.appendField("Version", Main.VERSION, true)
-				.appendField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true)
-				.appendField("Build Date", "" + new Date(getBuildDate()), true)
-				.appendField("Java Version", System.getProperty("java.version"), true)
-				.appendField("Author", "bl4ckscor3", true).build());
+		Utilities.sendMessage(event, new EmbedBuilder().setColor(new Color(new Random().nextInt(0xFFFFFF)))
+				.addField("Version", Main.VERSION, true)
+				.addField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true)
+				.addField("Build Date", "" + new Date(getBuildDate()), true)
+				.addField("Java Version", System.getProperty("java.version"), true)
+				.addField("Built with JDA", "https://github.com/DV8FromTheWorld/JDA", true)
+				.addField("Author", "bl4ckscor3", true).build());
 	}
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().equals("-info");
+		return event.getMessage().getContentRaw().toLowerCase().equals("-info");
 	}
 
 	/**

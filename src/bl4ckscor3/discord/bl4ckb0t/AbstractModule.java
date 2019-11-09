@@ -3,8 +3,8 @@ package bl4ckscor3.discord.bl4ckb0t;
 import java.io.IOException;
 import java.net.URLClassLoader;
 
-import sx.blah.discord.api.ClientBuilder;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public abstract class AbstractModule
 {
@@ -24,7 +24,7 @@ public abstract class AbstractModule
 	/**
 	 * Initializes this module. This method is called before the bot connects to Discord
 	 */
-	public void onEnable(ClientBuilder builder){}
+	public void onEnable(JDABuilder builder){}
 
 	/**
 	 * Gets called when the module gets disabled. Should be used to remove any Listeners

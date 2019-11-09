@@ -6,24 +6,24 @@ import java.util.concurrent.TimeUnit;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.api.events.EventSubscriber;
-import sx.blah.discord.handle.impl.events.guild.channel.message.reaction.ReactionAddEvent;
-import sx.blah.discord.handle.obj.IChannel;
-import sx.blah.discord.handle.obj.IMessage;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.RateLimitException;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
 public class Round implements IReactable
 {
+	private static final String DIE = "🎲";
+	private static final String NO_ENTRY = "⛔";
 	public boolean hasStarted = false;
 	public boolean isStarting = false;
 	public Shoe shoe;
 	public Players players;
-	public IMessage roundMessage;
-	public IChannel channel;
+	public Message roundMessage;
+	public MessageChannel channel;
 	public ScheduledFuture<?> removal;
 
-	public Round(IChannel c)
+	public Round(MessageChannel c)
 	{
 		if(shoe == null)
 			shoe = new Shoe();
@@ -93,16 +93,16 @@ public class Round implements IReactable
 			updateMessage();
 	}
 
-	@EventSubscriber
-	public void onReactionAdd(ReactionAddEvent event)
+	@Override
+	public void onReactionAdd(MessageReactionAddEvent event)
 	{
 		removal.cancel(false);
 
 		Player p = players.getCurrentPlayer();
 
-		switch(event.getReaction().getEmoji().toString())
+		switch(event.getReaction().getReactionEmote().getName())
 		{
-			case "🎲":
+			case DIE:
 				p.addCard(shoe.pull());
 
 				if(p.getCards().value() > 21)
@@ -118,7 +118,7 @@ public class Round implements IReactable
 
 				updateMessage();
 				break;
-			case "⛔":
+			case NO_ENTRY:
 				if(p.getCards().value() < players.getDealer().getCards().value())
 					p.setStatus(Status.BUST);
 				else
@@ -152,45 +152,31 @@ public class Round implements IReactable
 		try
 		{
 			if(roundMessage != null)
-				roundMessage.delete();
+				roundMessage.delete().queue();
 
-			roundMessage = Utilities.sendMessage(channel, players.build());
-			Thread.sleep(250);
-			Utilities.react(roundMessage, "🎲", "⛔");
-			waitForReaction(roundMessage.getLongID(), players.getCurrentPlayer().getUser().getLongID());
-			removal = Executors.newScheduledThreadPool(1).schedule(() -> {
-				AWAITED_REACTIONS.remove(roundMessage.getLongID());
-				Utilities.sendMessage(channel, "No decision in time. Removing **" + players.getCurrentPlayer().getUser().getName() + "** from the table.");
-				leave(players.getCurrentPlayer().getUser());
+			Utilities.sendMessage(channel, players.build(), msg -> {
+				roundMessage = msg;
+				Utilities.react(roundMessage, DIE, NO_ENTRY);
+				waitForReaction(roundMessage.getIdLong(), players.getCurrentPlayer().getUser().getIdLong());
+				removal = Executors.newScheduledThreadPool(1).schedule(() -> {
+					AWAITED_REACTIONS.remove(roundMessage.getIdLong());
+					Utilities.sendMessage(channel, "No decision in time. Removing **" + players.getCurrentPlayer().getUser().getName() + "** from the table.");
+					leave(players.getCurrentPlayer().getUser());
 
-				if(!players.isEmpty())
-					updateMessage();
-				else
-				{
-					Utilities.sendMessage(channel, "All players have left, the table is empty.");
-					reset(false);
-				}
-			}, 120, TimeUnit.SECONDS);
+					if(!players.isEmpty())
+						updateMessage();
+					else
+					{
+						Utilities.sendMessage(channel, "All players have left, the table is empty.");
+						reset(false);
+					}
+				}, 120, TimeUnit.SECONDS);
+			});
 		}
 		catch(Exception e)
 		{
 			e.printStackTrace();
-
-			try
-			{
-				Utilities.sendMessage(channel, "An error occured, see log for details. Round will be reset.");
-			}
-			catch(RateLimitException e2)
-			{
-				try
-				{
-					Thread.sleep(1000);
-				}
-				catch(InterruptedException e3) {}
-
-				Utilities.sendMessage(channel, "An error occured, see log for details. Round will be reset.");
-			}
-
+			Utilities.sendMessage(channel, "An error occured, see log for details. Round will be reset.");
 			reset(true);
 			return;
 		}
@@ -202,11 +188,11 @@ public class Round implements IReactable
 	 * @param status The initial {@link Status} the player should have.
 	 * @return true if the player has joined, false otherwise
 	 */
-	public boolean join(IUser user, Status status)
+	public boolean join(User user, Status status)
 	{
 		if(!players.contains(user))
 		{
-			String msg = user.mention() + " joined the table!";
+			String msg = user.getAsMention() + " joined the table!";
 
 			players.add(new Player(user, status));
 
@@ -227,11 +213,11 @@ public class Round implements IReactable
 	 * Removes a player from this round
 	 * @param user The player to remove
 	 */
-	public void leave(IUser user)
+	public void leave(User user)
 	{
 		if(players.contains(user))
 		{
-			String msg = user.mention() + " left the table.";
+			String msg = user.getAsMention() + " left the table.";
 
 			players.remove(user);
 

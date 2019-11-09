@@ -1,9 +1,8 @@
 package bl4ckscor3.discord.bl4ckb0t.module.playtext;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.ActivityType;
-import sx.blah.discord.handle.obj.StatusType;
+import bl4ckscor3.discord.bl4ckb0t.Main;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Playtext extends AbstractModule
 {
@@ -15,12 +14,12 @@ public class Playtext extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		event.getClient().changePresence(StatusType.ONLINE, ActivityType.PLAYING, "with bl4ckscor3");
+		Main.INSTANCE.updatePresence();
 	}
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().equals("-playtext");
+		return event.getMessage().getContentRaw().startsWith("-playtext");
 	}
 }

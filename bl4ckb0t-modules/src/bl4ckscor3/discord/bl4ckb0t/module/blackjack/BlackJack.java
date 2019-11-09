@@ -3,14 +3,14 @@ package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 import java.util.HashMap;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class BlackJack extends AbstractModule
 {
-	public static final long BL4CKSCOR3 = 230001507481681920L;
-	public HashMap<IChannel,Round> rounds = new HashMap<IChannel,Round>();
+	public HashMap<MessageChannel,Round> rounds = new HashMap<>();
 
 	public BlackJack(String name)
 	{
@@ -32,7 +32,7 @@ public class BlackJack extends AbstractModule
 			if(round.players.isEmpty())
 				rounds.remove(event.getChannel());
 		}
-		else if(args.length != 0 && args[0].toLowerCase().equals("reset") && event.getAuthor().getLongID() == BL4CKSCOR3)
+		else if(args.length != 0 && args[0].toLowerCase().equals("reset") && event.getAuthor().getIdLong() == IDs.BL4CKSCOR3)
 			round.reset(true);
 		else
 		{
@@ -47,10 +47,10 @@ public class BlackJack extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		if(event.getMessage().getContent().toLowerCase().startsWith("-blowjob"))
-			Utilities.sendMessage(event.getChannel(), "No, " + event.getAuthor().mention());
+		if(event.getMessage().getContentRaw().toLowerCase().startsWith("-blowjob"))
+			Utilities.sendMessage(event.getChannel(), "No, " + event.getAuthor().getAsMention());
 
-		return event.getMessage().getContent().toLowerCase().startsWith("-bj") ||
-				event.getMessage().getContent().toLowerCase().startsWith("-blackjack");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-bj") ||
+				event.getMessage().getContentRaw().toLowerCase().startsWith("-blackjack");
 	}
 }

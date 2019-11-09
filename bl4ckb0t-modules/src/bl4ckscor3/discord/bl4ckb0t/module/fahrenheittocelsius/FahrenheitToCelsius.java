@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class FahrenheitToCelsius extends AbstractModule
 {
@@ -18,7 +18,7 @@ public class FahrenheitToCelsius extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		String msg = event.getMessage().getContent().toLowerCase();
+		String msg = event.getMessage().getContentRaw().toLowerCase();
 		String result = "```json";
 		boolean even = false;
 
@@ -46,7 +46,7 @@ public class FahrenheitToCelsius extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		for(String s : event.getMessage().getContent().toLowerCase().split(" "))
+		for(String s : event.getMessage().getContentRaw().toLowerCase().split(" "))
 		{
 			if(s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)°?(c|f)"))
 				return true;

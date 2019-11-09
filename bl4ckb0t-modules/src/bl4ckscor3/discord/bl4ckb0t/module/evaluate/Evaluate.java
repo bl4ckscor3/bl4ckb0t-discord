@@ -8,8 +8,8 @@ import java.net.URL;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Evaluate extends AbstractModule
 {
@@ -34,10 +34,10 @@ public class Evaluate extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().startsWith("-calc") ||
-				event.getMessage().getContent().toLowerCase().startsWith("-eval") ||
-				event.getMessage().getContent().toLowerCase().startsWith("-evaluate") ||
-				event.getMessage().getContent().toLowerCase().startsWith("-calculate");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-calc") ||
+				event.getMessage().getContentRaw().toLowerCase().startsWith("-eval") ||
+				event.getMessage().getContentRaw().toLowerCase().startsWith("-evaluate") ||
+				event.getMessage().getContentRaw().toLowerCase().startsWith("-calculate");
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class Evaluate extends AbstractModule
 	{
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://api.wolframalpha.com/v2/query?appid=" + Tokens.WOLFRAM_ALPHA +"&input=" + input.trim().replace("+", "%2B").replace(' ', '+').replace(',', '.')).openStream()));
 		String line = "";
-		IChannel channel = event.getChannel();
+		MessageChannel channel = event.getChannel();
 
 		try
 		{

@@ -2,7 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.osuacc;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class OsuAcc extends AbstractModule
 {
@@ -34,7 +34,7 @@ public class OsuAcc extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().startsWith("-osuacc") ||
-				event.getMessage().getContent().toLowerCase().startsWith("-oa");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-osuacc") ||
+				event.getMessage().getContentRaw().toLowerCase().startsWith("-oa");
 	}
 }

@@ -13,8 +13,8 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.ModuleManager;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class ModuleManagement extends AbstractModule
 {
@@ -26,7 +26,7 @@ public class ModuleManagement extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		IChannel channel = event.getChannel();
+		MessageChannel channel = event.getChannel();
 
 		if(args.length == 2)
 		{
@@ -154,6 +154,6 @@ public class ModuleManagement extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().startsWith("-module");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-module");
 	}
 }

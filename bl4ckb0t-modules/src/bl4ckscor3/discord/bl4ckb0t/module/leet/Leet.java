@@ -2,7 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.leet;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Leet extends AbstractModule
 {
@@ -16,7 +16,7 @@ public class Leet extends AbstractModule
 	{
 		if(args.length >= 1)
 		{
-			char[] chars = event.getMessage().getContent().substring(6).toCharArray();
+			char[] chars = event.getMessage().getContentRaw().substring(6).toCharArray();
 			String result = "";
 
 			for(int i = 0; i < chars.length; i++)
@@ -42,6 +42,6 @@ public class Leet extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().toLowerCase().startsWith("-leet");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-leet");
 	}
 }

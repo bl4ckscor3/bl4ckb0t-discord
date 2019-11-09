@@ -1,9 +1,10 @@
 package bl4ckscor3.discord.bl4ckb0t.module.welcomereaction;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.impl.obj.ReactionEmoji;
-import sx.blah.discord.handle.obj.IMessage.Type;
+import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.internal.entities.EmoteImpl;
+import net.dv8tion.jda.internal.entities.GuildImpl;
 
 public class WelcomeReaction extends AbstractModule
 {
@@ -15,12 +16,12 @@ public class WelcomeReaction extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		event.getMessage().addReaction(ReactionEmoji.of("peekaboo", 592090198431498240L));
+		event.getChannel().addReactionById(event.getMessageIdLong(), new EmoteImpl(592090198431498240L, (GuildImpl)event.getGuild())).queue();
 	}
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getType() == Type.GUILD_MEMBER_JOIN;
+		return event.getMessage().getType() == MessageType.GUILD_MEMBER_JOIN;
 	}
 }

@@ -2,9 +2,9 @@ package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
 import java.util.ArrayList;
 
-import sx.blah.discord.api.internal.json.objects.EmbedObject;
-import sx.blah.discord.handle.obj.IUser;
-import sx.blah.discord.util.EmbedBuilder;
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.User;
 
 public class Players extends ArrayList<Player>
 {
@@ -79,7 +79,7 @@ public class Players extends ArrayList<Player>
 	 * Prepares an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} which displays the state of the current round without a title
 	 * @see {@link Players#build}
 	 */
-	public EmbedObject build()
+	public MessageEmbed build()
 	{
 		return build(false);
 	}
@@ -90,17 +90,17 @@ public class Players extends ArrayList<Player>
 	 * @param ended Wether the round end title should be shown or not
 	 * @return An EmbedObject which contains all card information for the dealer and players including the information on who needs to react
 	 */
-	public EmbedObject build(boolean ended)
+	public MessageEmbed build(boolean ended)
 	{
-		EmbedBuilder builder = new EmbedBuilder().withColor(0x000001);
-		IUser user = getCurrentPlayer().getUser();
+		EmbedBuilder builder = new EmbedBuilder().setColor(0x000001);
+		User user = getCurrentPlayer().getUser();
 
 		if(ended)
-			builder.withTitle("Round has ended! End results:");
+			builder.setTitle("Round has ended! End results:");
 
 		int dealerValue = dealer.getCards().value();
 
-		builder.appendField("Dealer's cards (" + (dealer.getCards().amount() == 2 && !ended ? dealer.getCards().get(0).getRank().getValue() : (dealerValue == 21 ? "Black Jack!" : dealerValue)) + ") " + dealer.getStatus().toString(), dealer.toString(ended), false);
+		builder.addField("Dealer's cards (" + (dealer.getCards().amount() == 2 && !ended ? dealer.getCards().get(0).getRank().getValue() : (dealerValue == 21 ? "Black Jack!" : dealerValue)) + ") " + dealer.getStatus().toString(), dealer.toString(ended), false);
 
 		for(Player p : this)
 		{
@@ -112,14 +112,14 @@ public class Players extends ArrayList<Player>
 				if(p.getCards().amount() == 2 && count == 21)
 					val = "Black Jack!";
 
-				builder.appendField(p.getUser().getName() + (p.getUser().getName().endsWith("s") || p.getUser().getName().endsWith("z") ? "'" : "'s") + " cards (" + val + ") " + p.getStatus().toString(), p.toString(), false);
+				builder.addField(p.getUser().getName() + (p.getUser().getName().endsWith("s") || p.getUser().getName().endsWith("z") ? "'" : "'s") + " cards (" + val + ") " + p.getStatus().toString(), p.toString(), false);
 			}
 		}
 
 		if(ended)
-			builder.withFooterText("Game is done!");
+			builder.setFooter("Game is done!");
 		else
-			builder.withFooterText("It's " + user.getName() + (user.getName().toLowerCase().endsWith("s") || user.getName().toLowerCase().endsWith("z") ? "'" : "'s") + " turn");
+			builder.setFooter("It's " + user.getName() + (user.getName().toLowerCase().endsWith("s") || user.getName().toLowerCase().endsWith("z") ? "'" : "'s") + " turn");
 
 		return builder.build();
 	}
@@ -129,7 +129,7 @@ public class Players extends ArrayList<Player>
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} to check
 	 * @return true if the {@link sx.blah.discord.handle.obj.IUser} is in this list, false otherwise
 	 */
-	public boolean contains(IUser u)
+	public boolean contains(User u)
 	{
 		for(Player p : this)
 		{
@@ -145,7 +145,7 @@ public class Players extends ArrayList<Player>
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} to check and remove
 	 * @return true if the {@link sx.blah.discord.handle.obj.IUser} is in this list and got removed, false otherwise
 	 */
-	public boolean remove(IUser u)
+	public boolean remove(User u)
 	{
 		for(Player p : this)
 		{

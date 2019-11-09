@@ -2,8 +2,8 @@ package bl4ckscor3.discord.bl4ckb0t.module.mpg;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * @author akino_germany, original code at https://github.com/bl4ckscor3/bl4ckb0t/blob/master/MPG/src/bl4ckscor3/module/mpg/ChannelCommand.java
@@ -18,7 +18,7 @@ public class MPG extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		IChannel channel = event.getChannel();
+		MessageChannel channel = event.getChannel();
 		String result = "";
 		float calc = 1.0f;
 		float calc2 = 2.0f;
@@ -44,6 +44,6 @@ public class MPG extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().startsWith("-mpg");
+		return event.getMessage().getContentRaw().startsWith("-mpg");
 	}
 }

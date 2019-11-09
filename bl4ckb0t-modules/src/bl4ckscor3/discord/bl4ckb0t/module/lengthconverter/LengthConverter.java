@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 /**
  * The code in here is an utter abomination
@@ -24,7 +24,7 @@ public class LengthConverter extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		String msg = event.getMessage().getContent().toLowerCase();
+		String msg = event.getMessage().getContentRaw().toLowerCase();
 		String result = "```json";
 
 		for(String s : msg.split(" "))
@@ -49,9 +49,6 @@ public class LengthConverter extends AbstractModule
 			}
 			else if(s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)m"))
 			{
-				if(event.getGuild().getLongID() == 357166022169591809L) //disable in bl4ck's Testing Range
-					return;
-
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
 				result += System.lineSeparator() + number + "m ->" + " " + ONE_DECIMAL_PLACE.format(number * M_TO_FT_FACTOR).replace(",", ".") + "ft";
@@ -76,14 +73,14 @@ public class LengthConverter extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		for(String s : event.getMessage().getContent().toLowerCase().split(" "))
+		for(String s : event.getMessage().getContentRaw().toLowerCase().split(" "))
 		{
 			if(s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(km|mi)") || s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(m|ft)") || s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(cm|in)"))
 				return true;
 		}
 
-		return event.getMessage().getContent().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(km|mi) +.*|-?[0-9]+(\\.[0-9]+)(km|mi) +.*|.* +-?[0-9]+(\\.[0-9]+)(km|mi)|-?[0-9]+(\\.[0-9]+)(km|mi))") ||
-				event.getMessage().getContent().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(m|ft) +.*|-?[0-9]+(\\.[0-9]+)(m|ft) +.*|.* +-?[0-9]+(\\.[0-9]+)(m|ft)|-?[0-9]+(\\.[0-9]+)(m|ft))") ||
-				event.getMessage().getContent().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(cm|in) +.*|-?[0-9]+(\\.[0-9]+)(cm|in) +.*|.* +-?[0-9]+(\\.[0-9]+)(m|ft)|-?[0-9]+(\\.[0-9]+)(cm|in))");
+		return event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(km|mi) +.*|-?[0-9]+(\\.[0-9]+)(km|mi) +.*|.* +-?[0-9]+(\\.[0-9]+)(km|mi)|-?[0-9]+(\\.[0-9]+)(km|mi))") ||
+				event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(m|ft) +.*|-?[0-9]+(\\.[0-9]+)(m|ft) +.*|.* +-?[0-9]+(\\.[0-9]+)(m|ft)|-?[0-9]+(\\.[0-9]+)(m|ft))") ||
+				event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(cm|in) +.*|-?[0-9]+(\\.[0-9]+)(cm|in) +.*|.* +-?[0-9]+(\\.[0-9]+)(m|ft)|-?[0-9]+(\\.[0-9]+)(cm|in))");
 	}
 }

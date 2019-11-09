@@ -1,10 +1,10 @@
 package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
-import sx.blah.discord.handle.obj.IUser;
+import net.dv8tion.jda.api.entities.User;
 
 public class Player
 {
-	protected IUser user = null;
+	protected User user = null;
 	protected final Cards cards = new Cards();
 	protected Status status;
 	protected boolean active;
@@ -22,7 +22,7 @@ public class Player
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} that is this player
 	 * @param s The initial {@link Status} to set
 	 */
-	public Player(IUser u, Status s)
+	public Player(User u, Status s)
 	{
 		user = u;
 		status = s;
@@ -32,7 +32,7 @@ public class Player
 	/**
 	 * @return The user that is this player
 	 */
-	public IUser getUser()
+	public User getUser()
 	{
 		return user;
 	}

@@ -4,7 +4,7 @@ import java.util.Random;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Select extends AbstractModule
 {
@@ -20,7 +20,7 @@ public class Select extends AbstractModule
 	{
 		if(args.length != 0)
 		{
-			String[] options = event.getMessage().getContent().substring(8).split(",");
+			String[] options = event.getMessage().getContentRaw().substring(8).split(",");
 
 			Utilities.sendMessage(event.getChannel(), options[new Random().nextInt(options.length)]);
 		}
@@ -29,6 +29,6 @@ public class Select extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().startsWith("-choose") || event.getMessage().getContent().startsWith("-select");
+		return event.getMessage().getContentRaw().startsWith("-choose") || event.getMessage().getContentRaw().startsWith("-select");
 	}
 }

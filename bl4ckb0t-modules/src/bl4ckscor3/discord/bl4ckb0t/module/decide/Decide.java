@@ -4,8 +4,8 @@ import java.util.Random;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import sx.blah.discord.handle.impl.events.guild.channel.message.MessageReceivedEvent;
-import sx.blah.discord.handle.obj.IChannel;
+import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Decide extends AbstractModule
 {
@@ -17,9 +17,9 @@ public class Decide extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		IChannel channel = event.getChannel();
+		MessageChannel channel = event.getChannel();
 
-		if(args.length >= 1 && event.getMessage().getContent().endsWith("?"))
+		if(args.length >= 1 && event.getMessage().getContentRaw().endsWith("?"))
 		{
 			int decision = new Random().nextInt(101);
 
@@ -37,6 +37,6 @@ public class Decide extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContent().startsWith("-decide");
+		return event.getMessage().getContentRaw().startsWith("-decide");
 	}
 }
