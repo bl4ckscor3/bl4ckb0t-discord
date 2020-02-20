@@ -58,8 +58,11 @@ public class Hangman extends AbstractModule implements IRequestDM
 				return;
 			}
 
-			waitForDM(event.getAuthor().getIdLong(), this);
-			Utilities.sendMessage(channel, "Ok! Send me a word via DM and I'll take care of everything else. Guesses can be given via `.LETTER`. E.g.: `.A` to guess the letter `A`");
+			HashMap<String,Object> info = new HashMap<>();
+
+			info.put("channel", channel);
+			waitForDM(event.getAuthor().getIdLong(), info);
+			Utilities.sendMessage(channel, "Ok! Send me a word via DM and I'll take care of everything else. Guesses can be given via `.LETTER`. E.g.: `.A` to guess the letter `A`. To guess a whole word, use `-hangman word`.");
 		}
 		else if(event.getMessage().getContentRaw().startsWith(".") && event.getMessage().getContentRaw().toCharArray().length == 2)
 		{
@@ -151,9 +154,9 @@ public class Hangman extends AbstractModule implements IRequestDM
 	}
 
 	@Override
-	public void onDMReceived(PrivateMessageReceivedEvent event)
+	public void onDMReceived(PrivateMessageReceivedEvent event, HashMap<String,Object> info)
 	{
-		MessageChannel channel = event.getChannel();
+		MessageChannel channel = (MessageChannel)info.get("channel");
 
 		if(!words.containsKey(channel))
 		{

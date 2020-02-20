@@ -1,6 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
@@ -53,9 +54,10 @@ public class Main extends ListenerAdapter
 	{
 		if(IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getIdLong()))
 		{
-			IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong()).onDMReceived(event);
+			HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong());
+
+			((IRequestDM)info.get("instance")).onDMReceived(event, info);
 			IRequestDM.AWAITED_DMS.remove(event.getAuthor().getIdLong());
-			return;
 		}
 	}
 

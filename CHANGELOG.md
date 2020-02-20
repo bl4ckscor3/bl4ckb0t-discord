@@ -1,4 +1,6 @@
-3.0:	- Major rewrite to switch from Discord4J to JDA
+v3.1:	- Re-add additional info hash map to IRequestDM
+
+v3.0:	- Major rewrite to switch from Discord4J to JDA
 
 v2.1:   - Add Info module
 		- Add "stop" as an alias to "exit"
