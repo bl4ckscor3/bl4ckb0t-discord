@@ -238,7 +238,7 @@ public class Round implements IReactable
 	public void endGame()
 	{
 		if(roundMessage != null)
-			roundMessage.delete();
+			roundMessage.delete().queue();
 
 		int dealerVal = players.getDealer().getCards().value();
 
