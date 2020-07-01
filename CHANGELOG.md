@@ -1,3 +1,5 @@
+v3.1.1	- Update log4j-core
+
 v3.1:	- Re-add additional info hash map to IRequestDM
 
 v3.0:	- Major rewrite to switch from Discord4J to JDA
