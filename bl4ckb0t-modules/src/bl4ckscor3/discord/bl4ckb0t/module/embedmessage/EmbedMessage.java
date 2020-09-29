@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class EmbedMessage extends AbstractModule
 {
-	private static final String DISCORD_LINK_REGEX = ".*(discordapp\\.com|discord\\.com)\\/channels\\/[0-9]{18}\\/[0-9]{18}\\/[0-9]{18}.*";
+	private static final String DISCORD_LINK_REGEX = "(\\r\\n|\\r|\\n|.)*(discordapp\\.com|discord\\.com)\\/channels\\/[0-9]{18}\\/[0-9]{18}\\/[0-9]{18}(\\r\\n|\\r|\\n|.)*";
 
 	public EmbedMessage(String name)
 	{
@@ -21,10 +21,14 @@ public class EmbedMessage extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
-		for(String arg : event.getMessage().getContentRaw().split(" "))
+		String msg = event.getMessage().getContentRaw().replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
+
+		for(String arg : msg.split(" "))
 		{
 			if(arg.matches(DISCORD_LINK_REGEX))
 			{
+				arg = arg.trim();
+
 				long messageId = Long.parseLong(arg.substring(arg.length() - 18, arg.length()));
 				long channelId = Long.parseLong(arg.substring(arg.length() - 37, arg.length() - 19));
 				long guildId = Long.parseLong(arg.substring(arg.length() - 56, arg.length() - 38));
