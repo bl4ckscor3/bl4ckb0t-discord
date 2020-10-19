@@ -1,3 +1,5 @@
+v3.1.2	- Add postConnect method to AbstractModule, which gets called after the bot has connected to Discord
+
 v3.1.1	- Update log4j-core
 
 v3.1:	- Re-add additional info hash map to IRequestDM

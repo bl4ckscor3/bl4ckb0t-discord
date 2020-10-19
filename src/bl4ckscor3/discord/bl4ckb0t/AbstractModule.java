@@ -27,6 +27,11 @@ public abstract class AbstractModule
 	public void onEnable(JDABuilder builder){}
 
 	/**
+	 * Can be used for actions that should happen after the bot connects to Discord
+	 */
+	public void postConnect(){}
+
+	/**
 	 * Gets called when the module gets disabled. Should be used to remove any Listeners
 	 */
 	public void onDisable(){}
