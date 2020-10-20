@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
+import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
@@ -20,7 +21,18 @@ public class Remind extends AbstractModule
 	}
 
 	@Override
+	public void onEnable(JDABuilder builder)
+	{
+		tryLoadReminders();
+	}
+
+	@Override
 	public void postConnect()
+	{
+		tryLoadReminders();
+	}
+
+	private void tryLoadReminders()
 	{
 		try
 		{
