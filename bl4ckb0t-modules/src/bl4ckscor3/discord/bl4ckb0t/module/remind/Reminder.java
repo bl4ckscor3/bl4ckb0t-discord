@@ -136,6 +136,9 @@ public class Reminder
 	 */
 	public static void loadReminders() throws URISyntaxException, NumberFormatException, IOException
 	{
+		if(Main.client() == null)
+			return;
+
 		File folder = new File(Utilities.getJarLocation() + "/reminders");
 
 		if(!folder.exists())
