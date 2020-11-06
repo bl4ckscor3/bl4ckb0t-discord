@@ -18,15 +18,15 @@ import net.dv8tion.jda.api.events.ResumedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.api.events.user.update.GenericUserPresenceEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Main extends ListenerAdapter
 {
 	private static boolean dev;
 	private static JDA client;
 	public static ModuleManager manager;
-	public static final String VERSION = "v3.1.2";
+	public static final String VERSION = "v3.2.1";
 	public static final Main INSTANCE = new Main();
 
 	public static void main(String[] args)
@@ -35,7 +35,7 @@ public class Main extends ListenerAdapter
 
 		try
 		{
-			JDABuilder builder = new JDABuilder(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD);
+			JDABuilder builder = JDABuilder.create(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.DIRECT_MESSAGES);
 
 			manager = new ModuleManager(builder);
 			manager.initPrivate();
@@ -113,13 +113,6 @@ public class Main extends ListenerAdapter
 		{
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public void onGenericUserPresence(GenericUserPresenceEvent event)
-	{
-		if(event.getMember().getIdLong() == client.getSelfUser().getIdLong())
-			updatePresence();
 	}
 
 	@Override

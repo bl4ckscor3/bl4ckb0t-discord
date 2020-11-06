@@ -1,4 +1,7 @@
-v3.1.2	- Add postConnect method to AbstractModule, which gets called after the bot has connected to Discord
+v3.2.1	- Fix bot not working due to Discord API changes
+		- Update JDA
+
+v3.2	- Add postConnect method to AbstractModule, which gets called after the bot has connected to Discord
 
 v3.1.1	- Update log4j-core
 

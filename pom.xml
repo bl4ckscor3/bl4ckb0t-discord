@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>bl4ckb0t-discord</groupId>
 	<artifactId>bl4ckb0t-discord</artifactId>
-	<version>3.1.2</version>
+	<version>3.2.1</version>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -18,9 +18,10 @@
 		</plugins>
 	</build>
 	<repositories>
-		<repository> <!-- This repo fixes issues with transitive dependencies -->
-			<id>jcenter</id>
-			<url>http://jcenter.bintray.com</url>
+		<repository>
+		    <id>jcenter</id>
+		    <name>jcenter-bintray</name>
+		    <url>https://jcenter.bintray.com</url>
 		</repository>
 		<repository>
 			<id>jitpack.io</id>
@@ -36,7 +37,7 @@
 		<dependency>
 			<groupId>net.dv8tion</groupId>
 			<artifactId>JDA</artifactId>
-			<version>4.0.0_59</version>
+			<version>4.2.0_168</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
