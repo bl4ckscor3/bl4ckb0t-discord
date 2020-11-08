@@ -26,7 +26,7 @@ public class Word
 	}
 
 	/**
-	 * Checks wether the given character is in the word array and sets all positions x in the guessed array to true if it is at position x in the word array. Does not increase hangman
+	 * Checks whether the given character is in the word array and sets all positions x in the guessed array to true if it is at position x in the word array. Does not increase hangman
 	 * @param c The character to check
 	 * @return true if the character was present in the word array, false otherwise
 	 */

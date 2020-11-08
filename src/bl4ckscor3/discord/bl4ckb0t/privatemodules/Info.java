@@ -28,6 +28,7 @@ public class Info extends AbstractModule
 				.addField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true)
 				.addField("Build Date", "" + new Date(getBuildDate()), true)
 				.addField("Java Version", System.getProperty("java.version"), true)
+				.addField("Source", "https://github.com/bl4ckscor3/bl4ckb0t-discord", true)
 				.addField("Built with JDA", "https://github.com/DV8FromTheWorld/JDA", true)
 				.addField("Author", "bl4ckscor3", true).build());
 	}
