@@ -87,7 +87,7 @@ public class Main extends ListenerAdapter
 					if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY)))
 					{
 						if((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
-							m.exe(event, Utilities.toArgs(event.getMessage().getContentRaw())); //no return to allow for modulesto fire after other modules
+							m.exe(event, Utilities.toArgs(event.getMessage().getContentRaw())); //no return to allow for modules to fire after other modules
 					}
 				}
 			}
