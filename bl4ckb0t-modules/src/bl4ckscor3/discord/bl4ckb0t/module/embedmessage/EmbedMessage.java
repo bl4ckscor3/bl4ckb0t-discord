@@ -1,5 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.module.embedmessage;
 
+import org.jsoup.helper.StringUtil;
+
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -27,11 +29,10 @@ public class EmbedMessage extends AbstractModule
 		{
 			if(arg.matches(DISCORD_LINK_REGEX))
 			{
-				arg = arg.trim();
-
-				long messageId = Long.parseLong(arg.substring(arg.length() - 18, arg.length()));
-				long channelId = Long.parseLong(arg.substring(arg.length() - 37, arg.length() - 19));
-				long guildId = Long.parseLong(arg.substring(arg.length() - 56, arg.length() - 38));
+				String[] split = arg.trim().split("/");
+				long messageId = Long.parseLong(split[split.length - 1] = split[split.length - 1].substring(0, 18));
+				long channelId = Long.parseLong(split[split.length - 2]);
+				long guildId = Long.parseLong(split[split.length - 3]);
 				Guild guild = Main.client().getGuildById(guildId);
 
 				if(guild != null)
@@ -47,7 +48,7 @@ public class EmbedMessage extends AbstractModule
 							text = text.substring(0, MessageEmbed.VALUE_MAX_LENGTH - 3) + "...";
 
 						event.getChannel().sendMessage(new EmbedBuilder()
-								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + arg + ") " + channel.getAsMention(), true)
+								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + StringUtil.join(split, "/") + ") " + channel.getAsMention(), true)
 								.addField("", text, false)
 								.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
 								.setTimestamp(message.getTimeCreated())
