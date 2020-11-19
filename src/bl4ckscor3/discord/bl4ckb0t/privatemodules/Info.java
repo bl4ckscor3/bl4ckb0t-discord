@@ -13,7 +13,7 @@ import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class Info extends AbstractModule
+public class Info extends AbstractModule implements BuiltInModule
 {
 	public Info(String name)
 	{

@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Random;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -13,10 +14,11 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.ModuleManager;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class ModuleManagement extends AbstractModule
+public class ModuleManagement extends AbstractModule implements BuiltInModule
 {
 	public ModuleManagement(String name)
 	{
@@ -142,6 +144,23 @@ public class ModuleManagement extends AbstractModule
 						Utilities.sendMessage(channel, "That is not a valid URL.");
 					}
 			}
+		}
+		else if(args.length == 1 && args[0].equals("list"))
+		{
+			EmbedBuilder embed = new EmbedBuilder().setTitle("Active modules").setFooter("(italics = built-in)").setColor(new Random().nextInt(0xFFFFFF));
+
+			for(AbstractModule module : ModuleManager.MODULES)
+			{
+				if(module instanceof BuiltInModule)
+					embed.appendDescription("*" + module.getName() + "* | ");
+				else
+					embed.appendDescription(module.getName() + " | ");
+			}
+
+			//can't know the actual length of the string (unless i put in effort), so in order to remove the last 3 characters:
+			//reverse the string, remove the first 3, then reverse the string again to get it back to the order it was in before
+			embed.getDescriptionBuilder().reverse().replace(0, 3, "").reverse();
+			Utilities.sendMessage(channel, embed.build());
 		}
 	}
 

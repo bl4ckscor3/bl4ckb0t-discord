@@ -1,3 +1,5 @@
+v3.3	- Add "-module list" to list all active modules
+
 v3.2.1	- Fix bot not working due to Discord API changes
 		- Update JDA
 

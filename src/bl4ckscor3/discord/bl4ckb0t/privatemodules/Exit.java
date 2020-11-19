@@ -7,7 +7,7 @@ import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
-public class Exit extends AbstractModule implements IReactable
+public class Exit extends AbstractModule implements IReactable, BuiltInModule
 {
 	public Exit(String name)
 	{
