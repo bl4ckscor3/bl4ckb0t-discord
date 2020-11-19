@@ -4,6 +4,7 @@ import org.jsoup.helper.StringUtil;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
+import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -47,13 +48,13 @@ public class EmbedMessage extends AbstractModule
 						if(text.length() > MessageEmbed.VALUE_MAX_LENGTH)
 							text = text.substring(0, MessageEmbed.VALUE_MAX_LENGTH - 3) + "...";
 
-						event.getChannel().sendMessage(new EmbedBuilder()
+						Utilities.sendMessage(event.getChannel(), new EmbedBuilder()
 								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + StringUtil.join(split, "/") + ") " + channel.getAsMention(), true)
 								.addField("", text, false)
 								.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
 								.setTimestamp(message.getTimeCreated())
 								.setColor(0x2F3136)
-								.build()).complete();
+								.build());
 					}
 				}
 			}
