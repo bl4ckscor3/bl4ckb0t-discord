@@ -42,6 +42,8 @@ public class Leet extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getMessage().getContentRaw().toLowerCase().startsWith("-leet");
+		String s = event.getMessage().getContentRaw().toLowerCase();
+
+		return s.startsWith("-leet") || s.startsWith("-1337");
 	}
 }
