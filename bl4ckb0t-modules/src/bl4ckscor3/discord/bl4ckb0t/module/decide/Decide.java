@@ -21,17 +21,17 @@ public class Decide extends AbstractModule
 
 		if(args.length >= 1 && event.getMessage().getContentRaw().endsWith("?"))
 		{
-			int decision = new Random().nextInt(101);
+			int decision = new Random().nextInt(100);
 
-			if(decision >= 0 && decision <= 49)
+			if(decision >= 0 && decision < 50)
 				Utilities.react(event.getMessage(), "🚫");
-			else if(decision >= 50 && decision <= 100)
+			else if(decision >= 50 && decision < 100)
 				Utilities.react(event.getMessage(), "✅");
 			else
-				Utilities.sendMessage(channel, "fail: " + decision);
+				Utilities.sendMessage(channel, "I failed. My decision between 0 and 100 was: " + decision);
 		}
 		else
-			Utilities.react(event.getMessage(), "❓");
+			Utilities.react(event.getMessage(), "➕", "❓");
 	}
 
 	@Override
