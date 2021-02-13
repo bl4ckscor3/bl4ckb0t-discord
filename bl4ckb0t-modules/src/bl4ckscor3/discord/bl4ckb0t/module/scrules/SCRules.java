@@ -2,11 +2,13 @@ package bl4ckscor3.discord.bl4ckb0t.module.scrules;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class SCRules extends AbstractModule
@@ -42,10 +44,12 @@ public class SCRules extends AbstractModule
 			try
 			{
 				int rule = Integer.parseInt(args[0]);
+				List<User> mentions = event.getMessage().getMentionedUsers();
+				boolean mention = !mentions.isEmpty();
 
 				Utilities.sendMessage(event.getChannel(), new EmbedBuilder().setColor(0xFF0000)
 						.setTitle("❗ **Rule** " + NUMBERS[rule])
-						.setDescription(RULES[rule])
+						.setDescription((mention ? mentions.stream().map(u -> u.getAsMention()).collect(Collectors.joining(", ")) + ": " : "") + RULES[rule])
 						.addField("Please take a moment to review the rules.", "[Click here to see the rules](https://canary.discord.com/channels/318542314010312715/318544502438756352/667401399025401866)", false)
 						.setTimestamp(message.getTimeCreated())
 						.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
