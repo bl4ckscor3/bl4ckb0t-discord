@@ -1,12 +1,12 @@
 package bl4ckscor3.discord.bl4ckb0t.module.scrules;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -27,7 +27,7 @@ public class SCRules extends AbstractModule
 			"Do not advertise."
 	};
 	private static final String[] NUMBERS = {"", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"};
-	private static final List<Long> ALLOWED_USERS = Arrays.asList(230001507481681920L, 225350861138821122L, 466978012886466570L, 351751556770562050L, 233147380566982656L);
+	private static final long ALLOWED_ROLE = 329137158692798464L;
 
 	public SCRules(String name)
 	{
@@ -38,8 +38,9 @@ public class SCRules extends AbstractModule
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception
 	{
 		Message message = event.getMessage();
+		Guild guild = message.getGuild();
 
-		if(ALLOWED_USERS.contains(event.getAuthor().getIdLong()))
+		if(guild.getMembersWithRoles(guild.getRoleById(ALLOWED_ROLE)).stream().anyMatch(member -> member.getIdLong() == message.getAuthor().getIdLong()))
 		{
 			try
 			{
