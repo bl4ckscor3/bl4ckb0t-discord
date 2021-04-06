@@ -18,10 +18,6 @@
 		</plugins>
 	</build>
 	<repositories>
-		<repository> <!-- This repo fixes issues with transitive dependencies -->
-			<id>jcenter</id>
-			<url>http://jcenter.bintray.com</url>
-		</repository>
 		<repository>
 			<id>jitpack.io</id>
 			<url>https://jitpack.io</url>
@@ -31,7 +27,7 @@
 		<dependency>
 			<groupId>bl4ckb0t-discord</groupId>
 			<artifactId>bl4ckb0t-discord</artifactId>
-			<version>3.3</version>
+			<version>3.3.1</version>
 		</dependency>
 	</dependencies>
 </project>

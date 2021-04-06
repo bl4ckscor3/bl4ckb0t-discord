@@ -1,3 +1,6 @@
+v3.3.1	- Fix modules not working if they would be triggered by a reply
+		- Update JDA
+
 v3.3	- Add "-module list" to list all active modules
 
 v3.2.1	- Fix bot not working due to Discord API changes
