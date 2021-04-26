@@ -1,3 +1,5 @@
+v3.3.2 - Update commons-io
+
 v3.3.1	- Fix modules not working if they would be triggered by a reply
 		- Update JDA
 
