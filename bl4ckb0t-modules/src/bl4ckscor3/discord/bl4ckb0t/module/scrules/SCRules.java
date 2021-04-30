@@ -17,7 +17,7 @@ public class SCRules extends AbstractModule
 	private static final String[] RULES = {
 			"", //no rule 0
 			"Don't mention users that have the `Moderators`, `Developers`, or `Owner` roles without an urgent cause (examples of an urgent cause: our official Minecraft server is down, critical crash in new version, ...). When using Discord's Reply functionality, remember to turn pinging off.",
-			"This is an English server. As such, please only converse using English.",
+			"This is an English server. As such, please only converse using English. Feel free to use a translation website.",
 			"Keep messages in the correct channels. Check the channel description before writing! If your message does not fit the channel at all, it may be removed without notice.",
 			"Treat others with respect.",
 			"Do not spam in any way, shape, or form. This includes NSFW content.",
