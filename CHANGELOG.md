@@ -1,16 +1,18 @@
-v3.3.2 - Update commons-io
+v3.4:	- Update commons-io
+		- Update to and compile using Java 16
+		- Add class format version to info command (will be shown as a Java version in the embed)
 
-v3.3.1	- Fix modules not working if they would be triggered by a reply
+v3.3.1:	- Fix modules not working if they would be triggered by a reply
 		- Update JDA
 
-v3.3	- Add "-module list" to list all active modules
+v3.3:	- Add "-module list" to list all active modules
 
-v3.2.1	- Fix bot not working due to Discord API changes
+v3.2.1:	- Fix bot not working due to Discord API changes
 		- Update JDA
 
-v3.2	- Add postConnect method to AbstractModule, which gets called after the bot has connected to Discord
+v3.2:	- Add postConnect method to AbstractModule, which gets called after the bot has connected to Discord
 
-v3.1.1	- Update log4j-core
+v3.1.1:	- Update log4j-core
 
 v3.1:	- Re-add additional info hash map to IRequestDM
 
