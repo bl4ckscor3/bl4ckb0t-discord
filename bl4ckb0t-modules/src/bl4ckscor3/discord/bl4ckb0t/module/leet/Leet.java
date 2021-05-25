@@ -21,18 +21,17 @@ public class Leet extends AbstractModule
 
 			for(int i = 0; i < chars.length; i++)
 			{
-				switch(chars[i])
-				{
-					case 'A': case 'a': result += "4"; break;
-					case 'E': case 'e': result += "3"; break;
-					case 'G': case 'g': result += "6"; break;
-					case 'L': case 'l': result += "1"; break;
-					case 'O': case 'o': result += "0"; break;
-					case 'S': case 's': result += "5"; break;
-					case 'T': case 't': result += "7"; break;
-					case 'Z': case 'z': result += "2"; break;
-					default: result += chars[i];
-				}
+				result += switch(chars[i]) {
+					case 'A', 'a' -> "4";
+					case 'E', 'e' -> "3";
+					case 'G', 'g' -> "6";
+					case 'L', 'l' -> "1";
+					case 'O', 'o' -> "0";
+					case 'S', 's' -> "5";
+					case 'T', 't' -> "7";
+					case 'Z', 'z' -> "2";
+					default -> chars[i];
+				};
 			}
 
 			Utilities.sendMessage(event.getChannel(), result);

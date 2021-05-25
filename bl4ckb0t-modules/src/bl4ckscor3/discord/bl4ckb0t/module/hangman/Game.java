@@ -149,19 +149,18 @@ public class Game
 	 */
 	public String getBuildProgressString()
 	{
-		switch(hangman)
-		{
-			case 0: return "The hill has been built.";
-			case 1: return "The base beam has been built.";
-			case 2: return "The top beam has been built.";
-			case 3: return "The connecting beam has been built.";
-			case 4: return "The rope is now hanging down.";
-			case 5: return "Your head appears.";
-			case 6: return "Your body appears.";
-			case 7: return "Your left arm appears.";
-			case 8: return "Your right arm appears.";
-			case 9: return "Your left leg appears.";
-			default: return "";
-		}
+		return switch(hangman) {
+			case 0 -> "The hill has been built.";
+			case 1 -> "The base beam has been built.";
+			case 2 -> "The top beam has been built.";
+			case 3 -> "The connecting beam has been built.";
+			case 4 -> "The rope is now hanging down.";
+			case 5 -> "Your head appears.";
+			case 6 -> "Your body appears.";
+			case 7 -> "Your left arm appears.";
+			case 8 -> "Your right arm appears.";
+			case 9 -> "Your left leg appears.";
+			default -> "";
+		};
 	}
 }
