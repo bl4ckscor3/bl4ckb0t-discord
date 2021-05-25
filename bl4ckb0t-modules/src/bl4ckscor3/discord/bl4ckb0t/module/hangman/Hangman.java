@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class Hangman extends AbstractModule implements IRequestDM
 {
-	public HashMap<MessageChannel,Word> words = new HashMap<>();
+	public HashMap<MessageChannel,Game> games = new HashMap<>();
 	public static final String ALREADY_GUESSING = "This channel already has a word being guessed at the moment.";
 
 	public Hangman(String name)
@@ -27,13 +27,18 @@ public class Hangman extends AbstractModule implements IRequestDM
 
 		if(event.getMessage().getContentRaw().startsWith("-hangman"))
 		{
-			if(words.containsKey(channel))
+			if(games.containsKey(channel))
 			{
 				if(args.length != 0)
 				{
-					Word word = words.get(channel);
-					String alphabeticWord = Utilities.filterAlphabetic(word.getWord());
+					Game game = games.get(channel);
+					String alphabeticWord = Utilities.filterAlphabetic(game.getWord());
 					String alphabeticGuess = Utilities.filterAlphabetic(Arrays.toString(args).replace(",", "").replace("[", "").replace("]", "")).toLowerCase();
+
+					if(!game.guessers.contains(event.getAuthor()))
+						game.guessers.add(event.getAuthor());
+
+					event.getMessage().delete().queue();
 
 					if(alphabeticWord.length() == alphabeticGuess.length())
 					{
@@ -41,15 +46,15 @@ public class Hangman extends AbstractModule implements IRequestDM
 						{
 							if(alphabeticWord.charAt(i) != alphabeticGuess.charAt(i))
 							{
-								wrongGuess(channel, word);
+								wrongGuess(channel, game);
 								return;
 							}
 						}
 
-						correctGuess(channel, word, true);
+						correctGuess(channel, game, true);
 					}
 					else
-						wrongGuess(channel, word);
+						wrongGuess(channel, game);
 
 					return;
 				}
@@ -66,26 +71,31 @@ public class Hangman extends AbstractModule implements IRequestDM
 		}
 		else if(event.getMessage().getContentRaw().startsWith(".") && event.getMessage().getContentRaw().toCharArray().length == 2)
 		{
-			if(words.containsKey(channel))
+			if(games.containsKey(channel))
 			{
-				Word word = words.get(channel);
+				Game game = games.get(channel);
 				char guess = event.getMessage().getContentRaw().charAt(1);
 
-				for(char c : word.used)
+				if(!game.guessers.contains(event.getAuthor()))
+					game.guessers.add(event.getAuthor());
+
+				event.getMessage().delete().queue();
+
+				for(char c : game.used)
 				{
 					if(c == guess)
 					{
-						Utilities.sendMessage(channel, "You already guessed this!" + System.lineSeparator() + word.toString());
+						game.message.editMessage(game.getGameMessage(c)).queue();
 						return;
 					}
 				}
 
-				word.used[Character.toUpperCase(guess) - 65] = guess;
+				game.used[Character.toUpperCase(guess) - 65] = guess;
 
-				if(!word.guess(guess))
-					wrongGuess(channel, word);
+				if(!game.guess(guess))
+					wrongGuess(channel, game);
 				else
-					correctGuess(channel, word, false);
+					correctGuess(channel, game, false);
 			}
 		}
 	}
@@ -93,49 +103,37 @@ public class Hangman extends AbstractModule implements IRequestDM
 	/**
 	 * Will increase the hangman state and send a message with the current hangman state to the given channel
 	 * @param channel The channel
-	 * @param word The word being guessed in that channel
+	 * @param game The hangman game that channel
 	 */
-	private void wrongGuess(MessageChannel channel, Word word)
+	private void wrongGuess(MessageChannel channel, Game game)
 	{
-		String sentence = "";
+		game.hangman++;
 
-		word.hangman++;
-
-		switch(word.hangman)
+		if(game.hangman == 10)
 		{
-			case 0: sentence = "The hill has been built."; break;
-			case 1: sentence = "The base beam has been built."; break;
-			case 2: sentence = "The top beam has been built."; break;
-			case 3: sentence = "The connecting beam has been built."; break;
-			case 4: sentence = "The rope is now hanging down."; break;
-			case 5: sentence = "Your head appears."; break;
-			case 6: sentence = "Your body appears."; break;
-			case 7: sentence = "Your left arm appears."; break;
-			case 8: sentence = "Your right arm appears."; break;
-			case 9: sentence = "Your left leg appears."; break;
-			case 10:
-			{
-				Utilities.sendMessage(channel, String.format("Your right leg appears. You lost! The word was: **%s**%sA new word can now be submitted.", word.getWord(), System.lineSeparator()));
-				words.remove(channel);
-				return;
-			}
+			game.message.editMessage(String.format("Your right leg appears. You lost! The word was: **%s**%s%s%sA new word can now be submitted.",
+					game.getWord() + System.lineSeparator(),
+					game.getBuildProgressString() + System.lineSeparator(),
+					"Guessed letters: " + game.usedToString() + System.lineSeparator(),
+					game.getGuessers() + System.lineSeparator())).queue();
+			games.remove(channel);
+			return;
 		}
 
-		sentence += System.lineSeparator() + word.toString();
-		Utilities.sendMessage(channel, sentence);
+		game.message.editMessage(game.getGameMessage('0')).queue();
 	}
 
 	/**
 	 * Will check wether the correct guess results in a win or not
 	 * @param channel The channel
-	 * @param word The word being guessed in that channel
+	 * @param game The hangman game in that channel
 	 * @param forceWin Forces a win. Useful if the word has been guessed in advance
 	 */
-	private void correctGuess(MessageChannel channel, Word word, boolean forceWin)
+	private void correctGuess(MessageChannel channel, Game game, boolean forceWin)
 	{
 		boolean won = true;
 
-		for(boolean b : word.guessed)
+		for(boolean b : game.guessed)
 		{
 			if(!b)
 			{
@@ -146,11 +144,15 @@ public class Hangman extends AbstractModule implements IRequestDM
 
 		if(won || forceWin)
 		{
-			words.remove(channel);
-			Utilities.sendMessage(channel, String.format("You win! The word was: **%s**%sA new word can now be submitted.", word.getWord(), System.lineSeparator()));
+			games.remove(channel);
+			game.message.editMessage(String.format("You win! The word was: **%s**%s%s%sA new word can now be submitted.",
+					game.getWord() + System.lineSeparator(),
+					game.getBuildProgressString() + System.lineSeparator(),
+					"Guessed letters: " + game.usedToString() + System.lineSeparator(),
+					game.getGuessers() + System.lineSeparator())).queue();
 		}
 		else
-			Utilities.sendMessage(channel, word.toString());
+			game.message.editMessage(game.getGameMessage('0')).queue();
 	}
 
 	@Override
@@ -158,12 +160,14 @@ public class Hangman extends AbstractModule implements IRequestDM
 	{
 		MessageChannel channel = (MessageChannel)info.get("channel");
 
-		if(!words.containsKey(channel))
+		if(!games.containsKey(channel))
 		{
-			Word word = new Word(event.getMessage().getContentRaw().toLowerCase());
+			Game game = new Game(event.getMessage().getContentRaw().toLowerCase());
 
-			words.put(channel, word);
-			Utilities.sendMessage(channel, "New hangman game started by " + event.getAuthor().getAsMention() + ": " + word.toString());
+			channel.sendMessage("New hangman game started by " + event.getAuthor().getAsMention() + ": " + game.getGameMessage('0')).queue(message -> {
+				game.setMessage(message);
+				games.put(channel, game);
+			});
 		}
 		else
 			Utilities.sendMessage(channel, ALREADY_GUESSING);
