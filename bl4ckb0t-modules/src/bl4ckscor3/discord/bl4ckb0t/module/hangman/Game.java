@@ -1,6 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.module.hangman;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,19 +15,26 @@ public class Game
 {
 	public char[] word;
 	public boolean[] guessed;
-	public char[] used = new char[26];
+	public LetterState[] letterStates = new LetterState[26];
 	public int hangman = -1;
 	public Message message;
 	public List<User> guessers = new ArrayList<>();
+	public String user;
+	public char lastGuessedLetter;
+	public String originalWord;
 
 	/**
-	 * Sets up this word
-	 * @param w The word
+	 * Sets up this hangman game
+	 * @param a The user who started this game
+	 * @param w The word to guess
 	 */
-	public Game(String w)
+	public Game(String u, String w)
 	{
-		word = w.toCharArray();
+		user = u;
+		originalWord = w;
+		word = w.toLowerCase().toCharArray();
 		guessed = new boolean[word.length];
+		Arrays.fill(letterStates, LetterState.UNUSED);
 
 		for(int i = 0; i < word.length; i++)
 		{
@@ -80,67 +88,76 @@ public class Game
 	}
 
 	/**
-	 * toString method for the used array in this class
-	 * @return The used array to string, stripped out of all null characters, characters are seperated by spaces
+	 * Gets all letters with the given state in a formatted message
+	 * @state The state which the letter has to be in to be included in the message
+	 * @return The formatted message, characters are seperated by spaces
 	 */
-	public String usedToString()
+	public String getLettersByState(LetterState state)
 	{
 		String result = "";
 
-		for(int i = 0; i < used.length; i++)
+		for(int i = 0; i < letterStates.length; i++)
 		{
-			if(used[i] == '\0')
+			if(letterStates[i] == LetterState.UNUSED)
 				continue;
-
-			result += used[i] + " ";
+			else if(letterStates[i] == state)
+				result += Character.toString(i + 97);
 		}
 
 		return result;
 	}
 
 	/**
+	 * Gets the game's status formatted as a message without any initial text and with showing the currently unsolved word
+	 * @see {@link #getGameMessage(String, char, boolean)}
+	 */
+	public String getGameMessage()
+	{
+		return getGameMessage("", '0', true);
+	}
+
+	/**
 	 * Gets the game's status formatted as a message
-	 * @param alreadyGuessed Whether text about a letter already having been guessed should be displayed
+	 * @param The text that this message should start with
+	 * @param alreadyGuessedLetter If this is not '0', a text about this letter already having been guessed will be displayed
+	 * @param showUnsolvedWord Whether the unsolved word should be displayed
 	 * @return The message
 	 */
-	public String getGameMessage(char alreadyGuessedLetter)
+	public String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedWord)
 	{
-		String result = "";
+		String result = "Started by: " + user + System.lineSeparator() + initialText;
 
 		if(alreadyGuessedLetter != '0')
 			result += String.format("You already guessed `%s`!%s", alreadyGuessedLetter, System.lineSeparator());
 
-
-		result += getBuildProgressString() + System.lineSeparator();
-
-		for(int i = 0; i < word.length; i++)
+		if(showUnsolvedWord)
 		{
-			if(Character.isAlphabetic(word[i]))
+			for(int i = 0; i < word.length; i++)
 			{
-				if(guessed[i])
-					result += word[i] + " ";
-				else
-					result += "\\_ ";
+				if(Character.isAlphabetic(word[i]))
+				{
+					if(guessed[i])
+					{
+						if(word[i] == lastGuessedLetter)
+							result += "**" + word[i] + "** ";
+						else
+							result += word[i] + " ";
+					}
+					else
+						result += "\\_ ";
+				}
+				else if(word[i] == ' ')
+					result += "  ";
 			}
-			else if(word[i] == ' ')
-				result += "  ";
+
+			result += System.lineSeparator();
 		}
 
-		String used = usedToString();
-
-		if(!used.equals(""))
-			result += System.lineSeparator() + "Guessed letters: " + usedToString();
-
-		return result + System.lineSeparator() + getGuessers();
-	}
-
-	/**
-	 * Gets a formatted list of people who have guessed in this game
-	 * @return The formatted list
-	 */
-	public String getGuessers()
-	{
-		return "Guessers: " + guessers.stream().map(u -> u.getAsMention()).collect(Collectors.joining(", "));
+		result += getBuildProgressString() + System.lineSeparator();
+		result += "Wrong guesses: " + getLettersByState(LetterState.WRONG) + System.lineSeparator();
+		result += "Correct guesses: " + getLettersByState(LetterState.CORRECT) + System.lineSeparator();
+		result += "Guessers: " + guessers.stream().map(u -> u.getAsMention()).collect(Collectors.joining(", "));
+		return result;
 	}
 
 	/**
@@ -149,18 +166,81 @@ public class Game
 	 */
 	public String getBuildProgressString()
 	{
-		return switch(hangman) {
-			case 0 -> "The hill has been built.";
-			case 1 -> "The base beam has been built.";
-			case 2 -> "The top beam has been built.";
-			case 3 -> "The connecting beam has been built.";
-			case 4 -> "The rope is now hanging down.";
-			case 5 -> "Your head appears.";
-			case 6 -> "Your body appears.";
-			case 7 -> "Your left arm appears.";
-			case 8 -> "Your right arm appears.";
-			case 9 -> "Your left leg appears.";
-			default -> "";
-		};
+		if(hangman == -1)
+			return "";
+		else return "```" + switch(hangman) {
+			//text blocks don't format the message nicely
+			case 0 ->
+			" _____\n" +
+			"/     \\";
+			case 1 ->
+			"   |\n" +
+			"   |\n" +
+			"   |\n" +
+			" __|__\n" +
+			"/     \\";
+			case 2 ->
+			"   | /\n" +
+			"   |/\n" +
+			"   |\n" +
+			" __|__\n" +
+			"/     \\";
+			case 3 ->
+			"   ________\n" +
+			"   | /\n" +
+			"   |/\n" +
+			"   |\n" +
+			" __|__\n" +
+			"/     \\";
+			case 4 ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/\n" +
+			"   |\n" +
+			" __|__\n" +
+			"/     \\";
+			case 5 ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/     O\n" +
+			"   |\n" +
+			" __|__\n" +
+			"/     \\";
+			case 6 ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/     O\n" +
+			"   |      |\n" +
+			" __|__\n" +
+			"/     \\";
+			case 7 ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/     O\n" +
+			"   |     \\|\n" +
+			" __|__\n" +
+			"/     \\";
+			case 8 ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/     O\n" +
+			"   |     \\|/\n" +
+			" __|__\n" +
+			"/     \\";
+			case 9 ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/     O\n" +
+			"   |     \\|/\n" +
+			" __|__   /\n" +
+			"/     \\";
+			default ->
+			"   ________\n" +
+			"   | /    |\n" +
+			"   |/     O\n" +
+			"   |     \\|/\n" +
+			" __|__   / \\\n" +
+			"/     \\";
+		} + "```";
 	}
 }

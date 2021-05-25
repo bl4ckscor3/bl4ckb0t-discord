@@ -79,8 +79,8 @@ public class Info extends AbstractModule implements BuiltInModule
 	}
 
 	/**
-	 * Gets a connection to the jar file of this programm
-	 * @return The connection to the jar file
+	 * Gets the jar file of this programm
+	 * @return The jar file
 	 */
 	private JarFile getJarFile() throws IOException
 	{
