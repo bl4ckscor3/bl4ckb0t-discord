@@ -1,10 +1,13 @@
 package bl4ckscor3.discord.bl4ckb0t.privatemodules;
 
 import java.awt.Color;
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.JarURLConnection;
 import java.util.Date;
 import java.util.Random;
+import java.util.jar.JarFile;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
@@ -27,7 +30,8 @@ public class Info extends AbstractModule implements BuiltInModule
 				.addField("Version", Main.VERSION, true)
 				.addField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true)
 				.addField("Build Date", "" + new Date(getBuildDate()), true)
-				.addField("Java Version", System.getProperty("java.version"), true)
+				.addField("Compiled with", "Java " + (getClassFormatVersion() - 44), true) //- 44 to get the java version from the class format version (dirty, but works until this is no longer consistent)
+				.addField("Running on", "Java " + System.getProperty("java.version"), true)
 				.addField("Source", "https://github.com/bl4ckscor3/bl4ckb0t-discord", true)
 				.addField("Built with JDA", "https://github.com/DV8FromTheWorld/JDA", true)
 				.addField("Author", "bl4ckscor3", true).build());
@@ -45,13 +49,41 @@ public class Info extends AbstractModule implements BuiltInModule
 	 */
 	private long getBuildDate()
 	{
-		try
+		try(JarFile jar = getJarFile())
 		{
-			return ((JarURLConnection)ClassLoader.getSystemResource(Main.class.getName().replace('.', '/') + ".class").openConnection()).getJarFile().getEntry("META-INF/MANIFEST.MF").getTime();
+			return jar.getEntry("META-INF/MANIFEST.MF").getTime();
 		}
 		catch(Exception e)
 		{
 			return 0L;
 		}
+	}
+
+	/**
+	 * Gets the major class format version of the jar file, representing the Java version it was compiled with
+	 * @return The major class format version (NOT the Java version). 0 if no jar file has been found
+	 */
+	private int getClassFormatVersion()
+	{
+		try(JarFile jar = getJarFile(); DataInputStream input = new DataInputStream(jar.getInputStream(jar.getEntry("bl4ckscor3/discord/bl4ckb0t/Main.class"))))
+		{
+			input.readUnsignedShort(); //cafe
+			input.readUnsignedShort(); //babe
+			input.readUnsignedShort(); //minor version
+			return input.readUnsignedShort(); //major version
+		}
+		catch(Exception e)
+		{
+			return 0;
+		}
+	}
+
+	/**
+	 * Gets a connection to the jar file of this programm
+	 * @return The connection to the jar file
+	 */
+	private JarFile getJarFile() throws IOException
+	{
+		return ((JarURLConnection)ClassLoader.getSystemResource(Main.class.getName().replace('.', '/') + ".class").openConnection()).getJarFile();
 	}
 }
