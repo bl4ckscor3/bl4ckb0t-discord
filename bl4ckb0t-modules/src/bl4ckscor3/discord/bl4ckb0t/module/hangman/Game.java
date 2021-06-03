@@ -9,11 +9,11 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 /**
- * A hangman game. Holds the word itself, which letters of it have already been guessed, and the state of the hangman.
+ * A hangman game. Holds the phrase itself, which letters of it have already been guessed, and the state of the hangman.
  */
 public class Game
 {
-	public char[] word;
+	public char[] phrase;
 	public boolean[] guessed;
 	public LetterState[] letterStates = new LetterState[26];
 	public int hangman = -1;
@@ -21,24 +21,24 @@ public class Game
 	public List<User> guessers = new ArrayList<>();
 	public String user;
 	public char lastGuessedLetter;
-	public String originalWord;
+	public String originalPhrase;
 
 	/**
 	 * Sets up this hangman game
 	 * @param a The user who started this game
-	 * @param w The word to guess
+	 * @param p The phrase to guess
 	 */
-	public Game(String u, String w)
+	public Game(String u, String p)
 	{
 		user = u;
-		originalWord = w;
-		word = w.toLowerCase().toCharArray();
-		guessed = new boolean[word.length];
+		originalPhrase = p;
+		phrase = p.toLowerCase().toCharArray();
+		guessed = new boolean[phrase.length];
 		Arrays.fill(letterStates, LetterState.UNUSED);
 
-		for(int i = 0; i < word.length; i++)
+		for(int i = 0; i < phrase.length; i++)
 		{
-			guessed[i] = !Character.isAlphabetic(word[i]);
+			guessed[i] = !Character.isAlphabetic(phrase[i]);
 		}
 	}
 
@@ -52,17 +52,17 @@ public class Game
 	}
 
 	/**
-	 * Checks whether the given character is in the word array and sets all positions x in the guessed array to true if it is at position x in the word array. Does not increase hangman
+	 * Checks whether the given character is in the phrase array and sets all positions x in the guessed array to true if it is at position x in the phrase array. Does not increase hangman
 	 * @param c The character to check
-	 * @return true if the character was present in the word array, false otherwise
+	 * @return true if the character was present in the phrase array, false otherwise
 	 */
 	public boolean guess(char c)
 	{
 		boolean correct = false;
 
-		for(int i = 0; i < word.length; i++)
+		for(int i = 0; i < phrase.length; i++)
 		{
-			if(word[i] == Character.toLowerCase(c))
+			if(phrase[i] == Character.toLowerCase(c))
 			{
 				guessed[i] = true;
 				correct = true;
@@ -73,18 +73,18 @@ public class Game
 	}
 
 	/**
-	 * @return The word as it was sent in the direct message
+	 * @return The phrase as it was sent in the direct message
 	 */
-	public String getWord()
+	public String getPhrase()
 	{
-		String word = "";
+		String phrase = "";
 
-		for(char c : this.word)
+		for(char c : this.phrase)
 		{
-			word += c;
+			phrase += c;
 		}
 
-		return word;
+		return phrase;
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class Game
 	}
 
 	/**
-	 * Gets the game's status formatted as a message without any initial text and with showing the currently unsolved word
+	 * Gets the game's status formatted as a message without any initial text and with showing the currently unsolved phrase
 	 * @see {@link #getGameMessage(String, char, boolean)}
 	 */
 	public String getGameMessage()
@@ -120,33 +120,33 @@ public class Game
 	 * Gets the game's status formatted as a message
 	 * @param The text that this message should start with
 	 * @param alreadyGuessedLetter If this is not '0', a text about this letter already having been guessed will be displayed
-	 * @param showUnsolvedWord Whether the unsolved word should be displayed
+	 * @param showUnsolvedPhrase Whether the unsolved phrase should be displayed
 	 * @return The message
 	 */
-	public String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedWord)
+	public String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedPhrase)
 	{
 		String result = "Started by: " + user + System.lineSeparator() + initialText;
 
 		if(alreadyGuessedLetter != '0')
 			result += String.format("You already guessed `%s`!%s", alreadyGuessedLetter, System.lineSeparator());
 
-		if(showUnsolvedWord)
+		if(showUnsolvedPhrase)
 		{
-			for(int i = 0; i < word.length; i++)
+			for(int i = 0; i < phrase.length; i++)
 			{
-				if(Character.isAlphabetic(word[i]))
+				if(Character.isAlphabetic(phrase[i]))
 				{
 					if(guessed[i])
 					{
-						if(word[i] == lastGuessedLetter)
-							result += "**" + word[i] + "** ";
+						if(phrase[i] == lastGuessedLetter)
+							result += "**" + phrase[i] + "** ";
 						else
-							result += word[i] + " ";
+							result += phrase[i] + " ";
 					}
 					else
 						result += "\\_ ";
 				}
-				else if(word[i] == ' ')
+				else if(phrase[i] == ' ')
 					result += "  ";
 			}
 

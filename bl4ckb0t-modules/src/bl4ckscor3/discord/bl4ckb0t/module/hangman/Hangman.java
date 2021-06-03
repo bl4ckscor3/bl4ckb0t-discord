@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 public class Hangman extends AbstractModule implements IRequestDM
 {
 	public HashMap<MessageChannel,Game> games = new HashMap<>();
-	public static final String ALREADY_GUESSING = "This channel already has a word being guessed at the moment.";
+	public static final String ALREADY_GUESSING = "This channel already has a phrase being guessed at the moment.";
 
 	public Hangman(String name)
 	{
@@ -32,7 +32,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 				if(args.length != 0)
 				{
 					Game game = games.get(channel);
-					String alphabeticWord = Utilities.filterAlphabetic(game.originalWord);
+					String alphabeticPhrase = Utilities.filterAlphabetic(game.originalPhrase);
 					String alphabeticGuess = Utilities.filterAlphabetic(Arrays.toString(args));
 
 					if(!game.guessers.contains(event.getAuthor()))
@@ -40,7 +40,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 
 					event.getMessage().delete().queue();
 
-					if(alphabeticWord.equalsIgnoreCase(alphabeticGuess))
+					if(alphabeticPhrase.equalsIgnoreCase(alphabeticGuess))
 						correctGuess(channel, game, '0', true);
 					else
 						wrongGuess(channel, game);
@@ -56,7 +56,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 
 			info.put("channel", channel);
 			waitForDM(event.getAuthor().getIdLong(), info);
-			Utilities.sendMessage(channel, "Ok! Send me a word via DM and I'll take care of everything else. Guesses can be given via `.LETTER`. E.g.: `.A` to guess the letter `A`. To guess a whole word, use `-hangman word`.");
+			Utilities.sendMessage(channel, "Ok! Send me a word or phrase via DM and I'll take care of everything else. Guesses can be given via `.LETTER`. E.g.: `.A` to guess the letter `A`. To guess a whole word or phrase, use `-hangman guess here`.");
 		}
 		else if(event.getMessage().getContentRaw().startsWith(".") && event.getMessage().getContentRaw().toCharArray().length == 2)
 		{
@@ -103,7 +103,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 
 		if(game.hangman == 10)
 		{
-			game.message.editMessage(game.getGameMessage(String.format("__You lost!__ The word was: **%s**", game.originalWord), '0', false) + System.lineSeparator() + "__**A new word can now be submitted.**__").queue();
+			game.message.editMessage(game.getGameMessage(String.format("__You lost!__ The phrase was: **%s**", game.originalPhrase), '0', false) + System.lineSeparator() + "__**A new word or phrase can now be submitted.**__").queue();
 			games.remove(channel);
 			return;
 		}
@@ -116,7 +116,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 	 * @param channel The channel
 	 * @param game The hangman game in that channel
 	 * @param guess The guessed character
-	 * @param forceWin Forces a win. Useful if the word has been guessed in advance
+	 * @param forceWin Forces a win. Useful if the phrase has been guessed in advance
 	 */
 	private void correctGuess(MessageChannel channel, Game game, char guess, boolean forceWin)
 	{
@@ -133,7 +133,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 
 		if(won || forceWin)
 		{
-			game.message.editMessage(game.getGameMessage(String.format("__You win!__ The word was: **%s**" + System.lineSeparator(), game.originalWord), '0', false) + System.lineSeparator() + "__**A new word can now be submitted.**__").queue();
+			game.message.editMessage(game.getGameMessage(String.format("__You win!__ The phrase was: **%s**" + System.lineSeparator(), game.originalPhrase), '0', false) + System.lineSeparator() + "__**A new word or phrase can now be submitted.**__").queue();
 			games.remove(channel);
 		}
 		else
