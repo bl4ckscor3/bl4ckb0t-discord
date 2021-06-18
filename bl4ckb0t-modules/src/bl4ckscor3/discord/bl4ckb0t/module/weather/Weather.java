@@ -1,6 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.module.weather;
 
 import java.text.DecimalFormat;
+import java.time.ZonedDateTime;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -38,14 +39,16 @@ public class Weather extends AbstractModule
 		try
 		{
 			Document doc = Jsoup.connect("http://api.openweathermap.org/data/2.5/weather?q=" + city.trim() + "&mode=xml&APPID=" + Tokens.OPEN_WEATHER_MAP).ignoreContentType(true).get();
+			String time = doc.select("lastupdate").attr("value");
 
 			Utilities.sendMessage(channel, new EmbedBuilder().setTitle("__" + doc.select("city").attr("name") + ", " + doc.select("country").text() + "__")
 					.addField(":sunny: Temperature", getTemperature(doc), false)
 					.addField(":droplet: Humidity", doc.select("humidity").attr("value") + doc.select("humidity").attr("unit"), false)
 					.addField(":compression: Pressure", doc.select("pressure").attr("value") + doc.select("pressure").attr("unit"), false)
 					.addField(":dash: Wind", getWindSpeed(doc), false)
-					.addField(":timer: Last updated", doc.select("lastupdate").attr("value").replace("T", " "), false)
-					.setFooter("Powered by OpenWeatherMap").build());
+					.addField(":timer: Last updated", time.replace("T", " ") + " UTC", false)
+					.setFooter("Powered by OpenWeatherMap")
+					.setTimestamp(ZonedDateTime.parse(time + "+00:00[Europe/London]")).build()); //openweathermap supplies UTC time, convert to local time for discord embed timestamp
 		}
 		catch(Exception e)
 		{
