@@ -73,6 +73,9 @@ public class LengthConverter extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
+		if(event.getGuild().getIdLong() != 499306032489824256L)
+			return false;
+
 		for(String s : event.getMessage().getContentRaw().toLowerCase().split(" "))
 		{
 			if(s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(km|mi)") || s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(m|ft)") || s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(cm|in)"))
