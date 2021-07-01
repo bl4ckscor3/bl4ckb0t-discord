@@ -3,6 +3,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.remind;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
@@ -13,7 +14,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Remind extends AbstractModule
 {
-	public static final ArrayList<Reminder> reminders = new ArrayList<Reminder>();
+	public static final List<Reminder> REMINDERS = new ArrayList<>();
 
 	public Remind(String name)
 	{
@@ -54,12 +55,12 @@ public class Remind extends AbstractModule
 
 		if(args.length == 1 && args[0].equals("list"))
 		{
-			if(reminders.size() > 0)
+			if(REMINDERS.size() > 0)
 			{
 				String ids = "";
 				boolean reminder = false; //whether the user has any active reminder or not
 
-				for(Reminder r : reminders)
+				for(Reminder r : REMINDERS)
 				{
 					if(r.getIssuedUser() != event.getAuthor().getIdLong())
 						continue;
@@ -71,7 +72,7 @@ public class Remind extends AbstractModule
 				if(reminder)
 				{
 					ids = ids.substring(0, ids.lastIndexOf(','));
-					Utilities.sendMessage(channel, String.format("You have %s active reminders: %s", reminders.size(), ids));
+					Utilities.sendMessage(channel, String.format("You have %s active reminders: %s", REMINDERS.size(), ids));
 				}
 				else
 					Utilities.sendMessage(channel, "You don't have any active reminders.");
@@ -88,7 +89,7 @@ public class Remind extends AbstractModule
 
 			if(!(id > Reminder.latestId))
 			{
-				for(Reminder r : reminders)
+				for(Reminder r : REMINDERS)
 				{
 					if(r.getId() == id)
 					{
@@ -134,10 +135,12 @@ public class Remind extends AbstractModule
 
 				String ev = s.trim();
 				long timeDue = 0;
+				long timestampDue;
 
 				try
 				{
-					timeDue = TimeParser.stringToLong(args[0]) * 1000L;
+					timestampDue = TimeParser.stringToLong(args[0]);
+					timeDue = timestampDue * 1000L;
 				}
 				catch(NumberFormatException ex)
 				{
@@ -147,8 +150,8 @@ public class Remind extends AbstractModule
 
 				Reminder reminder = new Reminder(event.getAuthor().getIdLong(), channel, ev, timeDue, false);
 
-				Utilities.sendMessage(channel, String.format("I'll remind you! (ID: %s)", reminder.getId()));
-				reminders.add(reminder);
+				Utilities.sendMessage(channel, String.format("I'll remind you <t:" + ((System.currentTimeMillis() / 1000L) + timestampDue) + ":R>! (ID: %s)", reminder.getId()));
+				REMINDERS.add(reminder);
 			}
 		}
 	}

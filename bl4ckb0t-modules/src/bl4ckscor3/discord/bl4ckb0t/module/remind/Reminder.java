@@ -65,7 +65,7 @@ public class Reminder
 		ev = e;
 		thread = Executors.newSingleThreadScheduledExecutor().schedule(() -> {
 			Utilities.sendMessage(channel, String.format("<@%s>, reminder for: %s", user, e));
-			Remind.reminders.remove(this);
+			Remind.REMINDERS.remove(this);
 			f.delete();
 		}, timeDue, TimeUnit.MILLISECONDS);
 
@@ -78,7 +78,7 @@ public class Reminder
 			FileUtils.writeLines(f, lines);
 		}
 		else
-			Remind.reminders.add(this);
+			Remind.REMINDERS.add(this);
 	}
 
 	/**
@@ -127,7 +127,7 @@ public class Reminder
 	public void stop()
 	{
 		thread.cancel(true);
-		Remind.reminders.remove(this);
+		Remind.REMINDERS.remove(this);
 		f.delete();
 	}
 
