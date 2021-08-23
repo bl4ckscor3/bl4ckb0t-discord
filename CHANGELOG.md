@@ -1,3 +1,7 @@
+v3.4.1:	- Update commons-io
+		- Update JDA
+		- Update jsoup
+
 v3.4:	- Update commons-io
 		- Update to and compile using Java 16
 		- Add class format version to info command (will be shown as a Java version in the embed)
