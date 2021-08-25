@@ -1,7 +1,5 @@
 package bl4ckscor3.discord.bl4ckb0t.module.embedmessage;
 
-import org.jsoup.helper.StringUtil;
-
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
@@ -49,7 +47,7 @@ public class EmbedMessage extends AbstractModule
 							text = text.substring(0, MessageEmbed.VALUE_MAX_LENGTH - 3) + "...";
 
 						Utilities.sendMessage(event.getChannel(), new EmbedBuilder()
-								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + StringUtil.join(split, "/") + ") " + channel.getAsMention(), true)
+								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + String.join("/", split) + ") " + channel.getAsMention(), true)
 								.addField("", text, false)
 								.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
 								.setTimestamp(message.getTimeCreated())
