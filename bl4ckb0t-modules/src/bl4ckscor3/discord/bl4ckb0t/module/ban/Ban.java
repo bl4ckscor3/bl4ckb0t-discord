@@ -32,7 +32,7 @@ public class Ban extends AbstractModule implements IReactable
 		if(guild.getMembersWithRoles(guild.getRoleById(ALLOWED_ROLE)).stream().anyMatch(member -> member.getIdLong() == message.getAuthor().getIdLong()))
 		{
 			Utilities.react(message, "✅", "❌");
-			REACTION_INFO.put(message.getIdLong(), new BanInfo(args[0], event.getMessage().getContentRaw().split(args[0] + " ")[1]));
+			REACTION_INFO.put(message.getIdLong(), new BanInfo(args[0], event.getMessage().getContentRaw().split(args[0] + " ")[1] + " (" + event.getAuthor().getName() + ")"));
 			waitForReaction(message.getIdLong(), message.getAuthor().getIdLong());
 		}
 	}
