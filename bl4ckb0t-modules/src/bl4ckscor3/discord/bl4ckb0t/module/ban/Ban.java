@@ -1,11 +1,23 @@
 package bl4ckscor3.discord.bl4ckb0t.module.ban;
 
-import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
-import bl4ckscor3.discord.bl4ckb0t.util.IDs;
-import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Ban extends AbstractModule
+import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
+import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+
+public class Ban extends AbstractModule implements IReactable
 {
+	private static record BanInfo(String userId, String reason) {}
+	private static final long SECURITYCRAFT_ID = 318542314010312715L;
+	private static final long ALLOWED_ROLE = 329137158692798464L;
+	private static final Map<Long,BanInfo> REACTION_INFO = new HashMap<>();
+
 	public Ban(String name)
 	{
 		super(name);
@@ -14,12 +26,35 @@ public class Ban extends AbstractModule
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args)
 	{
-		event.getGuild().ban(args[0], 0, event.getMessage().getContentRaw().split(args[0] + " ")[1]).complete();
+		Message message = event.getMessage();
+		Guild guild = message.getGuild();
+
+		if(guild.getMembersWithRoles(guild.getRoleById(ALLOWED_ROLE)).stream().anyMatch(member -> member.getIdLong() == message.getAuthor().getIdLong()))
+		{
+			Utilities.react(message, "✅", "❌");
+			REACTION_INFO.put(message.getIdLong(), new BanInfo(args[0], event.getMessage().getContentRaw().split(args[0] + " ")[1]));
+			waitForReaction(message.getIdLong(), message.getAuthor().getIdLong());
+		}
+	}
+
+	@Override
+	public void onReactionAdd(MessageReactionAddEvent event)
+	{
+		BanInfo banInfo = REACTION_INFO.remove(event.getMessageIdLong());
+
+		if(banInfo != null && event.getReactionEmote().getName().equals("✅"))
+			event.getGuild().ban(banInfo.userId, 0, banInfo.reason).complete();
+	}
+
+	@Override
+	public long[] allowedChannels()
+	{
+		return new long[] {692486132700676106L};
 	}
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 && event.getMessage().getContentRaw().startsWith("-ban");
+		return event.getGuild().getIdLong() == SECURITYCRAFT_ID && event.getMessage().getContentRaw().startsWith("-ban");
 	}
 }
