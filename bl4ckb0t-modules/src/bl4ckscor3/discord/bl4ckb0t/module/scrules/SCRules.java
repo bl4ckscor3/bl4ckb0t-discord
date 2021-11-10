@@ -17,14 +17,14 @@ public class SCRules extends AbstractModule
 	private static final String[] RULES = {
 			"", //no rule 0
 			"Don't mention users that have the `Moderators`, `Developers`, or `Owner` roles without an urgent cause (examples of an urgent cause: our official Minecraft server is down, critical crash in new version, ...). When using Discord's Reply functionality, remember to turn pinging off.",
-			"This is an English server. As such, please only converse using English. Feel free to use a translation website.",
+			"This is an English server. We cannot moderate non-English conversations, so please only talk English. Feel free to use a translation service.",
 			"Keep messages in the correct channels. Check the channel description before writing! If your message does not fit the channel at all, it may be removed without notice.",
 			"Treat others with respect.",
 			"Do not spam in any way, shape, or form. This includes NSFW content.",
 			"If you have any issues and/or need help, send your problem and be patient while waiting for a reply. Generally, there will be one quick enough. Do not mention the developers (-> Rule 1).",
 			"Leave moderating to the moderators. If there is a problem, or someone breaking the rules, you can let the `Discord Staff` know (this is an exception to rule 1).",
-			"Don't ask/beg for updates, they will come eventually. _It's done when it's done_.",
-			"Do not advertise."
+			"Don't ask about updates, particularly release ETAs. They will be published eventually. It's done when it's done.",
+			"Do not advertise. This includes posting Discord invite links, unless asked about."
 	};
 	private static final String[] NUMBERS = {"", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"};
 	private static final long ALLOWED_ROLE = 329137158692798464L;
