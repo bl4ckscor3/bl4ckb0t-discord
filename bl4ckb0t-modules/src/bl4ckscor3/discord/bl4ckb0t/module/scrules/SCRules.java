@@ -23,7 +23,7 @@ public class SCRules extends AbstractModule
 			"Do not spam in any way, shape, or form. This includes NSFW content.",
 			"If you have any issues and/or need help, send your problem and be patient while waiting for a reply. Generally, there will be one quick enough. Do not mention the developers (-> Rule 1).",
 			"Leave moderating to the moderators. If there is a problem, or someone breaking the rules, you can let the `Discord Staff` know (this is an exception to rule 1).",
-			"Don't ask about updates, particularly release ETAs. They will be published eventually. It's done when it's done.",
+			"Don't ask about updates, particularly release ETAs. They will be published eventually. _It's done when it's done._",
 			"Do not advertise. This includes posting Discord invite links, unless asked about."
 	};
 	private static final String[] NUMBERS = {"", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"};
