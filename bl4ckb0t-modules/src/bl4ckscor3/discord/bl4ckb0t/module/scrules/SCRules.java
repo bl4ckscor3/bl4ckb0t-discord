@@ -21,7 +21,7 @@ public class SCRules extends AbstractModule
 			"Keep messages in the correct channels. Check the channel description before writing! If your message does not fit the channel at all, it may be removed without notice.",
 			"Treat others with respect.",
 			"Do not spam in any way, shape, or form. This includes NSFW content.",
-			"If you have any issues and/or need help, send your problem and be patient while waiting for a reply. Generally, there will be one quick enough. Do not mention the developers (-> Rule 1).",
+			"Don't ask for help if you are using cracked launchers like TLauncher or similar. We do not support them, and SecurityCraft may not work. You're on your own.",
 			"Leave moderating to the moderators. If there is a problem, or someone breaking the rules, you can let the `Discord Staff` know (this is an exception to rule 1).",
 			"Don't ask about updates, particularly release ETAs. They will be published eventually. _It's done when it's done._",
 			"Do not advertise. This includes posting Discord invite links, unless asked about."
