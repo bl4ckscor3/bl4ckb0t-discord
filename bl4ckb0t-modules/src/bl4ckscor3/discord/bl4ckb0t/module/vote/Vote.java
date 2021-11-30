@@ -47,7 +47,7 @@ public class Vote extends AbstractModule
 				}
 
 				title = title.substring(0, titleEnd);
-				event.getChannel().sendMessage(title + "\n" + commandMessage.substring(commandMessage.indexOf(title) + title.length() + 2)).queue(msg -> Utilities.react(msg, getNumberedReactions(optionAmount)));
+				event.getChannel().sendMessage("__**" + title + "**__\n" + commandMessage.substring(commandMessage.indexOf(title) + title.length() + 2) + "\n\nVote created by " + event.getAuthor().getAsMention()).queue(msg -> Utilities.react(msg, getNumberedReactions(optionAmount)));
 				event.getMessage().delete().queue();
 			}
 			catch(NumberFormatException e)
