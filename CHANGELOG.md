@@ -1,3 +1,9 @@
+v3.4.4: - Update log4j to 2.17.0
+
+v3.4.3: - Update log4j to 2.16.0
+
+v3.4.2: - Update log4j to 2.15.0
+
 v3.4.1:	- Update commons-io
 		- Update JDA
 		- Update jsoup
