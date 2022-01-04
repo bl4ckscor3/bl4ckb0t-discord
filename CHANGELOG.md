@@ -1,3 +1,5 @@
+v3.4.5: - Update log4j to 2.17.1
+
 v3.4.4: - Update log4j to 2.17.0
 
 v3.4.3: - Update log4j to 2.16.0

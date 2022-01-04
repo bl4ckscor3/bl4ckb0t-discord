@@ -27,7 +27,7 @@
 		<dependency>
 			<groupId>bl4ckb0t-discord</groupId>
 			<artifactId>bl4ckb0t-discord</artifactId>
-			<version>3.4.4</version>
+			<version>3.4.5</version>
 		</dependency>
 	</dependencies>
 </project>
