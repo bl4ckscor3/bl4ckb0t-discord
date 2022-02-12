@@ -16,7 +16,6 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.ResumedEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -26,7 +25,7 @@ public class Main extends ListenerAdapter
 	private static boolean dev;
 	private static JDA client;
 	public static ModuleManager manager;
-	public static final String VERSION = "v3.4.5";
+	public static final String VERSION = "v3.5";
 	public static final Main INSTANCE = new Main();
 
 	public static void main(String[] args)
@@ -61,33 +60,31 @@ public class Main extends ListenerAdapter
 	}
 
 	@Override
-	public void onPrivateMessageReceived(PrivateMessageReceivedEvent event)
-	{
-		if(IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getIdLong()))
-		{
-			HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong());
-
-			((IRequestDM)info.get("instance")).onDMReceived(event, info);
-			IRequestDM.AWAITED_DMS.remove(event.getAuthor().getIdLong());
-		}
-	}
-
-	@Override
 	public void onMessageReceived(MessageReceivedEvent event)
 	{
 		try
 		{
 			if(event.getChannel().getType() == ChannelType.PRIVATE)
-				return;
-
-			for(AbstractModule m : (ArrayList<AbstractModule>)ModuleManager.MODULES.clone()) //.clone to counteract ConcurrentModificationException
 			{
-				if(m.triggeredBy(event))
+				if(IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getIdLong()))
 				{
-					if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY)))
+					HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong());
+
+					((IRequestDM)info.get("instance")).onDMReceived(event, info);
+					IRequestDM.AWAITED_DMS.remove(event.getAuthor().getIdLong());
+				}
+			}
+			else
+			{
+				for(AbstractModule m : (ArrayList<AbstractModule>)ModuleManager.MODULES.clone()) //.clone to counteract ConcurrentModificationException
+				{
+					if(m.triggeredBy(event))
 					{
-						if((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
-							m.exe(event, Utilities.toArgs(event.getMessage().getContentRaw())); //no return to allow for modules to fire after other modules
+						if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY)))
+						{
+							if((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
+								m.exe(event, Utilities.toArgs(event.getMessage().getContentRaw())); //no return to allow for modules to fire after other modules
+						}
 					}
 				}
 			}
@@ -116,7 +113,7 @@ public class Main extends ListenerAdapter
 	}
 
 	@Override
-	public void onResume(ResumedEvent event)
+	public void onResumed(ResumedEvent event)
 	{
 		updatePresence();
 	}

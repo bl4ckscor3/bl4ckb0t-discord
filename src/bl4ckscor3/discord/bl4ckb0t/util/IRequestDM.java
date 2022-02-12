@@ -2,7 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.util;
 
 import java.util.HashMap;
 
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public interface IRequestDM
 {
@@ -26,5 +26,5 @@ public interface IRequestDM
 	 * @param event The event holding information about the DM
 	 * @param info Extra info about the context
 	 */
-	public void onDMReceived(PrivateMessageReceivedEvent event, HashMap<String,Object> info);
+	public void onDMReceived(MessageReceivedEvent event, HashMap<String,Object> info);
 }

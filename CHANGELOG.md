@@ -1,3 +1,6 @@
+v3.5:	- Update JDA to 5.0.0-alpha.1
+			-> The bot now works in threads!
+
 v3.4.5: - Update log4j to 2.17.1
 
 v3.4.4: - Update log4j to 2.17.0

@@ -120,7 +120,7 @@ public class Utilities
 	 */
 	public static void sendMessage(MessageChannel channel, MessageEmbed embed)
 	{
-		channel.sendMessage(embed).queue();
+		channel.sendMessageEmbeds(embed).queue();
 	}
 
 	/**
@@ -132,7 +132,7 @@ public class Utilities
 	 */
 	public static void sendMessage(MessageChannel channel, MessageEmbed embed, Consumer<? super Message> success)
 	{
-		channel.sendMessage(embed).queue(success);
+		channel.sendMessageEmbeds(embed).queue(success);
 	}
 
 	public static void deleteMessage(MessageChannel channel, long messageID)

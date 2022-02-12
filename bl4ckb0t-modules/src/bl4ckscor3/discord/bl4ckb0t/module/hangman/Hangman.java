@@ -8,7 +8,6 @@ import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
 
 public class Hangman extends AbstractModule implements IRequestDM
 {
@@ -144,7 +143,7 @@ public class Hangman extends AbstractModule implements IRequestDM
 	}
 
 	@Override
-	public void onDMReceived(PrivateMessageReceivedEvent event, HashMap<String,Object> info)
+	public void onDMReceived(MessageReceivedEvent event, HashMap<String,Object> info)
 	{
 		MessageChannel channel = (MessageChannel)info.get("channel");
 
