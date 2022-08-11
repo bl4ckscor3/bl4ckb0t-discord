@@ -1,3 +1,6 @@
+v3.5.1:	- Update JAD to 5.0.0-alpha.17
+		- Add Main#isDev to check whether the bot is running in with the dev flag or not
+
 v3.5:	- Update JDA to 5.0.0-alpha.1
 			-> The bot now works in threads!
 

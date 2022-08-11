@@ -8,6 +8,7 @@ import bl4ckscor3.discord.bl4ckb0t.Main;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.requests.RestAction;
 
@@ -37,13 +38,13 @@ public class Utilities
 	/**
 	 * Reacts to the given message with all given emojis
 	 * @param msg The message to react to
-	 * @param emojis The emojis to react with
+	 * @param emojis The unicode emojis to react with
 	 */
 	public static void react(Message msg, String... emojis)
 	{
 		for(String s : emojis)
 		{
-			msg.addReaction(s).queue();
+			msg.addReaction(Emoji.fromUnicode(s)).queue();
 		}
 	}
 

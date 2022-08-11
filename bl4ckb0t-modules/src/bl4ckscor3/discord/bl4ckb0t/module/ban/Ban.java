@@ -4,10 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.UserSnowflake;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
@@ -42,8 +44,8 @@ public class Ban extends AbstractModule implements IReactable
 	{
 		BanInfo banInfo = REACTION_INFO.remove(event.getMessageIdLong());
 
-		if(banInfo != null && event.getReactionEmote().getName().equals("✅"))
-			event.getGuild().ban(banInfo.userId, 0, banInfo.reason).complete();
+		if(banInfo != null && event.getEmoji().getName().equals("✅"))
+			event.getGuild().ban(UserSnowflake.fromId(banInfo.userId), 0, banInfo.reason).complete();
 	}
 
 	@Override
@@ -55,6 +57,6 @@ public class Ban extends AbstractModule implements IReactable
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getGuild().getIdLong() == SECURITYCRAFT_ID && event.getMessage().getContentRaw().startsWith("-ban");
+		return (Main.isDev() || event.getGuild().getIdLong() == SECURITYCRAFT_ID) && event.getMessage().getContentRaw().startsWith("-ban");
 	}
 }

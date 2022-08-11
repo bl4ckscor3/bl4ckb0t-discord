@@ -38,13 +38,13 @@ public class Exit extends AbstractModule implements IReactable, BuiltInModule
 	@Override
 	public void onReactionAdd(MessageReactionAddEvent event)
 	{
-		if(event.getReaction().getReactionEmote().getName().equals("✅"))
+		if(event.getReaction().getEmoji().getName().equals("✅"))
 		{
 			Utilities.deleteMessage(event.getChannel(), event.getMessageIdLong());
 			Main.client().shutdown();
 			System.exit(0);
 		}
-		else if(event.getReaction().getReactionEmote().getName().equals("❌"))
+		else if(event.getReaction().getEmoji().getName().equals("❌"))
 			Utilities.deleteMessage(event.getChannel(), event.getMessageIdLong());
 	}
 }

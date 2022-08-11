@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -45,7 +46,7 @@ public class SCRules extends AbstractModule
 			try
 			{
 				int rule = Integer.parseInt(args[0]);
-				List<User> mentions = event.getMessage().getMentionedUsers();
+				List<User> mentions = event.getMessage().getMentions().getUsers();
 				boolean mention = !mentions.isEmpty();
 				EmbedBuilder embed = new EmbedBuilder().setColor(0xFF0000)
 						.setTitle("❗ **Rule** " + NUMBERS[rule])
@@ -72,6 +73,6 @@ public class SCRules extends AbstractModule
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event)
 	{
-		return event.getGuild().getIdLong() == SECURITYCRAFT_ID && event.getMessage().getContentRaw().startsWith("-rule");
+		return (Main.isDev() || event.getGuild().getIdLong() == SECURITYCRAFT_ID) && event.getMessage().getContentRaw().startsWith("-rule");
 	}
 }

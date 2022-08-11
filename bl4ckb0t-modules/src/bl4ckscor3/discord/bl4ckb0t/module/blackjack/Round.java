@@ -100,7 +100,7 @@ public class Round implements IReactable
 
 		Player p = players.getCurrentPlayer();
 
-		switch(event.getReaction().getReactionEmote().getName())
+		switch(event.getReaction().getEmoji().getName())
 		{
 			case DIE:
 				p.addCard(shoe.pull());

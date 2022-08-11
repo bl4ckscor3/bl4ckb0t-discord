@@ -25,7 +25,7 @@ public class Main extends ListenerAdapter
 	private static boolean dev;
 	private static JDA client;
 	public static ModuleManager manager;
-	public static final String VERSION = "v3.5";
+	public static final String VERSION = "v3.5.1";
 	public static final Main INSTANCE = new Main();
 
 	public static void main(String[] args)
@@ -34,7 +34,7 @@ public class Main extends ListenerAdapter
 
 		try
 		{
-			JDABuilder builder = JDABuilder.create(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.DIRECT_MESSAGES);
+			JDABuilder builder = JDABuilder.create(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
 
 			manager = new ModuleManager(builder);
 			manager.initPrivate();
@@ -129,5 +129,10 @@ public class Main extends ListenerAdapter
 	public static JDA client()
 	{
 		return client;
+	}
+
+	public static boolean isDev()
+	{
+		return dev;
 	}
 }
