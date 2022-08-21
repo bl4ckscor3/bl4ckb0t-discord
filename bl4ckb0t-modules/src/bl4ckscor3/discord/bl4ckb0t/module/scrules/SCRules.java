@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class SCRules extends AbstractModule
@@ -59,15 +60,18 @@ public class SCRules extends AbstractModule
 					embed.setImage("https://i.imgur.com/JoKAvjW.png");
 
 				Utilities.sendMessage(event.getChannel(), embed.build());
+				message.delete().queue();
 			}
-			catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {}
+			catch(NumberFormatException | ArrayIndexOutOfBoundsException e)
+			{
+				message.addReaction(Emoji.fromUnicode("❗")).queue();
+			}
 			catch(Exception e)
 			{
 				e.printStackTrace();
+				message.addReaction(Emoji.fromUnicode("‼")).queue();
 			}
 		}
-
-		message.delete().queue();
 	}
 
 	@Override
