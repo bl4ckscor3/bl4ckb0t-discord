@@ -3,26 +3,24 @@ package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 import java.util.LinkedList;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Shoe
-{
+public class Shoe {
 	private final FullDeck deck = new FullDeck();
-	private final LinkedList<Card> shoe = new LinkedList<Card>();
+	private final LinkedList<Card> shoe = new LinkedList<>();
 
 	/**
 	 * Randomly selects cards from six full decks to put into the shoe and selects a cutting card
 	 */
-	public Shoe()
-	{
+	public Shoe() {
 		reset();
 	}
 
 	/**
 	 * Pulls the first card out of the shoe and returns it
+	 *
 	 * @return The first card sitting in the shoe
 	 */
-	public Card pull()
-	{
-		if(shoe.size() == 0)
+	public Card pull() {
+		if (shoe.size() == 0)
 			reset();
 
 		return shoe.removeFirst();
@@ -31,10 +29,8 @@ public class Shoe
 	/**
 	 * Resets this shoe
 	 */
-	public void reset()
-	{
-		for(int i = 0; i < deck.size() * 6; i++)
-		{
+	public void reset() {
+		for (int i = 0; i < deck.size() * 6; i++) {
 			shoe.add(deck.pull());
 		}
 

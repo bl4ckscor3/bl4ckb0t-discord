@@ -4,24 +4,19 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class Leet extends AbstractModule
-{
-	public Leet(String name)
-	{
+public class Leet extends AbstractModule {
+	public Leet(String name) {
 		super(name);
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception
-	{
-		if(args.length >= 1)
-		{
+	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+		if (args.length >= 1) {
 			char[] chars = event.getMessage().getContentRaw().substring(6).toCharArray();
 			String result = "";
 
-			for(int i = 0; i < chars.length; i++)
-			{
-				result += switch(chars[i]) {
+			for (int i = 0; i < chars.length; i++) {
+				result += switch (chars[i]) {
 					case 'A', 'a' -> "4";
 					case 'E', 'e' -> "3";
 					case 'G', 'g' -> "6";
@@ -39,8 +34,7 @@ public class Leet extends AbstractModule
 	}
 
 	@Override
-	public boolean triggeredBy(MessageReceivedEvent event)
-	{
+	public boolean triggeredBy(MessageReceivedEvent event) {
 		String s = event.getMessage().getContentRaw().toLowerCase();
 
 		return s.startsWith("-leet") || s.startsWith("-1337");

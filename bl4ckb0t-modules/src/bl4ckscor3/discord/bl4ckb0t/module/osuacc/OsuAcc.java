@@ -4,18 +4,14 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class OsuAcc extends AbstractModule
-{
-	public OsuAcc(String name)
-	{
+public class OsuAcc extends AbstractModule {
+	public OsuAcc(String name) {
 		super(name);
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception
-	{
-		try
-		{
+	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+		try {
 			double num300s = Integer.parseInt(args[0]);
 			double num100s = Integer.parseInt(args[1]);
 			double num50s = Integer.parseInt(args[2]);
@@ -25,16 +21,13 @@ public class OsuAcc extends AbstractModule
 
 			Utilities.sendMessage(event, String.format("%.2f", (numerator / denominator) * 100).replace(',', '.') + "%");
 		}
-		catch(NumberFormatException e)
-		{
+		catch (NumberFormatException e) {
 			Utilities.sendMessage(event, "One or more arguments weren't numbers. Usage: -osuacc num300s num100s num50s numMisses");
 		}
 	}
 
 	@Override
-	public boolean triggeredBy(MessageReceivedEvent event)
-	{
-		return event.getMessage().getContentRaw().toLowerCase().startsWith("-osuacc") ||
-				event.getMessage().getContentRaw().toLowerCase().startsWith("-oa");
+	public boolean triggeredBy(MessageReceivedEvent event) {
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-osuacc") || event.getMessage().getContentRaw().toLowerCase().startsWith("-oa");
 	}
 }

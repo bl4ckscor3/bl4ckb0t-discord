@@ -8,49 +8,42 @@ import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class BlackJack extends AbstractModule
-{
-	public HashMap<MessageChannel,Round> rounds = new HashMap<>();
+public class BlackJack extends AbstractModule {
+	public HashMap<MessageChannel, Round> rounds = new HashMap<>();
 
-	public BlackJack(String name)
-	{
+	public BlackJack(String name) {
 		super(name);
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception
-	{
-		if(!rounds.containsKey(event.getChannel()))
+	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+		if (!rounds.containsKey(event.getChannel()))
 			rounds.put(event.getChannel(), new Round(event.getChannel()));
 
 		Round round = rounds.get(event.getChannel());
 
-		if(args.length != 0 && args[0].toLowerCase().equals("leave"))
-		{
+		if (args.length != 0 && args[0].toLowerCase().equals("leave")) {
 			round.leave(event.getAuthor());
 
-			if(round.players.isEmpty())
+			if (round.players.isEmpty())
 				rounds.remove(event.getChannel());
 		}
-		else if(args.length != 0 && args[0].toLowerCase().equals("reset") && event.getAuthor().getIdLong() == IDs.BL4CKSCOR3)
+		else if (args.length != 0 && args[0].toLowerCase().equals("reset") && event.getAuthor().getIdLong() == IDs.BL4CKSCOR3)
 			round.reset(true);
-		else
-		{
-			if(!round.join(event.getAuthor(), Status.WAITING))
+		else {
+			if (!round.join(event.getAuthor(), Status.WAITING))
 				return;
 
-			if(!round.hasStarted && !round.isStarting)
+			if (!round.hasStarted && !round.isStarting)
 				round.start();
 		}
 	}
 
 	@Override
-	public boolean triggeredBy(MessageReceivedEvent event)
-	{
-		if(event.getMessage().getContentRaw().toLowerCase().startsWith("-blowjob"))
+	public boolean triggeredBy(MessageReceivedEvent event) {
+		if (event.getMessage().getContentRaw().toLowerCase().startsWith("-blowjob"))
 			Utilities.sendMessage(event.getChannel(), "No, " + event.getAuthor().getAsMention());
 
-		return event.getMessage().getContentRaw().toLowerCase().startsWith("-bj") ||
-				event.getMessage().getContentRaw().toLowerCase().startsWith("-blackjack");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("-bj") || event.getMessage().getContentRaw().toLowerCase().startsWith("-blackjack");
 	}
 }

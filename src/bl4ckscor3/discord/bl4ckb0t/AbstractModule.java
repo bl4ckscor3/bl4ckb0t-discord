@@ -6,38 +6,38 @@ import java.net.URLClassLoader;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public abstract class AbstractModule
-{
-	/**The name of the module. For public modules it's the file name, private modules have their name predefined*/
+public abstract class AbstractModule {
+	/** The name of the module. For public modules it's the file name, private modules have their name predefined */
 	private String name;
 	private URLClassLoader loader;
 
 	/**
 	 * Constructor
+	 *
 	 * @param n The name of the module
 	 */
-	public AbstractModule(String name)
-	{
+	public AbstractModule(String name) {
 		this.name = name;
 	}
 
 	/**
 	 * Initializes this module. This method is called before the bot connects to Discord
 	 */
-	public void onEnable(JDABuilder builder){}
+	public void onEnable(JDABuilder builder) {}
 
 	/**
 	 * Can be used for actions that should happen after the bot connects to Discord
 	 */
-	public void postConnect(){}
+	public void postConnect() {}
 
 	/**
 	 * Gets called when the module gets disabled. Should be used to remove any Listeners
 	 */
-	public void onDisable(){}
+	public void onDisable() {}
 
 	/**
 	 * Executes this module
+	 *
 	 * @param content The event that triggered this module
 	 * @param args The arguments of the command, without the command itself
 	 */
@@ -52,46 +52,38 @@ public abstract class AbstractModule
 	/**
 	 * @return An array of channel IDs in which this command is allowed to be executed
 	 */
-	public long[] allowedChannels()
-	{
+	public long[] allowedChannels() {
 		return null;
 	}
 
 	/**
 	 * @return true if this command can only be executed by Vauff and bl4ckscor3, false otherwise
 	 */
-	public boolean requiresPermission()
-	{
+	public boolean requiresPermission() {
 		return false;
 	}
 
 	/**
 	 * Gets the name of this module
+	 *
 	 * @return The name of this module
 	 */
-	public final String getName()
-	{
+	public final String getName() {
 		return name;
 	}
 
-	public final void setLoader(URLClassLoader loader)
-	{
+	public final void setLoader(URLClassLoader loader) {
 		this.loader = loader;
 	}
 
-	public final void closeLoader()
-	{
-		if(loader != null)
-		{
-			try
-			{
+	public final void closeLoader() {
+		if (loader != null) {
+			try {
 				loader.close();
 			}
-			catch(IOException e)
-			{
+			catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 }
-

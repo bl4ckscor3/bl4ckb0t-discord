@@ -4,22 +4,18 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class Playtext extends AbstractModule
-{
-	public Playtext(String name)
-	{
+public class Playtext extends AbstractModule {
+	public Playtext(String name) {
 		super(name);
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception
-	{
+	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
 		Main.INSTANCE.updatePresence();
 	}
 
 	@Override
-	public boolean triggeredBy(MessageReceivedEvent event)
-	{
+	public boolean triggeredBy(MessageReceivedEvent event) {
 		return event.getMessage().getContentRaw().startsWith("-playtext");
 	}
 }

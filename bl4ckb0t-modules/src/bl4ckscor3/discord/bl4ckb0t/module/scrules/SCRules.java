@@ -13,8 +13,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
-public class SCRules extends AbstractModule
-{
+public class SCRules extends AbstractModule {
 	private static final long SECURITYCRAFT_ID = 318542314010312715L;
 	private static final String[] RULES = {
 			"", //no rule 0
@@ -28,46 +27,37 @@ public class SCRules extends AbstractModule
 			"Don't ask about updates, particularly release ETAs. They will be published eventually. _It's done when it's done._",
 			"Do not advertise. This includes posting Discord invite links, unless asked about."
 	};
-	private static final String[] NUMBERS = {"", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"};
+	private static final String[] NUMBERS = {
+			"", "1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣"
+	};
 	private static final long ALLOWED_ROLE = 329137158692798464L;
 
-	public SCRules(String name)
-	{
+	public SCRules(String name) {
 		super(name);
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception
-	{
+	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
 		Message message = event.getMessage();
 		Guild guild = message.getGuild();
 
-		if(guild.getMembersWithRoles(guild.getRoleById(ALLOWED_ROLE)).stream().anyMatch(member -> member.getIdLong() == message.getAuthor().getIdLong()))
-		{
-			try
-			{
+		if (guild.getMembersWithRoles(guild.getRoleById(ALLOWED_ROLE)).stream().anyMatch(member -> member.getIdLong() == message.getAuthor().getIdLong())) {
+			try {
 				int rule = Integer.parseInt(args[0]);
 				List<User> mentions = event.getMessage().getMentions().getUsers();
 				boolean mention = !mentions.isEmpty();
-				EmbedBuilder embed = new EmbedBuilder().setColor(0xFF0000)
-						.setTitle("❗ **Rule** " + NUMBERS[rule])
-						.setDescription((mention ? mentions.stream().map(u -> u.getAsMention()).collect(Collectors.joining(", ")) + ": " : "") + RULES[rule])
-						.addField("Please take a moment to review the rules.", "[Click here to see the rules](https://canary.discord.com/channels/318542314010312715/318544502438756352/667401399025401866)", false)
-						.setTimestamp(message.getTimeCreated())
-						.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl());
+				EmbedBuilder embed = new EmbedBuilder().setColor(0xFF0000).setTitle("❗ **Rule** " + NUMBERS[rule]).setDescription((mention ? mentions.stream().map(u -> u.getAsMention()).collect(Collectors.joining(", ")) + ": " : "") + RULES[rule]).addField("Please take a moment to review the rules.", "[Click here to see the rules](https://canary.discord.com/channels/318542314010312715/318544502438756352/667401399025401866)", false).setTimestamp(message.getTimeCreated()).setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl());
 
-				if(rule == 1)
+				if (rule == 1)
 					embed.setImage("https://i.imgur.com/JoKAvjW.png");
 
 				Utilities.sendMessage(event.getChannel(), embed.build());
 				message.delete().queue();
 			}
-			catch(NumberFormatException | ArrayIndexOutOfBoundsException e)
-			{
+			catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
 				message.addReaction(Emoji.fromUnicode("❗")).queue();
 			}
-			catch(Exception e)
-			{
+			catch (Exception e) {
 				e.printStackTrace();
 				message.addReaction(Emoji.fromUnicode("‼")).queue();
 			}
@@ -75,8 +65,7 @@ public class SCRules extends AbstractModule
 	}
 
 	@Override
-	public boolean triggeredBy(MessageReceivedEvent event)
-	{
+	public boolean triggeredBy(MessageReceivedEvent event) {
 		return (Main.isDev() || event.getGuild().getIdLong() == SECURITYCRAFT_ID) && event.getMessage().getContentRaw().startsWith("-rule");
 	}
 }

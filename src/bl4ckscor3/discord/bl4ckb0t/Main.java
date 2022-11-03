@@ -20,20 +20,17 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
-public class Main extends ListenerAdapter
-{
+public class Main extends ListenerAdapter {
 	private static boolean dev;
 	private static JDA client;
 	public static ModuleManager manager;
 	public static final String VERSION = "v3.5.1";
 	public static final Main INSTANCE = new Main();
 
-	public static void main(String[] args)
-	{
+	public static void main(String[] args) {
 		dev = args.length >= 1 && args[0].equalsIgnoreCase("-dev");
 
-		try
-		{
+		try {
 			JDABuilder builder = JDABuilder.create(dev ? Tokens.DISCORD_DEV : Tokens.DISCORD, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.MESSAGE_CONTENT);
 
 			manager = new ModuleManager(builder);
@@ -42,17 +39,14 @@ public class Main extends ListenerAdapter
 			builder.addEventListeners(INSTANCE);
 			client = builder.build();
 		}
-		catch(Throwable t)
-		{
+		catch (Throwable t) {
 			t.printStackTrace();
 		}
 	}
 
 	@Override
-	public void onReady(ReadyEvent event)
-	{
-		for(AbstractModule m : ModuleManager.MODULES)
-		{
+	public void onReady(ReadyEvent event) {
+		for (AbstractModule m : ModuleManager.MODULES) {
 			m.postConnect();
 		}
 
@@ -60,79 +54,63 @@ public class Main extends ListenerAdapter
 	}
 
 	@Override
-	public void onMessageReceived(MessageReceivedEvent event)
-	{
-		try
-		{
-			if(event.getChannel().getType() == ChannelType.PRIVATE)
-			{
-				if(IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getIdLong()))
-				{
-					HashMap<String,Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong());
+	public void onMessageReceived(MessageReceivedEvent event) {
+		try {
+			if (event.getChannel().getType() == ChannelType.PRIVATE) {
+				if (IRequestDM.AWAITED_DMS.containsKey(event.getAuthor().getIdLong())) {
+					HashMap<String, Object> info = IRequestDM.AWAITED_DMS.get(event.getAuthor().getIdLong());
 
-					((IRequestDM)info.get("instance")).onDMReceived(event, info);
+					((IRequestDM) info.get("instance")).onDMReceived(event, info);
 					IRequestDM.AWAITED_DMS.remove(event.getAuthor().getIdLong());
 				}
 			}
-			else
-			{
-				for(AbstractModule m : (ArrayList<AbstractModule>)ModuleManager.MODULES.clone()) //.clone to counteract ConcurrentModificationException
+			else {
+				for (AbstractModule m : (ArrayList<AbstractModule>) ModuleManager.MODULES.clone()) //.clone to counteract ConcurrentModificationException
 				{
-					if(m.triggeredBy(event))
-					{
-						if(!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY)))
-						{
-							if((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
+					if (m.triggeredBy(event)) {
+						if (!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY))) {
+							if ((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
 								m.exe(event, Utilities.toArgs(event.getMessage().getContentRaw())); //no return to allow for modules to fire after other modules
 						}
 					}
 				}
 			}
 		}
-		catch(Exception e)
-		{
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void onMessageReactionAdd(MessageReactionAddEvent event)
-	{
-		try
-		{
-			if(IReactable.AWAITED_REACTIONS.containsKey(event.getMessageIdLong()) && event.getUser().getIdLong() == IReactable.AWAITED_REACTIONS.get(event.getMessageIdLong()).getUserID())
-			{
+	public void onMessageReactionAdd(MessageReactionAddEvent event) {
+		try {
+			if (IReactable.AWAITED_REACTIONS.containsKey(event.getMessageIdLong()) && event.getUser().getIdLong() == IReactable.AWAITED_REACTIONS.get(event.getMessageIdLong()).getUserID()) {
 				IReactable.AWAITED_REACTIONS.get(event.getMessageIdLong()).getReactable().onReactionAdd(event);
 				IReactable.AWAITED_REACTIONS.remove(event.getMessageIdLong());
 			}
 		}
-		catch(Exception e)
-		{
+		catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void onResumed(ResumedEvent event)
-	{
+	public void onResumed(ResumedEvent event) {
 		updatePresence();
 	}
 
-	public void updatePresence()
-	{
+	public void updatePresence() {
 		client.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("with bl4ckscor3"));
 	}
 
 	/**
-	 *  @return The client
+	 * @return The client
 	 */
-	public static JDA client()
-	{
+	public static JDA client() {
 		return client;
 	}
 
-	public static boolean isDev()
-	{
+	public static boolean isDev() {
 		return dev;
 	}
 }

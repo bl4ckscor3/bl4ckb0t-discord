@@ -11,8 +11,7 @@ import net.dv8tion.jda.api.entities.User;
 /**
  * A hangman game. Holds the phrase itself, which letters of it have already been guessed, and the state of the hangman.
  */
-public class Game
-{
+public class Game {
 	public char[] phrase;
 	public boolean[] guessed;
 	public LetterState[] letterStates = new LetterState[26];
@@ -25,45 +24,43 @@ public class Game
 
 	/**
 	 * Sets up this hangman game
+	 *
 	 * @param a The user who started this game
 	 * @param p The phrase to guess
 	 */
-	public Game(String u, String p)
-	{
+	public Game(String u, String p) {
 		user = u;
 		originalPhrase = p;
 		phrase = p.toLowerCase().toCharArray();
 		guessed = new boolean[phrase.length];
 		Arrays.fill(letterStates, LetterState.UNUSED);
 
-		for(int i = 0; i < phrase.length; i++)
-		{
+		for (int i = 0; i < phrase.length; i++) {
 			guessed[i] = !Character.isAlphabetic(phrase[i]);
 		}
 	}
 
 	/**
 	 * Sets the message that this game is being played in
+	 *
 	 * @param message The message to set
 	 */
-	public void setMessage(Message message)
-	{
+	public void setMessage(Message message) {
 		this.message = message;
 	}
 
 	/**
-	 * Checks whether the given character is in the phrase array and sets all positions x in the guessed array to true if it is at position x in the phrase array. Does not increase hangman
+	 * Checks whether the given character is in the phrase array and sets all positions x in the guessed array to true if it
+	 * is at position x in the phrase array. Does not increase hangman
+	 *
 	 * @param c The character to check
 	 * @return true if the character was present in the phrase array, false otherwise
 	 */
-	public boolean guess(char c)
-	{
+	public boolean guess(char c) {
 		boolean correct = false;
 
-		for(int i = 0; i < phrase.length; i++)
-		{
-			if(phrase[i] == Character.toLowerCase(c))
-			{
+		for (int i = 0; i < phrase.length; i++) {
+			if (phrase[i] == Character.toLowerCase(c)) {
 				guessed[i] = true;
 				correct = true;
 			}
@@ -75,12 +72,10 @@ public class Game
 	/**
 	 * @return The phrase as it was sent in the direct message
 	 */
-	public String getPhrase()
-	{
+	public String getPhrase() {
 		String phrase = "";
 
-		for(char c : this.phrase)
-		{
+		for (char c : this.phrase) {
 			phrase += c;
 		}
 
@@ -89,18 +84,17 @@ public class Game
 
 	/**
 	 * Gets all letters with the given state in a formatted message
+	 *
 	 * @state The state which the letter has to be in to be included in the message
 	 * @return The formatted message, characters are seperated by spaces
 	 */
-	public String getLettersByState(LetterState state)
-	{
+	public String getLettersByState(LetterState state) {
 		String result = "";
 
-		for(int i = 0; i < letterStates.length; i++)
-		{
-			if(letterStates[i] == LetterState.UNUSED)
+		for (int i = 0; i < letterStates.length; i++) {
+			if (letterStates[i] == LetterState.UNUSED)
 				continue;
-			else if(letterStates[i] == state)
+			else if (letterStates[i] == state)
 				result += Character.toString(i + 97);
 		}
 
@@ -109,36 +103,32 @@ public class Game
 
 	/**
 	 * Gets the game's status formatted as a message without any initial text and with showing the currently unsolved phrase
+	 *
 	 * @see {@link #getGameMessage(String, char, boolean)}
 	 */
-	public String getGameMessage()
-	{
+	public String getGameMessage() {
 		return getGameMessage("", '0', true);
 	}
 
 	/**
 	 * Gets the game's status formatted as a message
+	 *
 	 * @param The text that this message should start with
 	 * @param alreadyGuessedLetter If this is not '0', a text about this letter already having been guessed will be displayed
 	 * @param showUnsolvedPhrase Whether the unsolved phrase should be displayed
 	 * @return The message
 	 */
-	public String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedPhrase)
-	{
+	public String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedPhrase) {
 		String result = "Started by: " + user + System.lineSeparator() + initialText;
 
-		if(alreadyGuessedLetter != '0')
+		if (alreadyGuessedLetter != '0')
 			result += String.format("You already guessed `%s`!%s", alreadyGuessedLetter, System.lineSeparator());
 
-		if(showUnsolvedPhrase)
-		{
-			for(int i = 0; i < phrase.length; i++)
-			{
-				if(Character.isAlphabetic(phrase[i]))
-				{
-					if(guessed[i])
-					{
-						if(phrase[i] == lastGuessedLetter)
+		if (showUnsolvedPhrase) {
+			for (int i = 0; i < phrase.length; i++) {
+				if (Character.isAlphabetic(phrase[i])) {
+					if (guessed[i]) {
+						if (phrase[i] == lastGuessedLetter)
 							result += "**" + phrase[i] + "** ";
 						else
 							result += phrase[i] + " ";
@@ -146,7 +136,7 @@ public class Game
 					else
 						result += "\\_ ";
 				}
-				else if(phrase[i] == ' ')
+				else if (phrase[i] == ' ')
 					result += "  ";
 			}
 
@@ -162,85 +152,26 @@ public class Game
 
 	/**
 	 * Gets a string saying what part of the hangman structure was last built
+	 *
 	 * @return The string
 	 */
-	public String getBuildProgressString()
-	{
-		if(hangman == -1)
+	public String getBuildProgressString() {
+		if (hangman == -1)
 			return "";
-		else return "```" + switch(hangman) {
-			//text blocks don't format the message nicely
-			case 0 ->
-			" _____\n" +
-			"/     \\";
-			case 1 ->
-			"   |\n" +
-			"   |\n" +
-			"   |\n" +
-			" __|__\n" +
-			"/     \\";
-			case 2 ->
-			"   | /\n" +
-			"   |/\n" +
-			"   |\n" +
-			" __|__\n" +
-			"/     \\";
-			case 3 ->
-			"   ________\n" +
-			"   | /\n" +
-			"   |/\n" +
-			"   |\n" +
-			" __|__\n" +
-			"/     \\";
-			case 4 ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/\n" +
-			"   |\n" +
-			" __|__\n" +
-			"/     \\";
-			case 5 ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/     O\n" +
-			"   |\n" +
-			" __|__\n" +
-			"/     \\";
-			case 6 ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/     O\n" +
-			"   |      |\n" +
-			" __|__\n" +
-			"/     \\";
-			case 7 ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/     O\n" +
-			"   |     \\|\n" +
-			" __|__\n" +
-			"/     \\";
-			case 8 ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/     O\n" +
-			"   |     \\|/\n" +
-			" __|__\n" +
-			"/     \\";
-			case 9 ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/     O\n" +
-			"   |     \\|/\n" +
-			" __|__   /\n" +
-			"/     \\";
-			default ->
-			"   ________\n" +
-			"   | /    |\n" +
-			"   |/     O\n" +
-			"   |     \\|/\n" +
-			" __|__   / \\\n" +
-			"/     \\";
-		} + "```";
+		else
+			return "```" + switch (hangman) {
+				//text blocks don't format the message nicely
+				case 0 -> " _____\n" + "/     \\";
+				case 1 -> "   |\n" + "   |\n" + "   |\n" + " __|__\n" + "/     \\";
+				case 2 -> "   | /\n" + "   |/\n" + "   |\n" + " __|__\n" + "/     \\";
+				case 3 -> "   ________\n" + "   | /\n" + "   |/\n" + "   |\n" + " __|__\n" + "/     \\";
+				case 4 -> "   ________\n" + "   | /    |\n" + "   |/\n" + "   |\n" + " __|__\n" + "/     \\";
+				case 5 -> "   ________\n" + "   | /    |\n" + "   |/     O\n" + "   |\n" + " __|__\n" + "/     \\";
+				case 6 -> "   ________\n" + "   | /    |\n" + "   |/     O\n" + "   |      |\n" + " __|__\n" + "/     \\";
+				case 7 -> "   ________\n" + "   | /    |\n" + "   |/     O\n" + "   |     \\|\n" + " __|__\n" + "/     \\";
+				case 8 -> "   ________\n" + "   | /    |\n" + "   |/     O\n" + "   |     \\|/\n" + " __|__\n" + "/     \\";
+				case 9 -> "   ________\n" + "   | /    |\n" + "   |/     O\n" + "   |     \\|/\n" + " __|__   /\n" + "/     \\";
+				default -> "   ________\n" + "   | /    |\n" + "   |/     O\n" + "   |     \\|/\n" + " __|__   / \\\n" + "/     \\";
+			} + "```";
 	}
 }

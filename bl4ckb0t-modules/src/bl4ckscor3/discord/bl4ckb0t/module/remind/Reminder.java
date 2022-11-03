@@ -17,8 +17,7 @@ import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.entities.MessageChannel;
 
-public class Reminder
-{
+public class Reminder {
 	public static int latestId = 1;
 	private int id;
 	private long issuedUser;
@@ -29,20 +28,18 @@ public class Reminder
 
 	/**
 	 * Saves and manages a reminder
+	 *
 	 * @param user The user this Reminder belongs to
 	 * @param channel The channel this Reminder got issued from
 	 * @param e The reminder text
 	 * @param timeDue How long to wait between issuing the Reminder and reminding the person
 	 * @param load Whether or not the reminder gets loaded from a saved reminder
 	 */
-	public Reminder(long user, MessageChannel channel, String e, long timeDue, boolean load) throws URISyntaxException, IOException
-	{
+	public Reminder(long user, MessageChannel channel, String e, long timeDue, boolean load) throws URISyntaxException, IOException {
 		id = latestId++;
 
-		if(load)
-		{
-			if(timeDue <= 0)
-			{
+		if (load) {
+			if (timeDue <= 0) {
 				Utilities.sendMessage(channel, String.format("<@%s>, your reminder for \"%s\" was %s ago.", user, e, TimeParser.longToString(0 - timeDue, "%sd%sh%sm%ss")));
 				latestId--;
 				return;
@@ -50,14 +47,14 @@ public class Reminder
 		}
 
 		File folder = new File(Utilities.getJarLocation() + "/reminders");
-		ArrayList<String> lines = new ArrayList<String>();
+		ArrayList<String> lines = new ArrayList<>();
 
 		f = new File(Utilities.getJarLocation() + "/reminders/" + id + ".txt");
 
-		if(!folder.exists())
+		if (!folder.exists())
 			folder.mkdirs();
 
-		if(!f.exists())
+		if (!f.exists())
 			f.createNewFile();
 
 		issuedUser = user;
@@ -69,8 +66,7 @@ public class Reminder
 			f.delete();
 		}, timeDue, TimeUnit.MILLISECONDS);
 
-		if(!load)
-		{
+		if (!load) {
 			lines.add("issuedUser: " + issuedUser);
 			lines.add("issuedChannel: " + issuedChannel.getIdLong());
 			lines.add("event: " + ev);
@@ -84,48 +80,42 @@ public class Reminder
 	/**
 	 * @return The ID of the Reminder
 	 */
-	public int getId()
-	{
+	public int getId() {
 		return id;
 	}
 
 	/**
 	 * @return The user this Reminder belongs to
 	 */
-	public long getIssuedUser()
-	{
+	public long getIssuedUser() {
 		return issuedUser;
 	}
 
 	/**
 	 * @return The channel this Reminder got issued from
 	 */
-	public MessageChannel getIssuedChannel()
-	{
+	public MessageChannel getIssuedChannel() {
 		return issuedChannel;
 	}
 
 	/**
 	 * @return The text of this Reminder
 	 */
-	public String getEvent()
-	{
+	public String getEvent() {
 		return ev;
 	}
 
 	/**
 	 * @return How long it's left until reminding the user
 	 */
-	public long getRemainingTime()
-	{
+	public long getRemainingTime() {
 		return thread.getDelay(TimeUnit.MILLISECONDS);
 	}
 
 	/**
 	 * Stops the reminder
 	 */
-	public void stop()
-	{
+	public void stop() {
 		thread.cancel(true);
 		Remind.REMINDERS.remove(this);
 		f.delete();
@@ -134,18 +124,16 @@ public class Reminder
 	/**
 	 * Loads reminders from the filesystem, if existing
 	 */
-	public static void loadReminders() throws URISyntaxException, NumberFormatException, IOException
-	{
-		if(Main.client() == null)
+	public static void loadReminders() throws URISyntaxException, NumberFormatException, IOException {
+		if (Main.client() == null)
 			return;
 
 		File folder = new File(Utilities.getJarLocation() + "/reminders");
 
-		if(!folder.exists())
+		if (!folder.exists())
 			return;
 
-		for(File f : folder.listFiles())
-		{
+		for (File f : folder.listFiles()) {
 			List<String> lines = FileUtils.readLines(f, Charset.defaultCharset());
 			long user = Long.parseLong(lines.get(0).split(": ")[1]);
 			MessageChannel channel = Main.client().getTextChannelById(Long.parseLong(lines.get(1).split(": ")[1]));
@@ -153,21 +141,18 @@ public class Reminder
 			long timeDue = Long.parseLong(lines.get(3).split(": ")[1]) - System.currentTimeMillis();
 			Reminder r = new Reminder(user, channel, e, timeDue, true);
 
-			if(timeDue <= 0)
+			if (timeDue <= 0)
 				f.delete();
-			else if(!f.getName().split(".txt")[0].equals("" + r.getId()))
-			{
+			else if (!f.getName().split(".txt")[0].equals("" + r.getId())) {
 				File newFile = new File(Utilities.getJarLocation() + "/reminders/" + r.getId() + ".txt");
 
 				FileUtils.writeLines(newFile, lines);
 				f.delete();
 
-				try
-				{
+				try {
 					Utilities.sendMessage(channel, String.format("<@%s>, the ID assigned to your reminder for \"%s\" is now %s.", user, e, r.getId()));
 				}
-				catch(Exception ex)
-				{
+				catch (Exception ex) {
 					ex.printStackTrace();
 				}
 			}
