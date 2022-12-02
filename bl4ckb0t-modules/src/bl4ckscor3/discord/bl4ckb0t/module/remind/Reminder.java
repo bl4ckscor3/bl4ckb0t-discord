@@ -15,7 +15,7 @@ import org.apache.commons.io.FileUtils;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
 public class Reminder {
 	public static int latestId = 1;

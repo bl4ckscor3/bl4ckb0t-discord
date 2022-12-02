@@ -2,6 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.ban;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
@@ -41,7 +42,7 @@ public class Ban extends AbstractModule implements IReactable {
 		BanInfo banInfo = REACTION_INFO.remove(event.getMessageIdLong());
 
 		if (banInfo != null && event.getEmoji().getName().equals("✅"))
-			event.getGuild().ban(UserSnowflake.fromId(banInfo.userId), 0, banInfo.reason).complete();
+			event.getGuild().ban(UserSnowflake.fromId(banInfo.userId), 0, TimeUnit.DAYS).reason(banInfo.reason).complete();
 	}
 
 	@Override
