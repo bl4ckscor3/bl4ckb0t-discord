@@ -24,7 +24,6 @@ public class Main extends ListenerAdapter {
 	private static boolean dev;
 	private static JDA client;
 	public static ModuleManager manager;
-	public static final String VERSION = "v3.5.1";
 	public static final Main INSTANCE = new Main();
 
 	public static void main(String[] args) {

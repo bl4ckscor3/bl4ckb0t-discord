@@ -1,7 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t.privatemodules;
 
 import java.awt.Color;
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.JarURLConnection;
@@ -23,8 +22,22 @@ public class Info extends AbstractModule implements BuiltInModule {
 
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
-		Utilities.sendMessage(event, new EmbedBuilder().setColor(new Color(new Random().nextInt(0xFFFFFF))).addField("Version", Main.VERSION, true).addField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true).addField("Build Date", "" + new Date(getBuildDate()), true).addField("Compiled with", "Java " + (getClassFormatVersion() - 44), true) //- 44 to get the java version from the class format version (dirty, but works until this is no longer consistent)
-				.addField("Running on", "Java " + System.getProperty("java.version"), true).addField("Source", "https://github.com/bl4ckscor3/bl4ckb0t-discord", true).addField("Built with JDA", "https://github.com/DV8FromTheWorld/JDA", true).addField("Author", "bl4ckscor3", true).build());
+		try (JarFile jar = getJarFile()) {
+			//@formatter:off
+			Utilities.sendMessage(event, new EmbedBuilder()
+					.setColor(new Color(new Random().nextInt(0xFFFFFF)))
+					.addField("Version", getBotVersion(jar), true)
+					.addField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true)
+					.addField("Build Date", "" + new Date(getBuildDate(jar)), true)
+					.addField("Compiled with", "Java " + (getJdkVersion(jar)), true) //- 44 to get the java version from the class format version (dirty, but works until this is no longer consistent)
+					.addField("Running on", "Java " + System.getProperty("java.version"), true)
+					.addField("Source", "https://github.com/bl4ckscor3/bl4ckb0t-discord", true)
+					.addField("Built with JDA", "https://github.com/DV8FromTheWorld/JDA", true)
+					.addField("Author", "bl4ckscor3", true)
+					.build());
+			//@formatter:on
+		}
+		catch (Exception e) {}
 	}
 
 	@Override
@@ -33,33 +46,42 @@ public class Info extends AbstractModule implements BuiltInModule {
 	}
 
 	/**
-	 * Gets the build date of the jar
+	 * Gets the bot's version from the jar file
 	 *
-	 * @return The build date of the jar as a long, 0 if no jar file has been found
+	 * @param jar The bot's jar file
+	 * @return The bot's version, an empty string if an IOException occurs.
 	 */
-	private long getBuildDate() {
-		try (JarFile jar = getJarFile()) {
-			return jar.getEntry("META-INF/MANIFEST.MF").getTime();
+	private String getBotVersion(JarFile jar) {
+		try {
+			return jar.getManifest().getMainAttributes().getValue("Implementation-Version");
 		}
-		catch (Exception e) {
-			return 0L;
+		catch (IOException e) {
+			return "";
 		}
 	}
 
 	/**
-	 * Gets the major class format version of the jar file, representing the Java version it was compiled with
+	 * Gets the build date of the jar
 	 *
-	 * @return The major class format version (NOT the Java version). 0 if no jar file has been found
+	 * @param jar The bot's jar file
+	 * @return The build date of the jar as a long, 0 if no jar file has been found
 	 */
-	private int getClassFormatVersion() {
-		try (JarFile jar = getJarFile(); DataInputStream input = new DataInputStream(jar.getInputStream(jar.getEntry("bl4ckscor3/discord/bl4ckb0t/Main.class")))) {
-			input.readUnsignedShort(); //cafe
-			input.readUnsignedShort(); //babe
-			input.readUnsignedShort(); //minor version
-			return input.readUnsignedShort(); //major version
+	private long getBuildDate(JarFile jar) {
+		return jar.getEntry("META-INF/MANIFEST.MF").getTime();
+	}
+
+	/**
+	 * Gets the JDK version number that this jar file was built with
+	 *
+	 * @param jar The bot's jar file
+	 * @return The JDK version number, an empty string if an IOException occurs.
+	 */
+	private String getJdkVersion(JarFile jar) {
+		try {
+			return jar.getManifest().getMainAttributes().getValue("Build-Jdk");
 		}
-		catch (Exception e) {
-			return 0;
+		catch (IOException e) {
+			return "";
 		}
 	}
 

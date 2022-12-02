@@ -1,4 +1,6 @@
 v3.5.2:	- Update JDA to 5.0.0-beta.1
+		- Bot and Java versions for the info command are now retrieved via the jar manifest
+		- Update jsoup to 1.15.3
 
 v3.5.1:	- Update JDA to 5.0.0-alpha.17
 		- Add Main#isDev to check whether the bot is running with the dev flag or not
