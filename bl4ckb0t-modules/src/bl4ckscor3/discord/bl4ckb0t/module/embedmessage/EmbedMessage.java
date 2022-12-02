@@ -24,10 +24,22 @@ public class EmbedMessage extends AbstractModule {
 		for (String arg : msg.split(" ")) {
 			if (arg.matches(DISCORD_LINK_REGEX)) {
 				String[] split = arg.trim().split("/");
-				long messageId = Long.parseLong(split[split.length - 1] = split[split.length - 1].substring(0, 18));
+				String stringMessageId;
+				long messageId;
 				long channelId = Long.parseLong(split[split.length - 2]);
 				long guildId = Long.parseLong(split[split.length - 3]);
 				Guild guild = Main.client().getGuildById(guildId);
+
+				try {
+					stringMessageId = split[split.length - 1].substring(0, 19);
+					messageId = Long.parseLong(stringMessageId);
+					split[split.length - 1] = stringMessageId;
+				}
+				catch (StringIndexOutOfBoundsException | NumberFormatException e) {
+					stringMessageId = split[split.length - 1].substring(0, 18);
+					messageId = Long.parseLong(stringMessageId);
+					split[split.length - 1] = stringMessageId;
+				}
 
 				if (guild != null) {
 					TextChannel channel = guild.getTextChannelById(channelId);
@@ -39,7 +51,15 @@ public class EmbedMessage extends AbstractModule {
 						if (text.length() > MessageEmbed.VALUE_MAX_LENGTH)
 							text = text.substring(0, MessageEmbed.VALUE_MAX_LENGTH - 3) + "...";
 
-						Utilities.sendMessage(event.getChannel(), new EmbedBuilder().addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + String.join("/", split) + ") " + channel.getAsMention(), true).addField("", text, false).setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl()).setTimestamp(message.getTimeCreated()).setColor(0x2F3136).build());
+						//@formatter:off
+						Utilities.sendMessage(event.getChannel(), new EmbedBuilder()
+								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + String.join("/", split) + ") " + channel.getAsMention(), true)
+								.addField("", text, false)
+								.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
+								.setTimestamp(message.getTimeCreated())
+								.setColor(message.getAuthor().retrieveProfile().complete().getAccentColor())
+								.build());
+						//@formatter:on
 					}
 				}
 			}
