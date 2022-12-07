@@ -49,7 +49,7 @@ public class SCRules extends AbstractModule {
 				EmbedBuilder embed = new EmbedBuilder().setColor(0xFF0000).setTitle("❗ **Rule** " + NUMBERS[rule]).setDescription((mention ? mentions.stream().map(u -> u.getAsMention()).collect(Collectors.joining(", ")) + ": " : "") + RULES[rule]).addField("Please take a moment to review the rules.", "[Click here to see the rules](https://canary.discord.com/channels/318542314010312715/318544502438756352/667401399025401866)", false).setTimestamp(message.getTimeCreated()).setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl());
 
 				if (rule == 1)
-					embed.setImage("https://i.imgur.com/JoKAvjW.png");
+					embed.setImage("https://i.imgur.com/lS7cE1f.png");
 
 				Utilities.sendMessage(event.getChannel(), embed.build());
 				message.delete().queue();
