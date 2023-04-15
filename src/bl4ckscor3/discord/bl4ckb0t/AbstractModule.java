@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URLClassLoader;
 
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public abstract class AbstractModule {
@@ -44,6 +46,13 @@ public abstract class AbstractModule {
 	public abstract void exe(MessageReceivedEvent event, String[] args) throws Exception;
 
 	/**
+	 * When a slash command happens
+	 *
+	 * @param event The event from the slash command interaction
+	 */
+	public void onSlashCommand(SlashCommandInteractionEvent event) {}
+
+	/**
 	 * @param content The event that is possibily triggering this module
 	 * @return true if the event triggers this module, false otherwise
 	 */
@@ -57,11 +66,26 @@ public abstract class AbstractModule {
 	}
 
 	/**
-	 * @return true if this command can only be executed by Vauff and bl4ckscor3, false otherwise
+	 * @return true if this module can only be executed by specific, hard-coded users, false otherwise
 	 */
 	public boolean requiresPermission() {
 		return false;
 	}
+
+	/**
+	 * @return true if this module has slash commands for a specific guild
+	 */
+	public boolean hasGuildSpecificSlashCommands() {
+		return false;
+	}
+
+	/**
+	 * Initialize slash commands for the guild. {@link #hasGuildSpecificSlashCommands()} needs to return true for this to be
+	 * called.
+	 *
+	 * @param guild The guild to initialize slash commands for
+	 */
+	public void addSlashCommandsFor(Guild guild) {}
 
 	/**
 	 * Gets the name of this module

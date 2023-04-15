@@ -12,7 +12,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
@@ -47,6 +49,19 @@ public class Main extends ListenerAdapter {
 	public void onReady(ReadyEvent event) {
 		for (AbstractModule m : ModuleManager.MODULES) {
 			m.postConnect();
+
+			if (m.hasGuildSpecificSlashCommands()) {
+				for (Guild guild : client.getGuilds()) {
+					if (isDev()) {
+						if (guild.getIdLong() == IDs.TESTING) {
+							m.addSlashCommandsFor(guild);
+							return;
+						}
+					}
+					else
+						m.addSlashCommandsFor(guild);
+				}
+			}
 		}
 
 		updatePresence();
@@ -64,8 +79,7 @@ public class Main extends ListenerAdapter {
 				}
 			}
 			else {
-				for (AbstractModule m : (ArrayList<AbstractModule>) ModuleManager.MODULES.clone()) //.clone to counteract ConcurrentModificationException
-				{
+				for (AbstractModule m : (ArrayList<AbstractModule>) ModuleManager.MODULES.clone()) { //.clone to counteract ConcurrentModificationException
 					if (m.triggeredBy(event)) {
 						if (!m.requiresPermission() || (m.requiresPermission() && (event.getAuthor().getIdLong() == IDs.BL4CKSCOR3 || event.getAuthor().getIdLong() == IDs.AKINO_GERMANY))) {
 							if ((dev && event.getChannel().getIdLong() == IDs.TESTING) || m.allowedChannels() == null || (m.allowedChannels() != null && Utilities.longArrayContains(m.allowedChannels(), event.getChannel().getIdLong())))
@@ -77,6 +91,14 @@ public class Main extends ListenerAdapter {
 		}
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
+		for (AbstractModule m : (ArrayList<AbstractModule>) ModuleManager.MODULES.clone()) {
+			if (m.hasGuildSpecificSlashCommands())
+				m.onSlashCommand(event);
 		}
 	}
 
