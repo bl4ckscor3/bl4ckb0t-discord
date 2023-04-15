@@ -82,7 +82,7 @@ public class SCRules extends AbstractModule {
 	}
 
 	@Override
-	public boolean hasGuildSpecificSlashCommands() {
+	public boolean hasGuildSpecificSlashCommand() {
 		return true;
 	}
 

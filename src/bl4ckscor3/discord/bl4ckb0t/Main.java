@@ -55,7 +55,7 @@ public class Main extends ListenerAdapter {
 		for (AbstractModule m : ModuleManager.MODULES) {
 			m.postConnect();
 
-			if (m.hasGuildSpecificSlashCommands()) {
+			if (m.hasGuildSpecificSlashCommand()) {
 				for (Guild guild : client.getGuilds()) {
 					SlashCommandData slashCommand = null;
 
@@ -110,7 +110,7 @@ public class Main extends ListenerAdapter {
 	@Override
 	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		for (AbstractModule m : (ArrayList<AbstractModule>) ModuleManager.MODULES.clone()) {
-			if (m.hasGuildSpecificSlashCommands())
+			if (m.hasGuildSpecificSlashCommand())
 				m.onSlashCommand(event);
 		}
 	}
