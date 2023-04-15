@@ -2,6 +2,8 @@ package bl4ckscor3.discord.bl4ckb0t;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
@@ -20,6 +22,7 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.session.SessionResumeEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 
 public class Main extends ListenerAdapter {
@@ -47,23 +50,33 @@ public class Main extends ListenerAdapter {
 
 	@Override
 	public void onReady(ReadyEvent event) {
+		Map<Guild, List<SlashCommandData>> slashCommands = new HashMap<>();
+
 		for (AbstractModule m : ModuleManager.MODULES) {
 			m.postConnect();
 
 			if (m.hasGuildSpecificSlashCommands()) {
 				for (Guild guild : client.getGuilds()) {
+					SlashCommandData slashCommand = null;
+
 					if (isDev()) {
-						if (guild.getIdLong() == IDs.TESTING) {
-							m.addSlashCommandsFor(guild);
-							return;
-						}
+						if (guild.getIdLong() == IDs.MODDING_RANGE)
+							slashCommand = m.addSlashCommandFor(guild);
 					}
 					else
-						m.addSlashCommandsFor(guild);
+						slashCommand = m.addSlashCommandFor(guild);
+
+					if (slashCommand != null) {
+						if (!slashCommands.containsKey(guild))
+							slashCommands.put(guild, new ArrayList<>());
+
+						slashCommands.get(guild).add(slashCommand);
+					}
 				}
 			}
 		}
 
+		slashCommands.keySet().forEach(guild -> guild.updateCommands().addCommands(slashCommands.get(guild)).complete());
 		updatePresence();
 	}
 

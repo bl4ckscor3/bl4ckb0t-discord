@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 public class SCRules extends AbstractModule {
 	private static final long SECURITYCRAFT_GUILD_ID = 318542314010312715L;
@@ -64,7 +65,7 @@ public class SCRules extends AbstractModule {
 	}
 
 	@Override
-	public void addSlashCommandsFor(Guild guild) {
+	public SlashCommandData addSlashCommandFor(Guild guild) {
 		if (Main.isDev() || guild.getIdLong() == SECURITYCRAFT_GUILD_ID) {
 			var ruleCommand = Commands.slash("rule", "Show a specific rule to a user for informational purposes.");
 			var ruleOption = new OptionData(OptionType.STRING, "rule", "The rule to show", true);
@@ -74,8 +75,10 @@ public class SCRules extends AbstractModule {
 			}
 
 			ruleCommand.addOptions(ruleOption, new OptionData(OptionType.USER, "user", "Set a user to mention in the rule embed."));
-			guild.updateCommands().addCommands(ruleCommand).complete();
+			return ruleCommand;
 		}
+
+		return null;
 	}
 
 	@Override

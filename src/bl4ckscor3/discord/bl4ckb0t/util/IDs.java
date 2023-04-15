@@ -7,4 +7,7 @@ public class IDs {
 
 	/* Channel IDs */
 	public static final long TESTING = 357166022169591810L;
+
+	/* Guild IDS */
+	public static final long MODDING_RANGE = 357166022169591809L;
 }

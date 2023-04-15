@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 public abstract class AbstractModule {
 	/** The name of the module. For public modules it's the file name, private modules have their name predefined */
@@ -73,19 +74,21 @@ public abstract class AbstractModule {
 	}
 
 	/**
-	 * @return true if this module has slash commands for a specific guild
+	 * @return true if this module has a slash command for a specific guild
 	 */
-	public boolean hasGuildSpecificSlashCommands() {
+	public boolean hasGuildSpecificSlashCommand() {
 		return false;
 	}
 
 	/**
-	 * Initialize slash commands for the guild. {@link #hasGuildSpecificSlashCommands()} needs to return true for this to be
-	 * called.
+	 * Get the slash command for the guild. {@link #hasGuildSpecificSlashCommand()} needs to return true for this to be called.
 	 *
-	 * @param guild The guild to initialize slash commands for
+	 * @param guild The guild to get slash command for
+	 * @return The slash command to add, null if there is none to add
 	 */
-	public void addSlashCommandsFor(Guild guild) {}
+	public SlashCommandData addSlashCommandFor(Guild guild) {
+		return null;
+	}
 
 	/**
 	 * Gets the name of this module
