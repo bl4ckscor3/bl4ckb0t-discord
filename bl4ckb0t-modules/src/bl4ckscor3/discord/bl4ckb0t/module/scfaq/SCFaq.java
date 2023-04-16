@@ -20,13 +20,14 @@ public class SCFaq extends AbstractModule {
 	static {
 		FAQ.put("1. Fabric/Bedrock Edition support", "757159143285981184");
 		FAQ.put("2. View camera in frame", "757159158398058586");
-		FAQ.put("3. How does it work?", "757159168577896498");
+		FAQ.put("3. How does this block/item work?/What is its recipe?/SC Manual", "757159168577896498");
 		FAQ.put("4. How do I break blocks?", "757159181470924800");
-		FAQ.put("5. Why does it not work?", "757159191340253294");
+		FAQ.put("5. Why does this block/item not work for me? Ownership", "757159191340253294");
 		FAQ.put("6. No crafting recipe", "757159201591263283");
 		FAQ.put("7. Allowlist module", "757159217835802665");
 		FAQ.put("8. Inventory scanner not working", "757159227939881061");
-		FAQ.put("10. Minecraft server", "757159247753642005");
+		FAQ.put("9. Change inventory scanner range", "757159237636980756");
+		FAQ.put("10. Official SecurityCraft Minecraft server", "757159247753642005");
 		FAQ.put("11. Missing registry entries", "768534042508656641");
 		FAQ.put("12. Reset configuration file", "810461564485238803");
 		FAQ.put("13. Where are the config files?", "810461589580808223");
