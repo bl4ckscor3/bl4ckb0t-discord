@@ -1,4 +1,5 @@
-v3.6:	- Add support for guild specific slash commands
+v3.6:	- Update JDA to 5.0.0-beta.8
+		- Add support for guild specific slash commands
 
 v3.5.2:	- Update JDA to 5.0.0-beta.1
 		- Bot and Java versions for the info command are now retrieved via the jar manifest
