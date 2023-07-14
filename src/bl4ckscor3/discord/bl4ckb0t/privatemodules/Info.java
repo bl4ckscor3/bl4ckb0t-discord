@@ -13,6 +13,7 @@ import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDAInfo;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Info extends AbstractModule implements BuiltInModule {
@@ -32,7 +33,7 @@ public class Info extends AbstractModule implements BuiltInModule {
 					.addField("Compiled with", "Java " + (getJdkVersion(jar)), true) //- 44 to get the java version from the class format version (dirty, but works until this is no longer consistent)
 					.addField("Running on", "Java " + System.getProperty("java.version"), true)
 					.addField("Source", "https://github.com/bl4ckscor3/bl4ckb0t-discord", true)
-					.addField("Built with JDA", "https://github.com/DV8FromTheWorld/JDA", true)
+					.addField("Built with JDA " + JDAInfo.VERSION, JDAInfo.GITHUB, true)
 					.addField("Author", "bl4ckscor3", true)
 					.build());
 			//@formatter:on

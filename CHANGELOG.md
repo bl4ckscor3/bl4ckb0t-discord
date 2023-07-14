@@ -1,3 +1,6 @@
+v3.6.1:	- Update JDA to 5.0.0-beta.12
+		- The info command now shows the JDA version and the most up to date GitHub link of the library
+
 v3.6:	- Update JDA to 5.0.0-beta.8
 		- Add support for guild specific slash commands
 
