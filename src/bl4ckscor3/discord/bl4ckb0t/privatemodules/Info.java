@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.JarURLConnection;
 import java.util.Date;
-import java.util.Random;
 import java.util.jar.JarFile;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
@@ -26,7 +25,7 @@ public class Info extends AbstractModule implements BuiltInModule {
 		try (JarFile jar = getJarFile()) {
 			//@formatter:off
 			Utilities.sendMessage(event, new EmbedBuilder()
-					.setColor(new Color(new Random().nextInt(0xFFFFFF)))
+					.setColor(new Color(Main.RANDOM.nextInt(0xFFFFFF)))
 					.addField("Version", getBotVersion(jar), true)
 					.addField("Uptime", TimeParser.longToString(ManagementFactory.getRuntimeMXBean().getUptime(), "%s:%s:%s:%s"), true)
 					.addField("Build Date", "" + new Date(getBuildDate(jar)), true)

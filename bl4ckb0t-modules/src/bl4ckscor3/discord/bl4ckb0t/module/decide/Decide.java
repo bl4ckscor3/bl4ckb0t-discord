@@ -1,8 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.module.decide;
 
-import java.util.Random;
-
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -17,7 +16,7 @@ public class Decide extends AbstractModule {
 		MessageChannel channel = event.getChannel();
 
 		if (args.length >= 1 && event.getMessage().getContentRaw().endsWith("?")) {
-			int decision = new Random().nextInt(100);
+			int decision = Main.RANDOM.nextInt(100);
 
 			if (decision >= 0 && decision < 50)
 				Utilities.react(event.getMessage(), "🚫");

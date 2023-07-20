@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.IReactable;
@@ -30,6 +31,9 @@ public class Main extends ListenerAdapter {
 	private static JDA client;
 	public static ModuleManager manager;
 	public static final Main INSTANCE = new Main();
+	public static final Random RANDOM = new Random();
+
+	private Main() {}
 
 	public static void main(String[] args) {
 		dev = args.length >= 1 && args[0].equalsIgnoreCase("-dev");

@@ -6,7 +6,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
-import java.util.Random;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -41,7 +40,8 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 								return;
 							}
 
-							inner: for (AbstractModule m : ModuleManager.MODULES) {
+							inner:
+							for (AbstractModule m : ModuleManager.MODULES) {
 								if (m.getName().equalsIgnoreCase(name)) {
 									ModuleManager.MODULES.remove(m);
 									m.onDisable();
@@ -135,7 +135,7 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 			}
 		}
 		else if (args.length == 1 && args[0].equals("list")) {
-			EmbedBuilder embed = new EmbedBuilder().setTitle("Active modules").setFooter("(italics = built-in)").setColor(new Random().nextInt(0xFFFFFF));
+			EmbedBuilder embed = new EmbedBuilder().setTitle("Active modules").setFooter("(italics = built-in)").setColor(Main.RANDOM.nextInt(0xFFFFFF));
 
 			for (AbstractModule module : ModuleManager.MODULES) {
 				if (module instanceof BuiltInModule)
