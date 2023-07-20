@@ -8,7 +8,6 @@ import java.net.URL;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Evaluate extends AbstractModule {
@@ -41,7 +40,6 @@ public class Evaluate extends AbstractModule {
 	private String evaluate(MessageReceivedEvent event, String input) throws MalformedURLException, IOException {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("http://api.wolframalpha.com/v2/query?appid=" + Tokens.WOLFRAM_ALPHA + "&input=" + input.trim().replace("+", "%2B").replace(' ', '+').replace(',', '.')).openStream()));
 		String line = "";
-		MessageChannel channel = event.getChannel();
 
 		try {
 			//skipping lines until wanted line is reached
@@ -78,7 +76,6 @@ public class Evaluate extends AbstractModule {
 			result = line.split(">")[1].split("<")[0];
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
-			channel.sendMessage(String.format("WolframAlpha could not find a solution for \"%s\".", input));
 			reader.close();
 			return "Error: WolframAlpha could not find a solution for \\\"%s\\\".";
 		}
