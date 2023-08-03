@@ -4,6 +4,7 @@ import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -44,7 +45,7 @@ public class EmbedMessage extends AbstractModule {
 				if (guild != null) {
 					TextChannel channel = guild.getTextChannelById(channelId);
 
-					if (channel != null) {
+					if (channel != null && guild.getSelfMember().hasPermission(channel.getPermissionContainer(), Permission.VIEW_CHANNEL)) {
 						Message message = channel.retrieveMessageById(messageId).complete();
 						String text = message.getContentDisplay();
 
