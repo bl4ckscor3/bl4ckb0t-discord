@@ -1,5 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.module.showcodeline;
 
+import java.io.IOException;
+
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,7 +16,7 @@ public class ShowCodeLine extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String message = event.getMessage().getContentRaw();
 
 		for (String link : message.split(" ")) {
@@ -29,6 +31,10 @@ public class ShowCodeLine extends AbstractModule {
 				}
 				catch (HttpStatusException e) {
 					System.out.println("[ShowCodeLine] ERROR: " + e.getStatusCode());
+					return;
+				}
+				catch (IOException e) {
+					e.printStackTrace();
 					return;
 				}
 

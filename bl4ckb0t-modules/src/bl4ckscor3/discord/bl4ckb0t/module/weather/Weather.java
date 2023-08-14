@@ -18,7 +18,7 @@ public class Weather extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String city = "";
 		MessageChannel channel = event.getChannel();
 

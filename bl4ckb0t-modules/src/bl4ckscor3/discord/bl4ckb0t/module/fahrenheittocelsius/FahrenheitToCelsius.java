@@ -14,23 +14,20 @@ public class FahrenheitToCelsius extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String msg = event.getMessage().getContentRaw().toLowerCase();
 		String result = "```json";
-		boolean even = false;
 
 		for (String s : msg.split(" ")) {
-			if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)°?f")) {
+			if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)°?f")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + (even ? "" : "") + number + "°F ->" + " " + ONE_DECIMAL_PLACE.format((number - 32) / 1.8D).replace(",", ".") + "°C";
-				even = !even;
+				result += System.lineSeparator() + number + "°F -> " + ONE_DECIMAL_PLACE.format((number - 32) / 1.8D).replace(",", ".") + "°C";
 			}
-			else if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)°?c")) {
+			else if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)°?c")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + (even ? "" : "") + number + "°C ->" + " " + ONE_DECIMAL_PLACE.format(number * 1.8D + 32).replace(",", ".") + "°F";
-				even = !even;
+				result += System.lineSeparator() + number + "°C -> " + ONE_DECIMAL_PLACE.format(number * 1.8D + 32).replace(",", ".") + "°F";
 			}
 		}
 
@@ -43,7 +40,7 @@ public class FahrenheitToCelsius extends AbstractModule {
 			return false;
 
 		for (String s : event.getMessage().getContentRaw().toLowerCase().split(" ")) {
-			if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)°?(c|f)"))
+			if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)°?([ac])"))
 				return true;
 		}
 

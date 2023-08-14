@@ -10,7 +10,7 @@ public class Leet extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		if (args.length >= 1) {
 			char[] chars = event.getMessage().getContentRaw().substring(6).toCharArray();
 			String result = "";

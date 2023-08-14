@@ -11,16 +11,16 @@ import net.dv8tion.jda.api.entities.User;
 /**
  * A hangman game. Holds the phrase itself, which letters of it have already been guessed, and the state of the hangman.
  */
-public class Game {
-	public char[] phrase;
-	public boolean[] guessed;
-	public LetterState[] letterStates = new LetterState[26];
-	public int hangman = -1;
-	public Message message;
-	public List<User> guessers = new ArrayList<>();
-	public String user;
-	public char lastGuessedLetter;
-	public String originalPhrase;
+class Game {
+	protected char[] phrase;
+	protected boolean[] guessed;
+	protected LetterState[] letterStates = new LetterState[26];
+	protected int hangman = -1;
+	protected Message message;
+	protected List<User> guessers = new ArrayList<>();
+	protected String user;
+	protected char lastGuessedLetter;
+	protected String originalPhrase;
 
 	/**
 	 * Sets up this hangman game
@@ -28,7 +28,7 @@ public class Game {
 	 * @param a The user who started this game
 	 * @param p The phrase to guess
 	 */
-	public Game(String u, String p) {
+	protected Game(String u, String p) {
 		user = u;
 		originalPhrase = p;
 		phrase = p.toLowerCase().toCharArray();
@@ -45,18 +45,18 @@ public class Game {
 	 *
 	 * @param message The message to set
 	 */
-	public void setMessage(Message message) {
+	protected void setMessage(Message message) {
 		this.message = message;
 	}
 
 	/**
-	 * Checks whether the given character is in the phrase array and sets all positions x in the guessed array to true if it
-	 * is at position x in the phrase array. Does not increase hangman
+	 * Checks whether the given character is in the phrase array and sets all positions x in the guessed array to true if it is
+	 * at position x in the phrase array. Does not increase hangman
 	 *
 	 * @param c The character to check
 	 * @return true if the character was present in the phrase array, false otherwise
 	 */
-	public boolean guess(char c) {
+	protected boolean guess(char c) {
 		boolean correct = false;
 
 		for (int i = 0; i < phrase.length; i++) {
@@ -72,14 +72,14 @@ public class Game {
 	/**
 	 * @return The phrase as it was sent in the direct message
 	 */
-	public String getPhrase() {
-		String phrase = "";
+	protected String getFullPhrase() {
+		String fullPhrase = "";
 
-		for (char c : this.phrase) {
-			phrase += c;
+		for (char c : phrase) {
+			fullPhrase += c;
 		}
 
-		return phrase;
+		return fullPhrase;
 	}
 
 	/**
@@ -88,13 +88,11 @@ public class Game {
 	 * @state The state which the letter has to be in to be included in the message
 	 * @return The formatted message, characters are seperated by spaces
 	 */
-	public String getLettersByState(LetterState state) {
+	protected String getLettersByState(LetterState state) {
 		String result = "";
 
 		for (int i = 0; i < letterStates.length; i++) {
-			if (letterStates[i] == LetterState.UNUSED)
-				continue;
-			else if (letterStates[i] == state)
+			if (letterStates[i] != LetterState.UNUSED && letterStates[i] == state)
 				result += Character.toString(i + 97);
 		}
 
@@ -106,7 +104,7 @@ public class Game {
 	 *
 	 * @see {@link #getGameMessage(String, char, boolean)}
 	 */
-	public String getGameMessage() {
+	protected String getGameMessage() {
 		return getGameMessage("", '0', true);
 	}
 
@@ -118,7 +116,7 @@ public class Game {
 	 * @param showUnsolvedPhrase Whether the unsolved phrase should be displayed
 	 * @return The message
 	 */
-	public String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedPhrase) {
+	protected String getGameMessage(String initialText, char alreadyGuessedLetter, boolean showUnsolvedPhrase) {
 		String result = "Started by: " + user + System.lineSeparator() + initialText;
 
 		if (alreadyGuessedLetter != '0')
@@ -155,7 +153,7 @@ public class Game {
 	 *
 	 * @return The string
 	 */
-	public String getBuildProgressString() {
+	protected String getBuildProgressString() {
 		if (hangman == -1)
 			return "";
 		else

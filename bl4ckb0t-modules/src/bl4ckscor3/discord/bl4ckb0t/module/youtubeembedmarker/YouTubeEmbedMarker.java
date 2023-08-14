@@ -13,7 +13,7 @@ public class YouTubeEmbedMarker extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String msg = event.getMessage().getContentRaw();
 		List<String> react = new ArrayList<>();
 

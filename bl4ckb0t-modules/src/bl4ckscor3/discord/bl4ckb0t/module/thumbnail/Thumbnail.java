@@ -11,7 +11,7 @@ public class Thumbnail extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		MessageChannel channel = event.getChannel();
 
 		if (!args[0].matches("(https:\\/\\/|http:\\/\\/|)(www\\.youtube\\.com\\/watch\\?v=|youtu\\.be\\/)([A-Za-z0-9-_]{11})(&[A-Za-z0-9=&]*|)") && !args[0].matches("[A-Za-z0-9-_]{11}")) //"https://" or "http://" or nothing, followed by www.youtube.com/watch?v= followed by 11 interchangeable upper or lower cased letters, or numbers or - or _

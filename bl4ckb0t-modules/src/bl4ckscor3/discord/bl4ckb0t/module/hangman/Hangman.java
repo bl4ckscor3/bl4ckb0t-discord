@@ -2,6 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.hangman;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.util.IRequestDM;
@@ -10,7 +11,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Hangman extends AbstractModule implements IRequestDM {
-	public HashMap<MessageChannel, Game> games = new HashMap<>();
+	private HashMap<MessageChannel, Game> games = new HashMap<>();
 	public static final String ALREADY_GUESSING = "This channel already has a phrase being guessed at the moment.";
 
 	public Hangman(String name) {
@@ -18,7 +19,7 @@ public class Hangman extends AbstractModule implements IRequestDM {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		MessageChannel channel = event.getChannel();
 
 		if (event.getMessage().getContentRaw().startsWith("-hangman")) {
@@ -51,30 +52,28 @@ public class Hangman extends AbstractModule implements IRequestDM {
 			waitForDM(event.getAuthor().getIdLong(), info);
 			Utilities.sendMessage(channel, "Ok! Send me a word or phrase via DM and I'll take care of everything else. Guesses can be given via `.LETTER`. E.g.: `.A` to guess the letter `A`. To guess a whole word or phrase, use `-hangman guess here`.");
 		}
-		else if (event.getMessage().getContentRaw().startsWith(".") && event.getMessage().getContentRaw().toCharArray().length == 2) {
-			if (games.containsKey(channel)) {
-				Game game = games.get(channel);
-				char guess = event.getMessage().getContentRaw().charAt(1);
-				int letterIndex = Character.toUpperCase(guess) - 65;
+		else if (event.getMessage().getContentRaw().startsWith(".") && event.getMessage().getContentRaw().toCharArray().length == 2 && games.containsKey(channel)) {
+			Game game = games.get(channel);
+			char guess = event.getMessage().getContentRaw().charAt(1);
+			int letterIndex = Character.toUpperCase(guess) - 65;
 
-				if (!game.guessers.contains(event.getAuthor()))
-					game.guessers.add(event.getAuthor());
+			if (!game.guessers.contains(event.getAuthor()))
+				game.guessers.add(event.getAuthor());
 
-				event.getMessage().delete().queue();
+			event.getMessage().delete().queue();
 
-				if (game.letterStates[letterIndex] != LetterState.UNUSED) {
-					game.message.editMessage(game.getGameMessage("", guess, true)).queue();
-					return;
-				}
+			if (game.letterStates[letterIndex] != LetterState.UNUSED) {
+				game.message.editMessage(game.getGameMessage("", guess, true)).queue();
+				return;
+			}
 
-				if (!game.guess(guess)) {
-					game.letterStates[letterIndex] = LetterState.WRONG;
-					wrongGuess(channel, game);
-				}
-				else {
-					game.letterStates[letterIndex] = LetterState.CORRECT;
-					correctGuess(channel, game, guess, false);
-				}
+			if (!game.guess(guess)) {
+				game.letterStates[letterIndex] = LetterState.WRONG;
+				wrongGuess(channel, game);
+			}
+			else {
+				game.letterStates[letterIndex] = LetterState.CORRECT;
+				correctGuess(channel, game, guess, false);
 			}
 		}
 	}
@@ -117,7 +116,7 @@ public class Hangman extends AbstractModule implements IRequestDM {
 		}
 
 		if (won || forceWin) {
-			game.message.editMessage(game.getGameMessage(String.format("__You win!__ The phrase was: **%s**" + System.lineSeparator(), game.originalPhrase), '0', false) + System.lineSeparator() + "__**A new word or phrase can now be submitted.**__").queue();
+			game.message.editMessage(game.getGameMessage(String.format("__You win!__ The phrase was: **%s**%s", game.originalPhrase, System.lineSeparator()), '0', false) + System.lineSeparator() + "__**A new word or phrase can now be submitted.**__").queue();
 			games.remove(channel);
 		}
 		else {
@@ -127,7 +126,7 @@ public class Hangman extends AbstractModule implements IRequestDM {
 	}
 
 	@Override
-	public void onDMReceived(MessageReceivedEvent event, HashMap<String, Object> info) {
+	public void onDMReceived(MessageReceivedEvent event, Map<String, Object> info) {
 		MessageChannel channel = (MessageChannel) info.get("channel");
 
 		if (!games.containsKey(channel)) {

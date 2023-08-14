@@ -12,7 +12,7 @@ public class Decide extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		MessageChannel channel = event.getChannel();
 
 		if (args.length >= 1 && event.getMessage().getContentRaw().endsWith("?")) {

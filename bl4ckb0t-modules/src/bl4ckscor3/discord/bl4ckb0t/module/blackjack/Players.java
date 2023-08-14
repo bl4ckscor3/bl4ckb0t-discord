@@ -6,28 +6,28 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 
-public class Players extends ArrayList<Player> {
+class Players extends ArrayList<Player> {
 	private Dealer dealer;
 	private int currentPlayer = 0;
 
 	/**
 	 * Initializes this list with a dealer
 	 */
-	public Players() {
+	protected Players() {
 		dealer = new Dealer();
 	}
 
 	/**
 	 * @return The dealer for these players
 	 */
-	public Dealer getDealer() {
+	protected Dealer getDealer() {
 		return dealer;
 	}
 
 	/**
 	 * @return The player to make the next turn, null if no player (round over)
 	 */
-	public Player getCurrentPlayer() {
+	protected Player getCurrentPlayer() {
 		return currentPlayer >= size() ? null : get(currentPlayer);
 	}
 
@@ -36,7 +36,7 @@ public class Players extends ArrayList<Player> {
 	 *
 	 * @return The next player that can take action, null if there is no such player (round over)
 	 */
-	public Player getNextPlayer() {
+	protected Player getNextPlayer() {
 		for (int i = currentPlayer; i < size(); i++) {
 			if (getCurrentPlayer().getStatus().isDone())
 				continue;
@@ -52,7 +52,7 @@ public class Players extends ArrayList<Player> {
 	 *
 	 * @return true if there is a next player false if not (aka round is over)
 	 */
-	public boolean next() {
+	protected boolean next() {
 		if (currentPlayer == size() - 1)
 			return false;
 
@@ -69,24 +69,24 @@ public class Players extends ArrayList<Player> {
 	}
 
 	/**
-	 * Prepares an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} which displays the state of the current
-	 * round without a title
+	 * Prepares an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} which displays the state of the current round
+	 * without a title
 	 *
 	 * @see {@link Players#build}
 	 */
-	public MessageEmbed build() {
+	protected MessageEmbed build() {
 		return build(false);
 	}
 
 	/**
-	 * Prepares an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} which displays the state of the current
-	 * round. This method will also set a player's status to {@link Status.STAND} if they have a blackjack from the beginning
+	 * Prepares an {@link sx.blah.discord.api.internal.json.objects.EmbedObject} which displays the state of the current round.
+	 * This method will also set a player's status to {@link Status.STAND} if they have a blackjack from the beginning
 	 *
 	 * @param ended Wether the round end title should be shown or not
 	 * @return An EmbedObject which contains all card information for the dealer and players including the information on who
 	 *         needs to react
 	 */
-	public MessageEmbed build(boolean ended) {
+	protected MessageEmbed build(boolean ended) {
 		EmbedBuilder builder = new EmbedBuilder().setColor(0x000001);
 		User user = getCurrentPlayer().getUser();
 
@@ -123,7 +123,7 @@ public class Players extends ArrayList<Player> {
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} to check
 	 * @return true if the {@link sx.blah.discord.handle.obj.IUser} is in this list, false otherwise
 	 */
-	public boolean contains(User u) {
+	protected boolean contains(User u) {
 		for (Player p : this) {
 			if (p.getUser().equals(u))
 				return true;
@@ -138,7 +138,7 @@ public class Players extends ArrayList<Player> {
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} to check and remove
 	 * @return true if the {@link sx.blah.discord.handle.obj.IUser} is in this list and got removed, false otherwise
 	 */
-	public boolean remove(User u) {
+	protected boolean remove(User u) {
 		for (Player p : this) {
 			if (p.getUser().equals(u))
 				return remove(p);
@@ -150,12 +150,17 @@ public class Players extends ArrayList<Player> {
 	/**
 	 * Resets the dealer and all players to make them ready for the next round
 	 */
-	public void reset() {
+	protected void reset() {
 		currentPlayer = 0;
 		dealer.reset();
 
 		for (Player p : this) {
 			p.reset();
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Players players && players.currentPlayer == currentPlayer && players.dealer.equals(dealer);
 	}
 }

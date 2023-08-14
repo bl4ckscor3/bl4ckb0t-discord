@@ -13,7 +13,7 @@ public class WelcomeReaction extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		event.getChannel().addReactionById(event.getMessageIdLong(), Emoji.fromCustom(new RichCustomEmojiImpl(592090198431498240L, (GuildImpl) event.getGuild()).setName("peekaboo"))).queue();
 	}
 

@@ -11,18 +11,18 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
-public class Round implements IReactable {
+class Round implements IReactable {
 	private static final String DIE = "🎲";
 	private static final String NO_ENTRY = "⛔";
-	public boolean hasStarted = false;
-	public boolean isStarting = false;
-	public Shoe shoe;
-	public Players players;
-	public Message roundMessage;
-	public MessageChannel channel;
-	public ScheduledFuture<?> removal;
+	protected boolean hasStarted = false;
+	protected boolean isStarting = false;
+	protected Shoe shoe;
+	protected Players players;
+	protected Message roundMessage;
+	protected MessageChannel channel;
+	protected ScheduledFuture<?> removal;
 
-	public Round(MessageChannel c) {
+	protected Round(MessageChannel c) {
 		if (shoe == null)
 			shoe = new Shoe();
 
@@ -35,7 +35,7 @@ public class Round implements IReactable {
 	/**
 	 * Starts this round if players are present and it has not already started
 	 */
-	public void start() {
+	protected void start() {
 		if (hasStarted || players.isEmpty())
 			return;
 
@@ -85,45 +85,43 @@ public class Round implements IReactable {
 
 	@Override
 	public void onReactionAdd(MessageReactionAddEvent event) {
+		Player p = players.getCurrentPlayer();
+		String name = event.getReaction().getEmoji().getName();
+
 		removal.cancel(false);
 
-		Player p = players.getCurrentPlayer();
+		if (name.equals(DIE)) {
+			p.addCard(shoe.pull());
 
-		switch (event.getReaction().getEmoji().getName()) {
-			case DIE:
-				p.addCard(shoe.pull());
-
-				if (p.getCards().value() > 21) {
-					p.setStatus(Status.BUST);
-
-					if (!players.next()) {
-						endGame();
-						return;
-					}
-				}
-
-				updateMessage();
-				break;
-			case NO_ENTRY:
-				if (p.getCards().value() < players.getDealer().getCards().value())
-					p.setStatus(Status.BUST);
-				else
-					p.setStatus(Status.STAND);
+			if (p.getCards().value() > 21) {
+				p.setStatus(Status.BUST);
 
 				if (!players.next()) {
-					try {
-						Thread.sleep(250);
-					}
-					catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-
 					endGame();
-					break;
+					return;
+				}
+			}
+
+			updateMessage();
+		}
+		else if (name.equals(NO_ENTRY)) {
+			if (p.getCards().value() < players.getDealer().getCards().value())
+				p.setStatus(Status.BUST);
+			else
+				p.setStatus(Status.STAND);
+
+			if (!players.next()) {
+				try {
+					Thread.sleep(250);
+				}
+				catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 
-				updateMessage();
-				break;
+				endGame();
+			}
+
+			updateMessage();
 		}
 	}
 
@@ -157,7 +155,6 @@ public class Round implements IReactable {
 			e.printStackTrace();
 			Utilities.sendMessage(channel, "An error occured, see log for details. Round will be reset.");
 			reset(true);
-			return;
 		}
 	}
 
@@ -168,7 +165,7 @@ public class Round implements IReactable {
 	 * @param status The initial {@link Status} the player should have.
 	 * @return true if the player has joined, false otherwise
 	 */
-	public boolean join(User user, Status status) {
+	protected boolean join(User user, Status status) {
 		if (!players.contains(user)) {
 			String msg = user.getAsMention() + " joined the table!";
 
@@ -191,7 +188,7 @@ public class Round implements IReactable {
 	 *
 	 * @param user The player to remove
 	 */
-	public void leave(User user) {
+	protected void leave(User user) {
 		if (players.contains(user)) {
 			String msg = user.getAsMention() + " left the table.";
 
@@ -211,7 +208,7 @@ public class Round implements IReactable {
 	/**
 	 * Ends the game. The dealer's cards will get revealed and all statuses will be updated. reset(true) will be called
 	 */
-	public void endGame() {
+	protected void endGame() {
 		if (roundMessage != null)
 			roundMessage.delete().queue();
 
@@ -226,14 +223,13 @@ public class Round implements IReactable {
 			players.getDealer().setStatus(Status.BUST);
 
 		for (Player p : players) {
-			if (p.getStatus() == Status.BUST)
-				continue;
-			else if (p.getCards().value() < dealerVal && players.getDealer().getStatus() != Status.BUST)
-				p.setStatus(Status.BUST);
-			else if (p.getCards().value() == dealerVal)
-				p.setStatus(Status.TIE);
+			if (p.getStatus() != Status.BUST) {
+				if (p.getCards().value() < dealerVal && players.getDealer().getStatus() != Status.BUST)
+					p.setStatus(Status.BUST);
+				else if (p.getCards().value() == dealerVal)
+					p.setStatus(Status.TIE);
+			}
 		}
-
 		Utilities.sendMessage(channel, players.build(true));
 		reset(true);
 	}
@@ -243,7 +239,7 @@ public class Round implements IReactable {
 	 *
 	 * @param restart true if the round should be restarted, false otherwise
 	 */
-	public void reset(boolean restart) {
+	protected void reset(boolean restart) {
 		players.reset();
 		hasStarted = false;
 		roundMessage = null;
@@ -251,9 +247,7 @@ public class Round implements IReactable {
 		if (restart) {
 			Utilities.sendMessage(channel, "New round starting in 10 seconds...");
 			isStarting = true;
-			Executors.newScheduledThreadPool(1).schedule(() -> {
-				start();
-			}, 10, TimeUnit.SECONDS);
+			Executors.newScheduledThreadPool(1).schedule(this::start, 10, TimeUnit.SECONDS);
 		}
 	}
 }

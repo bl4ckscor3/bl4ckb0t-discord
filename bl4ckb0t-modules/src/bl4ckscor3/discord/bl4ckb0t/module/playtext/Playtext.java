@@ -10,7 +10,7 @@ public class Playtext extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		Main.INSTANCE.updatePresence();
 	}
 

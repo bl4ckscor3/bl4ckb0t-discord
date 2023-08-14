@@ -1,6 +1,8 @@
 package bl4ckscor3.discord.bl4ckb0t.util;
 
 public class TimeParser {
+	private TimeParser() {}
+
 	//----------------CHANGE STRING TO LONG----------------\\
 	/**
 	 * Changes a String of the format xdxhxmxs (where x is a positive number) to a timestamp

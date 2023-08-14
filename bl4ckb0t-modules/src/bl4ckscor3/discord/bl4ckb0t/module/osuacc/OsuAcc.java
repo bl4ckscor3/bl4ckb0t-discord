@@ -10,7 +10,7 @@ public class OsuAcc extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		try {
 			double num300s = Integer.parseInt(args[0]);
 			double num100s = Integer.parseInt(args[1]);

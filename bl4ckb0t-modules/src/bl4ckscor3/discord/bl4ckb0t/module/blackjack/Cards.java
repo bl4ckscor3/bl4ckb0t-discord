@@ -2,9 +2,10 @@ package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class Cards {
-	private ArrayList<Card> cards = new ArrayList<>();
+class Cards {
+	private List<Card> cards = new ArrayList<>();
 	private int score;
 
 	/**
@@ -12,7 +13,7 @@ public class Cards {
 	 *
 	 * @param c The card to add
 	 */
-	public void addCard(Card c) {
+	protected void addCard(Card c) {
 		cards.add(c);
 		score = value();
 	}
@@ -20,21 +21,21 @@ public class Cards {
 	/**
 	 * @return The summed up score of all cards in {@link Cards#cards}
 	 */
-	public int getScore() {
+	protected int getScore() {
 		return score;
 	}
 
 	/**
 	 * @return The amount of cards in {@link Cards#cards}
 	 */
-	public int amount() {
+	protected int amount() {
 		return cards.size();
 	}
 
 	/**
 	 * Clears the cards from the list and resets the score
 	 */
-	public void clear() {
+	protected void clear() {
 		cards.clear();
 		score = 0;
 	}
@@ -42,25 +43,23 @@ public class Cards {
 	/**
 	 * @see {@link java.util.ArrayList#get(int)}
 	 */
-	public Card get(int i) {
+	protected Card get(int i) {
 		return cards.get(i);
 	}
 
 	/**
 	 * Sums up the values of all cards in {@link Cards#cards}. An ace will get a value of 11 if the total is smaller than 22,
-	 * otherwise it will have a value of 1. For instance, having a 2, 5 and an ace will yield 18 as a result, but having a
-	 * 10, 2 and an ace will yield 13.
+	 * otherwise it will have a value of 1. For instance, having a 2, 5 and an ace will yield 18 as a result, but having a 10, 2
+	 * and an ace will yield 13.
 	 *
 	 * @param cards The cards to count
 	 * @return The value of all cards added together
 	 */
-	public int value() {
+	protected int value() {
 		int total = 0;
 		boolean ace = false;
 
-		Arrays.sort(cards.toArray(new Card[cards.size()]), (c1, c2) -> {
-			return c1.getRank().getValue() < c2.getRank().getValue() ? -1 : (c1.getRank().getValue() == c2.getRank().getValue() ? 0 : 1);
-		});
+		Arrays.sort(cards.toArray(new Card[cards.size()]), (c1, c2) -> Integer.compare(c1.getRank().getValue(), c2.getRank().getValue()));
 
 		for (Card c : cards) {
 			if (c.getRank().getValue() < 11)
@@ -96,5 +95,10 @@ public class Cards {
 		}
 
 		return total.substring(0, total.lastIndexOf('|')).trim();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Cards c && c.cards.equals(cards) && c.score == score;
 	}
 }

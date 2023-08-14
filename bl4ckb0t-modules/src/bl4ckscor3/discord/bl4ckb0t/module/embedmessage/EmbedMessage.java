@@ -12,14 +12,14 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class EmbedMessage extends AbstractModule {
-	private static final String DISCORD_LINK_REGEX = "(\\r\\n|\\r|\\n|.)*(discordapp\\.com|discord\\.com)\\/channels\\/[0-9]{18}\\/[0-9]{18}\\/[0-9]{18}(\\r\\n|\\r|\\n|.)*";
+	private static final String DISCORD_LINK_REGEX = "(\\r\\n|\\r|\\n|.)*(discordapp\\.com|discord\\.com)\\/channels\\/\\d{18}\\/\\d{18}\\/\\d{18}(\\r\\n|\\r|\\n|.)*";
 
 	public EmbedMessage(String name) {
 		super(name);
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String msg = event.getMessage().getContentRaw().replace("\r\n", " ").replace("\r", " ").replace("\n", " ");
 
 		for (String arg : msg.split(" ")) {

@@ -12,7 +12,7 @@ public class Vote extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		if (args.length >= 3) {
 			try {
 				int optionAmount = Integer.parseInt(args[0]);

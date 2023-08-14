@@ -1,6 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
-public enum Status {
+enum Status {
 	WAITING(""), //waiting for new round
 	IDLE("⏰"), //waiting for turn
 	ACTIVE("◀"), //has to take turn
@@ -22,7 +22,7 @@ public enum Status {
 	/**
 	 * @return true if this status does not require any further action, false otherwhise
 	 */
-	public boolean isDone() {
+	protected boolean isDone() {
 		return this == Status.STAND || this == Status.BUST;
 	}
 

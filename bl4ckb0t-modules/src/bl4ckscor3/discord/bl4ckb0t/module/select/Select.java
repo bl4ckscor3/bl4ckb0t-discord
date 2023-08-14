@@ -15,7 +15,7 @@ public class Select extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		if (args.length != 0) {
 			String[] options = event.getMessage().getContentRaw().substring(8).split(",");
 

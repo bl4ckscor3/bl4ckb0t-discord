@@ -2,8 +2,8 @@ package bl4ckscor3.discord.bl4ckb0t.module.remind;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -17,12 +17,12 @@ import bl4ckscor3.discord.bl4ckb0t.util.TimeParser;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
-public class Reminder {
-	public static int latestId = 1;
+class Reminder {
+	protected static int latestId = 1;
 	private int id;
 	private long issuedUser;
 	private MessageChannel issuedChannel;
-	private String ev;
+	private String text;
 	private ScheduledFuture<?> thread;
 	private File f;
 
@@ -31,19 +31,17 @@ public class Reminder {
 	 *
 	 * @param user The user this Reminder belongs to
 	 * @param channel The channel this Reminder got issued from
-	 * @param e The reminder text
+	 * @param reminderText The reminder text
 	 * @param timeDue How long to wait between issuing the Reminder and reminding the person
 	 * @param load Whether or not the reminder gets loaded from a saved reminder
 	 */
-	public Reminder(long user, MessageChannel channel, String e, long timeDue, boolean load) throws URISyntaxException, IOException {
+	protected Reminder(long user, MessageChannel channel, String reminderText, long timeDue, boolean load) {
 		id = latestId++;
 
-		if (load) {
-			if (timeDue <= 0) {
-				Utilities.sendMessage(channel, String.format("<@%s>, your reminder for \"%s\" was %s ago.", user, e, TimeParser.longToString(0 - timeDue, "%sd%sh%sm%ss")));
-				latestId--;
-				return;
-			}
+		if (load && timeDue <= 0) {
+			Utilities.sendMessage(channel, String.format("<@%s>, your reminder for \"%s\" was %s ago.", user, reminderText, TimeParser.longToString(0 - timeDue, "%sd%sh%sm%ss")));
+			latestId--;
+			return;
 		}
 
 		File folder = new File(Utilities.getJarLocation() + "/reminders");
@@ -54,24 +52,41 @@ public class Reminder {
 		if (!folder.exists())
 			folder.mkdirs();
 
-		if (!f.exists())
-			f.createNewFile();
+		try {
+			if (!f.exists() && !f.createNewFile())
+				Utilities.sendMessage(channel, "The reminder file was not created.");
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		issuedUser = user;
 		issuedChannel = channel;
-		ev = e;
+		text = reminderText;
 		thread = Executors.newSingleThreadScheduledExecutor().schedule(() -> {
-			Utilities.sendMessage(channel, String.format("<@%s>, reminder for: %s", user, e));
+			Utilities.sendMessage(channel, String.format("<@%s>, reminder for: %s", user, reminderText));
 			Remind.REMINDERS.remove(this);
-			f.delete();
+
+			try {
+				Files.delete(f.toPath());
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}, timeDue, TimeUnit.MILLISECONDS);
 
 		if (!load) {
 			lines.add("issuedUser: " + issuedUser);
 			lines.add("issuedChannel: " + issuedChannel.getIdLong());
-			lines.add("event: " + ev);
+			lines.add("event: " + text);
 			lines.add("timeDue: " + (System.currentTimeMillis() + timeDue));
-			FileUtils.writeLines(f, lines);
+
+			try {
+				FileUtils.writeLines(f, lines);
+			}
+			catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		else
 			Remind.REMINDERS.add(this);
@@ -80,51 +95,57 @@ public class Reminder {
 	/**
 	 * @return The ID of the Reminder
 	 */
-	public int getId() {
+	protected int getId() {
 		return id;
 	}
 
 	/**
 	 * @return The user this Reminder belongs to
 	 */
-	public long getIssuedUser() {
+	protected long getIssuedUser() {
 		return issuedUser;
 	}
 
 	/**
 	 * @return The channel this Reminder got issued from
 	 */
-	public MessageChannel getIssuedChannel() {
+	protected MessageChannel getIssuedChannel() {
 		return issuedChannel;
 	}
 
 	/**
 	 * @return The text of this Reminder
 	 */
-	public String getEvent() {
-		return ev;
+	protected String getEvent() {
+		return text;
 	}
 
 	/**
 	 * @return How long it's left until reminding the user
 	 */
-	public long getRemainingTime() {
+	protected long getRemainingTime() {
 		return thread.getDelay(TimeUnit.MILLISECONDS);
 	}
 
 	/**
 	 * Stops the reminder
 	 */
-	public void stop() {
+	protected void stop() {
 		thread.cancel(true);
 		Remind.REMINDERS.remove(this);
-		f.delete();
+
+		try {
+			Files.delete(f.toPath());
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Loads reminders from the filesystem, if existing
 	 */
-	public static void loadReminders() throws URISyntaxException, NumberFormatException, IOException {
+	public static void loadReminders() throws NumberFormatException, IOException {
 		if (Main.client() == null)
 			return;
 
@@ -142,12 +163,12 @@ public class Reminder {
 			Reminder r = new Reminder(user, channel, e, timeDue, true);
 
 			if (timeDue <= 0)
-				f.delete();
+				Files.delete(f.toPath());
 			else if (!f.getName().split(".txt")[0].equals("" + r.getId())) {
 				File newFile = new File(Utilities.getJarLocation() + "/reminders/" + r.getId() + ".txt");
 
 				FileUtils.writeLines(newFile, lines);
-				f.delete();
+				Files.delete(f.toPath());
 
 				try {
 					Utilities.sendMessage(channel, String.format("<@%s>, the ID assigned to your reminder for \"%s\" is now %s.", user, e, r.getId()));

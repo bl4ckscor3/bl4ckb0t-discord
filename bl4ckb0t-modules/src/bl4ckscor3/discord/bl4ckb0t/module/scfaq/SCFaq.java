@@ -70,7 +70,7 @@ public class SCFaq extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {}
+	public void exe(MessageReceivedEvent event, String[] args) {}
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event) {

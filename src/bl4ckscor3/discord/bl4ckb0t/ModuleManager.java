@@ -2,19 +2,19 @@ package bl4ckscor3.discord.bl4ckb0t;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.List;
 
-import bl4ckscor3.discord.bl4ckb0t.privatemodules.Exit;
-import bl4ckscor3.discord.bl4ckb0t.privatemodules.Info;
-import bl4ckscor3.discord.bl4ckb0t.privatemodules.ModuleManagement;
+import bl4ckscor3.discord.bl4ckb0t.builtin.Exit;
+import bl4ckscor3.discord.bl4ckb0t.builtin.Info;
+import bl4ckscor3.discord.bl4ckb0t.builtin.ModuleManagement;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.JDABuilder;
 
 public class ModuleManager {
-	public static final ArrayList<AbstractModule> MODULES = new ArrayList<>();
+	public static final List<AbstractModule> MODULES = new ArrayList<>();
 	private JDABuilder builder;
 
 	public ModuleManager(JDABuilder c) {
@@ -24,7 +24,7 @@ public class ModuleManager {
 	/**
 	 * Loads all installed modules
 	 */
-	public void initPublic() throws URISyntaxException, IOException {
+	public void initPublic() throws IOException {
 		File folder = new File(Utilities.getJarLocation() + "/modules");
 
 		if (!folder.exists())
@@ -39,12 +39,12 @@ public class ModuleManager {
 	/**
 	 * Loads all modules that are getting shipped with the bot
 	 */
-	public void initPrivate() {
-		AbstractModule[] privateModules = {
+	public void initBuiltIn() {
+		AbstractModule[] builtInModules = {
 				new Exit("Exit"), new Info("Info"), new ModuleManagement("ModuleManagement")
 		};
 
-		for (AbstractModule m : privateModules) {
+		for (AbstractModule m : builtInModules) {
 			try {
 				m.onEnable(builder);
 				MODULES.add(m);
@@ -64,7 +64,7 @@ public class ModuleManager {
 	 * @param name The name of the file without the file type
 	 * @return 1 if the module was loaded, 0 if it was already loaded, -1 if an error occured
 	 */
-	public int loadModule(URL url, String name) throws IOException {
+	public int loadModule(URL url, String name) {
 		if (isModuleLoaded(name))
 			return 0;
 
@@ -100,8 +100,13 @@ public class ModuleManager {
 			e.printStackTrace();
 		}
 
-		if (loader != null)
-			loader.close();
+		try {
+			if (loader != null)
+				loader.close();
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		return -1;
 	}

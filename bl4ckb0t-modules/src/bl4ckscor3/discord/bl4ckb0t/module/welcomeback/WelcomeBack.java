@@ -12,13 +12,13 @@ public class WelcomeBack extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		Utilities.react(event.getMessage(), "🇼", "🇧");
 	}
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event) {
-		return event.getMessage().getContentRaw().toLowerCase().startsWith("re ") || event.getMessage().getContentRaw().toLowerCase().equals("re");
+		return event.getMessage().getContentRaw().toLowerCase().startsWith("re ") || event.getMessage().getContentRaw().equalsIgnoreCase("re");
 	}
 
 	@Override

@@ -12,7 +12,7 @@ public class AFKEssen extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		Utilities.react(event.getMessage(), "🇬", "🇭");
 	}
 

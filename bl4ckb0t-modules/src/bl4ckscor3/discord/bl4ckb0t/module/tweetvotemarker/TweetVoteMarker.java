@@ -1,5 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t.module.tweetvotemarker;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.jsoup.HttpStatusException;
@@ -17,7 +18,7 @@ public class TweetVoteMarker extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String message = event.getMessage().getContentRaw();
 
 		for (String link : message.split(" ")) {
@@ -37,11 +38,15 @@ public class TweetVoteMarker extends AbstractModule {
 					System.out.println("[TweetVoteMarker] ERROR: " + e.getStatusCode());
 					return;
 				}
+				catch (IOException e1) {
+					e1.printStackTrace();
+					return;
+				}
 
 				List<Element> vote = doc.select(".tweet").get(0).select(".card2");
 
 				for (Element e : vote) {
-					if (e.hasAttr("data-card2-name") && e.attr("data-card2-name").matches("poll[0-9]+choice_text_only")) {
+					if (e.hasAttr("data-card2-name") && e.attr("data-card2-name").matches("poll\\d+choice_text_only")) {
 						Utilities.react(event.getMessage(), "🔢"); //1234
 						return;
 					}

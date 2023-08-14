@@ -2,7 +2,7 @@ package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
 import net.dv8tion.jda.api.entities.User;
 
-public class Player {
+class Player {
 	protected User user = null;
 	protected final Cards cards = new Cards();
 	protected Status status;
@@ -21,23 +21,23 @@ public class Player {
 	 * @param u The {@link sx.blah.discord.handle.obj.IUser} that is this player
 	 * @param s The initial {@link Status} to set
 	 */
-	public Player(User u, Status s) {
+	protected Player(User u, Status s) {
 		user = u;
 		status = s;
-		active = (s == Status.ACTIVE) == true;
+		active = (s == Status.ACTIVE);
 	}
 
 	/**
 	 * @return The user that is this player
 	 */
-	public User getUser() {
+	protected User getUser() {
 		return user;
 	}
 
 	/**
 	 * @return true if this player is the dealer, false otherwise
 	 */
-	public boolean isDealer() {
+	protected boolean isDealer() {
 		return false;
 	}
 
@@ -46,7 +46,7 @@ public class Player {
 	 *
 	 * @param c The card to add
 	 */
-	public void addCard(Card c) {
+	protected void addCard(Card c) {
 		cards.addCard(c);
 	}
 
@@ -55,7 +55,7 @@ public class Player {
 	 *
 	 * @status The {@link Status} to set
 	 */
-	public void setStatus(Status s) {
+	protected void setStatus(Status s) {
 		status = s;
 
 		if (s == Status.ACTIVE)
@@ -65,7 +65,7 @@ public class Player {
 	/**
 	 * Resets this player's cards and status to make them ready for the next round
 	 */
-	public void reset() {
+	protected void reset() {
 		cards.clear();
 		status = isDealer() ? Status.DEALING : Status.IDLE;
 	}
@@ -73,21 +73,21 @@ public class Player {
 	/**
 	 * @return This player's open cards
 	 */
-	public Cards getCards() {
+	protected Cards getCards() {
 		return cards;
 	}
 
 	/**
 	 * @return This player's playing status
 	 */
-	public Status getStatus() {
+	protected Status getStatus() {
 		return status;
 	}
 
 	/**
 	 * Sets this user to be active
 	 */
-	public void setActive() {
+	protected void setActive() {
 		active = true;
 		setStatus(Status.ACTIVE);
 	}
@@ -97,12 +97,17 @@ public class Player {
 	 *
 	 * @return true if the user is active, false otherwise
 	 */
-	public boolean isActive() {
+	protected boolean isActive() {
 		return active;
 	}
 
 	@Override
 	public String toString() {
 		return cards.toString();
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		return o instanceof Player player && player.user.getIdLong() == user.getIdLong() && player.cards.equals(cards) && player.status.equals(status) && player.active == active;
 	}
 }

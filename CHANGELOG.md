@@ -1,3 +1,9 @@
+v3.7:	- Add AbstractModule#hasPermission to check if a given user has permission to trigger the module
+		- Add AbstractModule#isAllowedInChannel to check if the module can be triggered in a given channel
+		- Refactor code to call "private" modules "built-in" modules
+		- AbstractModule#exe no longer throws Exception
+		- Various refactors to generalize field and parameter types
+
 v3.6.1:	- Update JDA to 5.0.0-beta.12
 		- The info command now shows the JDA version and the most up to date GitHub link of the library
 

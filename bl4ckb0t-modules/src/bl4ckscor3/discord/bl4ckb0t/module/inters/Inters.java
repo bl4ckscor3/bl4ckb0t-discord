@@ -10,7 +10,7 @@ public class Inters extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		if (event.getMessage().getContentRaw().equals(".interns"))
 			Utilities.sendMessage(event.getChannel(), "https://tenor.com/view/patrick-star-idk-hammer-nailed-gif-15254720");
 		else

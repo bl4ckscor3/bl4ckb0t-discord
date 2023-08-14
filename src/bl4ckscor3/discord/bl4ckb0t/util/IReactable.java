@@ -1,6 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.util;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 
@@ -8,7 +9,7 @@ public interface IReactable {
 	/**
 	 * Holds all messages as keys which await a reaction by a specific user. The values hold an instance of {@link Await}
 	 */
-	public static final HashMap<Long, Await> AWAITED_REACTIONS = new HashMap<>();
+	public static final Map<Long, Await> AWAITED_REACTIONS = new HashMap<>();
 
 	/**
 	 * Sets up this IReactable to await a reaction by the user who triggered this IReactable

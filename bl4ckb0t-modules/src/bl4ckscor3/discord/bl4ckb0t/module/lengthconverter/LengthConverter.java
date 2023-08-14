@@ -20,40 +20,40 @@ public class LengthConverter extends AbstractModule {
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		String msg = event.getMessage().getContentRaw().toLowerCase();
 		String result = "```json";
 
 		for (String s : msg.split(" ")) {
-			if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)mi")) {
+			if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)mi")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + number + "mi ->" + " " + ONE_DECIMAL_PLACE.format(number / KM_TO_MI_FACTOR).replace(",", ".") + "km";
+				result += System.lineSeparator() + number + "mi -> " + ONE_DECIMAL_PLACE.format(number / KM_TO_MI_FACTOR).replace(",", ".") + "km";
 			}
-			else if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)km")) {
+			else if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)km")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + number + "km ->" + " " + ONE_DECIMAL_PLACE.format(number * KM_TO_MI_FACTOR).replace(",", ".") + "mi";
+				result += System.lineSeparator() + number + "km -> " + ONE_DECIMAL_PLACE.format(number * KM_TO_MI_FACTOR).replace(",", ".") + "mi";
 			}
-			else if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)ft")) {
+			else if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)ft")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + number + "ft ->" + " " + ONE_DECIMAL_PLACE.format(number / M_TO_FT_FACTOR).replace(",", ".") + "m";
+				result += System.lineSeparator() + number + "ft -> " + ONE_DECIMAL_PLACE.format(number / M_TO_FT_FACTOR).replace(",", ".") + "m";
 			}
-			else if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)m")) {
+			else if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)m")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + number + "m ->" + " " + ONE_DECIMAL_PLACE.format(number * M_TO_FT_FACTOR).replace(",", ".") + "ft";
+				result += System.lineSeparator() + number + "m -> " + ONE_DECIMAL_PLACE.format(number * M_TO_FT_FACTOR).replace(",", ".") + "ft";
 			}
-			else if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)in")) {
+			else if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)in")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + number + "in ->" + " " + ONE_DECIMAL_PLACE.format(number / CM_TO_IN_FACTOR).replace(",", ".") + "cm";
+				result += System.lineSeparator() + number + "in -> " + ONE_DECIMAL_PLACE.format(number / CM_TO_IN_FACTOR).replace(",", ".") + "cm";
 			}
-			else if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)cm")) {
+			else if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)cm")) {
 				double number = Double.parseDouble(s.replaceAll("[^\\.0123456789-]", ""));
 
-				result += System.lineSeparator() + number + "cm ->" + " " + ONE_DECIMAL_PLACE.format(number * CM_TO_IN_FACTOR).replace(",", ".") + "in";
+				result += System.lineSeparator() + number + "cm -> " + ONE_DECIMAL_PLACE.format(number * CM_TO_IN_FACTOR).replace(",", ".") + "in";
 			}
 		}
 
@@ -66,10 +66,10 @@ public class LengthConverter extends AbstractModule {
 			return false;
 
 		for (String s : event.getMessage().getContentRaw().toLowerCase().split(" ")) {
-			if (s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(km|mi)") || s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(m|ft)") || s.matches("-?([0-9]+|[0-9]+(\\.[0-9]+)?)(cm|in)"))
+			if (s.matches("-?(\\d+|\\d+(\\.\\d+)?)(km|mi)") || s.matches("-?(\\d+|\\d+(\\.\\d+)?)(m|ft)") || s.matches("-?(\\d+|\\d+(\\.\\d+)?)(cm|in)"))
 				return true;
 		}
 
-		return event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(km|mi) +.*|-?[0-9]+(\\.[0-9]+)(km|mi) +.*|.* +-?[0-9]+(\\.[0-9]+)(km|mi)|-?[0-9]+(\\.[0-9]+)(km|mi))") || event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(m|ft) +.*|-?[0-9]+(\\.[0-9]+)(m|ft) +.*|.* +-?[0-9]+(\\.[0-9]+)(m|ft)|-?[0-9]+(\\.[0-9]+)(m|ft))") || event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?[0-9]+(\\.[0-9]+)(cm|in) +.*|-?[0-9]+(\\.[0-9]+)(cm|in) +.*|.* +-?[0-9]+(\\.[0-9]+)(m|ft)|-?[0-9]+(\\.[0-9]+)(cm|in))");
+		return event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?\\d+(\\.\\d+)(km|mi) +.*|-?\\d+(\\.\\d+)(km|mi) +.*|.* +-?\\d+(\\.\\d+)(km|mi)|-?\\d+(\\.\\d+)(km|mi))") || event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?\\d+(\\.\\d+)(m|ft) +.*|-?\\d+(\\.\\d+)(m|ft) +.*|.* +-?\\d+(\\.\\d+)(m|ft)|-?\\d+(\\.\\d+)(m|ft))") || event.getMessage().getContentRaw().toLowerCase().matches("(.* +-?\\d+(\\.\\d+)(cm|in) +.*|-?\\d+(\\.\\d+)(cm|in) +.*|.* +-?\\d+(\\.\\d+)(m|ft)|-?\\d+(\\.\\d+)(cm|in))");
 	}
 }

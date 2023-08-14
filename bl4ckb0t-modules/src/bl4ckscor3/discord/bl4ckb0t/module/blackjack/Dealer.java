@@ -1,16 +1,13 @@
 package bl4ckscor3.discord.bl4ckb0t.module.blackjack;
 
-public class Dealer extends Player {
-	/**
-	 * Only use this if you want to create the dealer
-	 */
-	public Dealer() {}
+class Dealer extends Player {
+	protected Dealer() {}
 
 	/**
 	 * @return true if this player is the dealer, false otherwise
 	 */
 	@Override
-	public boolean isDealer() {
+	protected boolean isDealer() {
 		return true;
 	}
 
@@ -20,7 +17,7 @@ public class Dealer extends Player {
 	 * @status The {@link Status} to set
 	 */
 	@Override
-	public void setStatus(Status s) {
+	protected void setStatus(Status s) {
 		if (s != Status.TIE && s != Status.IDLE && s != Status.STAND && s != Status.WAITING && s != Status.ACTIVE)
 			status = s;
 	}
@@ -29,7 +26,7 @@ public class Dealer extends Player {
 	 * Resets this player's cards and status to make them ready for the next round
 	 */
 	@Override
-	public void reset() {
+	protected void reset() {
 		cards.clear();
 		status = Status.DEALING;
 	}
@@ -38,7 +35,7 @@ public class Dealer extends Player {
 	 * Sets this user to be active
 	 */
 	@Override
-	public void setActive() {
+	protected void setActive() {
 		active = false;
 	}
 
@@ -48,7 +45,7 @@ public class Dealer extends Player {
 	 * @return true if the user is active, false otherwise
 	 */
 	@Override
-	public boolean isActive() {
+	protected boolean isActive() {
 		return active;
 	}
 
@@ -59,7 +56,7 @@ public class Dealer extends Player {
 	 * @param ended true if the game has ended and all cards should be shown, false otherwise
 	 * @return The string as described
 	 */
-	public String toString(boolean ended) {
+	protected String toString(boolean ended) {
 		return cards.amount() == 2 && !ended ? cards.get(0).toString() + "   |   ??" : cards.toString();
 	}
 }

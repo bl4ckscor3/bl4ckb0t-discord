@@ -6,20 +6,20 @@ import java.util.concurrent.ThreadLocalRandom;
 import bl4ckscor3.discord.bl4ckb0t.module.blackjack.Card.Rank;
 import bl4ckscor3.discord.bl4ckb0t.module.blackjack.Card.Suit;
 
-public class FullDeck {
+class FullDeck {
 	private final ArrayList<Card> deck = new ArrayList<>();
 
 	/**
 	 * Initializes a full deck of all possible cards and puts them into {@link FullDeck#deck}
 	 */
-	public FullDeck() {
+	protected FullDeck() {
 		newDeck();
 	}
 
 	/**
 	 * Initializes a full deck of all possible cards and puts them into {@link FullDeck#deck}
 	 */
-	public void newDeck() {
+	protected void newDeck() {
 		deck.clear(); //just to be safe
 
 		for (Suit s : Suit.values()) {
@@ -30,13 +30,13 @@ public class FullDeck {
 	}
 
 	/**
-	 * Pulls a random card from the {@link FullDeck#deck} and removes it. Will create a new {@link FullDeck#deck} if the
-	 * current one is empty
+	 * Pulls a random card from the {@link FullDeck#deck} and removes it. Will create a new {@link FullDeck#deck} if the current
+	 * one is empty
 	 *
 	 * @return The random card
 	 */
-	public Card pull() {
-		if (deck.size() == 0)
+	protected Card pull() {
+		if (deck.isEmpty())
 			newDeck();
 
 		return deck.remove(ThreadLocalRandom.current().nextInt(deck.size()));
@@ -45,7 +45,7 @@ public class FullDeck {
 	/**
 	 * @return The size of this deck
 	 */
-	public int size() {
+	protected int size() {
 		return deck.size();
 	}
 }

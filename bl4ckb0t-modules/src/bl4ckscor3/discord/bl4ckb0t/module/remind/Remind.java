@@ -1,7 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t.module.remind;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +12,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public class Remind extends AbstractModule {
-	public static final List<Reminder> REMINDERS = new ArrayList<>();
+	protected static final List<Reminder> REMINDERS = new ArrayList<>();
 
 	public Remind(String name) {
 		super(name);
@@ -33,20 +32,20 @@ public class Remind extends AbstractModule {
 		try {
 			Reminder.loadReminders();
 		}
-		catch (NumberFormatException | URISyntaxException | IOException e) {
+		catch (NumberFormatException | IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void exe(MessageReceivedEvent event, String[] args) throws Exception {
+	public void exe(MessageReceivedEvent event, String[] args) {
 		MessageChannel channel = event.getChannel();
 
 		if (args.length == 0)
 			return;
 
 		if (args.length == 1 && args[0].equals("list")) {
-			if (REMINDERS.size() > 0) {
+			if (!REMINDERS.isEmpty()) {
 				String ids = "";
 				boolean reminder = false; //whether the user has any active reminder or not
 
@@ -74,7 +73,7 @@ public class Remind extends AbstractModule {
 		try {
 			int id = Integer.parseInt(args[0]); //if this doesn't fail we know that the user is probably asking for a specific id
 
-			if (!(id > Reminder.latestId)) {
+			if (id <= Reminder.latestId) {
 				for (Reminder r : REMINDERS) {
 					if (r.getId() == id) {
 						if (args.length >= 2 && args[1].equals("stop")) {
@@ -96,6 +95,7 @@ public class Remind extends AbstractModule {
 							Utilities.sendMessage(channel, String.format("Time left for \"%s\": %s", r.getEvent(), TimeParser.longToString(r.getRemainingTime(), "%sd %sh %sm %ss")));
 						else
 							Utilities.sendMessage(channel, "This is not your reminder.");
+
 						return;
 					}
 				}
@@ -126,7 +126,7 @@ public class Remind extends AbstractModule {
 
 				Reminder reminder = new Reminder(event.getAuthor().getIdLong(), channel, ev, timeDue, false);
 
-				Utilities.sendMessage(channel, String.format("I'll remind you <t:" + ((System.currentTimeMillis() / 1000L) + timestampDue) + ":R>! (ID: %s)", reminder.getId()));
+				Utilities.sendMessage(channel, String.format("I'll remind you <t:%s:R>! (ID: %s)", ((System.currentTimeMillis() / 1000L) + timestampDue), reminder.getId()));
 				REMINDERS.add(reminder);
 			}
 		}

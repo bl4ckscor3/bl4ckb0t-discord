@@ -15,6 +15,8 @@ import net.dv8tion.jda.api.requests.RestAction;
 public class Utilities {
 	public static final int RATE_LIMIT_DELAY = 2000; //in ms
 
+	private Utilities() {}
+
 	/**
 	 * Gets the path of the running jar file
 	 */
@@ -27,7 +29,9 @@ public class Utilities {
 			if (path.endsWith(".jar"))
 				path = path.substring(0, path.lastIndexOf(File.separator));
 		}
-		catch (URISyntaxException e) {}
+		catch (URISyntaxException e) {
+			e.printStackTrace();
+		}
 
 		return path;
 	}

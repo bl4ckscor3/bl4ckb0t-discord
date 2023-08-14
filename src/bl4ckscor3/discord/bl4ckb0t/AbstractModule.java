@@ -3,14 +3,18 @@ package bl4ckscor3.discord.bl4ckb0t;
 import java.io.IOException;
 import java.net.URLClassLoader;
 
+import bl4ckscor3.discord.bl4ckb0t.util.IDs;
+import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
 public abstract class AbstractModule {
-	/** The name of the module. For public modules it's the file name, private modules have their name predefined */
+	/** The name of the module. For public modules it's the file name, built-in modules have their name predefined */
 	private String name;
 	private URLClassLoader loader;
 
@@ -19,7 +23,7 @@ public abstract class AbstractModule {
 	 *
 	 * @param n The name of the module
 	 */
-	public AbstractModule(String name) {
+	protected AbstractModule(String name) {
 		this.name = name;
 	}
 
@@ -44,7 +48,7 @@ public abstract class AbstractModule {
 	 * @param content The event that triggered this module
 	 * @param args The arguments of the command, without the command itself
 	 */
-	public abstract void exe(MessageReceivedEvent event, String[] args) throws Exception;
+	public abstract void exe(MessageReceivedEvent event, String[] args);
 
 	/**
 	 * When a slash command happens
@@ -63,7 +67,7 @@ public abstract class AbstractModule {
 	 * @return An array of channel IDs in which this command is allowed to be executed
 	 */
 	public long[] allowedChannels() {
-		return null;
+		return new long[0];
 	}
 
 	/**
@@ -88,6 +92,31 @@ public abstract class AbstractModule {
 	 */
 	public SlashCommandData addSlashCommandFor(Guild guild) {
 		return null;
+	}
+
+	/**
+	 * Checks whether the command sender has permission to trigger this module.
+	 *
+	 * @param author The command sender
+	 * @return true if they have permission to trigger this module, false otherwise
+	 */
+	public final boolean hasPermission(User author) {
+		return !requiresPermission() || author.getIdLong() == IDs.BL4CKSCOR3 || author.getIdLong() == IDs.AKINO_GERMANY;
+	}
+
+	/**
+	 * Checks whether this module can be triggered in the given channel.
+	 *
+	 * @param channel The channel where this module should be triggered
+	 * @return true if the module can be triggered, false otherwise
+	 */
+	public final boolean isAllowedInChannel(Channel channel) {
+		if (Main.isDev() && channel.getIdLong() == IDs.TESTING)
+			return true;
+
+		long[] allowedChannels = allowedChannels();
+
+		return allowedChannels.length == 0 || Utilities.longArrayContains(allowedChannels, channel.getIdLong());
 	}
 
 	/**
