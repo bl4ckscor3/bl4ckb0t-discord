@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>bl4ckb0t-discord</groupId>
 	<artifactId>bl4ckb0t-discord</artifactId>
-	<version>v3.6.1</version>
+	<version>v3.7</version>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
@@ -59,7 +59,7 @@
 		<dependency>
 			<groupId>net.dv8tion</groupId>
 			<artifactId>JDA</artifactId>
-			<version>5.0.0-beta.12</version>
+			<version>5.0.0-beta.13</version>
 			<type>jar</type>
 			<scope>compile</scope>
 			<exclusions>
