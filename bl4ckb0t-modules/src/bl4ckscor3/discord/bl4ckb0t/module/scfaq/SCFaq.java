@@ -35,6 +35,7 @@ public class SCFaq extends AbstractModule {
 		FAQ.put("15. Mixin error", "922226168546066432");
 		FAQ.put("16. Change or remove recipe", "999956598724239420");
 		FAQ.put("17. Password in Jade/TOP/etc.", "1074429287001763941");
+		FAQ.put("18. White laser/inventory scanner.", "1162038169475231784");
 	}
 
 	public SCFaq(String name) {
