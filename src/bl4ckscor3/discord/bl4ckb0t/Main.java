@@ -98,9 +98,7 @@ public class Main extends ListenerAdapter {
 			}
 			else {
 				//copy to counteract ConcurrentModificationException
-				List<AbstractModule> copy = new ArrayList<>();
-
-				Collections.copy(copy, ModuleManager.MODULES);
+				List<AbstractModule> copy = new ArrayList<>(ModuleManager.MODULES);
 
 				for (AbstractModule module : copy) {
 					if (module.triggeredBy(event) && module.hasPermission(event.getAuthor()) && module.isAllowedInChannel(event.getChannel()))
