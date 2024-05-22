@@ -1,4 +1,4 @@
-v3.7:	- Update JDA to 5.0.0-beta.15
+v3.7:	- Update JDA to 5.0.0-beta.24
 		- Add AbstractModule#hasPermission to check if a given user has permission to trigger the module
 		- Add AbstractModule#isAllowedInChannel to check if the module can be triggered in a given channel
 		- Refactor code to call "private" modules "built-in" modules
@@ -10,7 +10,7 @@ v3.6.1:	- Update JDA to 5.0.0-beta.12
 		- The info command now shows the JDA version and the most up to date GitHub link of the library
 
 v3.6:	- Update JDA to 5.0.0-beta.8
-		- Add support for guild specific slash commands
+		- Add support for guild-specific slash commands
 
 v3.5.2:	- Update JDA to 5.0.0-beta.1
 		- Bot and Java versions for the info command are now retrieved via the jar manifest
