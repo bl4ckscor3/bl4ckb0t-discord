@@ -1,8 +1,5 @@
 package bl4ckscor3.discord.bl4ckb0t;
 
-import java.io.IOException;
-import java.net.URLClassLoader;
-
 import bl4ckscor3.discord.bl4ckb0t.util.IDs;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.JDABuilder;
@@ -16,7 +13,6 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 public abstract class AbstractModule {
 	/** The name of the module. For public modules it's the file name, built-in modules have their name predefined */
 	private String name;
-	private URLClassLoader loader;
 
 	/**
 	 * Constructor
@@ -126,20 +122,5 @@ public abstract class AbstractModule {
 	 */
 	public final String getName() {
 		return name;
-	}
-
-	public final void setLoader(URLClassLoader loader) {
-		this.loader = loader;
-	}
-
-	public final void closeLoader() {
-		if (loader != null) {
-			try {
-				loader.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
 	}
 }

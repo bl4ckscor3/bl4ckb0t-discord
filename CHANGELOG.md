@@ -4,6 +4,7 @@ v3.7:	- Update JDA to 5.0.0-beta.15
 		- Refactor code to call "private" modules "built-in" modules
 		- AbstractModule#exe no longer throws Exception
 		- Various refactors to generalize field and parameter types
+		- Memory improvements
 
 v3.6.1:	- Update JDA to 5.0.0-beta.12
 		- The info command now shows the JDA version and the most up to date GitHub link of the library

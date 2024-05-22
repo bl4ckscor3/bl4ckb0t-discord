@@ -78,7 +78,6 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 					if (m.getName().equalsIgnoreCase(name)) {
 						ModuleManager.MODULES.remove(m);
 						m.onDisable();
-						m.closeLoader();
 						break;
 					}
 				}
@@ -126,9 +125,6 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 	}
 
 	private void loadModule(MessageReceivedEvent event, String[] args, MessageChannel channel) {
-		ReadableByteChannel rbc = null;
-		FileOutputStream stream = null;
-
 		try {
 			String name = FilenameUtils.getName(args[1].contains("?") ? args[1].substring(0, args[1].indexOf('?')) : args[1]);
 			URL link = new URL(args[1]);
@@ -137,45 +133,27 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 			if (disabled.exists()) //delete disabled file just in case
 				Files.delete(disabled.toPath());
 
-			rbc = Channels.newChannel(link.openStream());
-			stream = new FileOutputStream(Utilities.getJarLocation() + "/modules/" + name); //the substring call removes all parameters of the link
-			stream.getChannel().transferFrom(rbc, 0, Integer.MAX_VALUE); //maximum download of a 2gb file
-			stream.close();
-			rbc.close();
+			//the substring call removes all parameters of the link
+			try (ReadableByteChannel rbc = Channels.newChannel(link.openStream()); FileOutputStream stream = new FileOutputStream(Utilities.getJarLocation() + "/modules/" + name)) {
+				stream.getChannel().transferFrom(rbc, 0, Integer.MAX_VALUE); //maximum download of a 2gb file
 
-			int loadState = Main.getModuleManager().loadModule(new URL("file:" + Utilities.getJarLocation() + "/modules/" + name), name.substring(0, name.lastIndexOf('.')));
+				int loadState = Main.getModuleManager().loadModule(new URL("file:" + Utilities.getJarLocation() + "/modules/" + name), name.substring(0, name.lastIndexOf('.')));
 
-			if (loadState == 1)
-				Utilities.sendMessage(channel, "The module was loaded successfully.");
-			else if (loadState == 0)
-				exe(event, new String[] {
-						"reload", name.substring(0, name.lastIndexOf('.'))
-				});
-			else
-				Utilities.sendMessage(channel, "There was an error while loading the module. See log for details.");
+				if (loadState == 1)
+					Utilities.sendMessage(channel, "The module was loaded successfully.");
+				else if (loadState == 0)
+					exe(event, new String[] {
+							"reload", name.substring(0, name.lastIndexOf('.'))
+					});
+				else
+					Utilities.sendMessage(channel, "There was an error while loading the module. See log for details.");
+			}
 		}
 		catch (MalformedURLException e) {
 			Utilities.sendMessage(channel, "That is not a valid URL.");
 		}
 		catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
-			try {
-				if (rbc != null)
-					rbc.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				if (stream != null)
-					stream.close();
-			}
-			catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 
