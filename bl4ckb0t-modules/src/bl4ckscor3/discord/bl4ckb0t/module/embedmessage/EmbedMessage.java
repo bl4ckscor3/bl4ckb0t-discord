@@ -1,5 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.module.embedmessage;
 
+import java.awt.Color;
+
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
 import bl4ckscor3.discord.bl4ckb0t.Main;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
@@ -47,20 +49,26 @@ public class EmbedMessage extends AbstractModule {
 
 					if (channel != null && guild.getSelfMember().hasPermission(channel.getPermissionContainer(), Permission.VIEW_CHANNEL)) {
 						Message message = channel.retrieveMessageById(messageId).complete();
-						String text = message.getContentDisplay();
+						message.getAuthor().retrieveProfile().mapToResult().queue(result -> {
+							String text = message.getContentDisplay();
+							Color accentColor = null;
 
-						if (text.length() > MessageEmbed.VALUE_MAX_LENGTH)
-							text = text.substring(0, MessageEmbed.VALUE_MAX_LENGTH - 3) + "...";
+							if (result.isSuccess())
+								accentColor = result.get().getAccentColor();
 
-						//@formatter:off
-						Utilities.sendMessage(event.getChannel(), new EmbedBuilder()
-								.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + String.join("/", split) + ") " + channel.getAsMention(), true)
-								.addField("", text, false)
-								.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
-								.setTimestamp(message.getTimeCreated())
-								.setColor(message.getAuthor().retrieveProfile().complete().getAccentColor())
-								.build());
-						//@formatter:on
+							if (text.length() > MessageEmbed.VALUE_MAX_LENGTH)
+								text = text.substring(0, MessageEmbed.VALUE_MAX_LENGTH - 3) + "...";
+
+							//@formatter:off
+							Utilities.sendMessage(event.getChannel(), new EmbedBuilder()
+									.addField(EmbedBuilder.ZERO_WIDTH_SPACE, "[Message in](" + String.join("/", split) + ") " + channel.getAsMention(), true)
+									.addField("", text, false)
+									.setFooter(message.getAuthor().getName(), message.getAuthor().getAvatarUrl())
+									.setTimestamp(message.getTimeCreated())
+									.setColor(accentColor)
+									.build());
+							//@formatter:on
+						});
 					}
 				}
 			}
