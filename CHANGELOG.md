@@ -5,6 +5,7 @@ v3.7:	- Update JDA to 5.0.0-beta.24
 		- AbstractModule#exe no longer throws Exception
 		- Various refactors to generalize field and parameter types
 		- Memory improvements
+		- Remove slf4j (included by JDA) and log4j (unused) dependencies
 
 v3.6.1:	- Update JDA to 5.0.0-beta.12
 		- The info command now shows the JDA version and the most up to date GitHub link of the library
