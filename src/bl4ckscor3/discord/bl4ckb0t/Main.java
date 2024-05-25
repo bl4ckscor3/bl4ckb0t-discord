@@ -1,7 +1,6 @@
 package bl4ckscor3.discord.bl4ckb0t;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -114,9 +113,7 @@ public class Main extends ListenerAdapter {
 	@Override
 	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
 		//copy to counteract ConcurrentModificationException
-		List<AbstractModule> copy = new ArrayList<>();
-
-		Collections.copy(copy, ModuleManager.MODULES);
+		List<AbstractModule> copy = new ArrayList<>(ModuleManager.MODULES);
 
 		for (AbstractModule m : copy) {
 			if (m.hasGuildSpecificSlashCommand())

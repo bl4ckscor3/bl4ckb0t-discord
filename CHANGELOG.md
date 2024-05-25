@@ -1,3 +1,4 @@
+v3.7.1:	- Fixed a crash
 v3.7:	- Update JDA to 5.0.0-beta.24
 		- Add AbstractModule#hasPermission to check if a given user has permission to trigger the module
 		- Add AbstractModule#isAllowedInChannel to check if the module can be triggered in a given channel
