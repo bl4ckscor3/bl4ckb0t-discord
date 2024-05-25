@@ -80,7 +80,7 @@ public class Info extends AbstractModule implements BuiltInModule {
 	 */
 	private String getJdkVersion(JarFile jar) {
 		try {
-			return jar.getManifest().getMainAttributes().getValue("Build-Jdk");
+			return jar.getManifest().getMainAttributes().getValue("Build-Jdk-Spec");
 		}
 		catch (IOException e) {
 			return "";
