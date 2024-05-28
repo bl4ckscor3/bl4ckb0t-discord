@@ -1,7 +1,7 @@
 package bl4ckscor3.discord.bl4ckb0t.util;
 
-import java.io.File;
 import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.function.Consumer;
 
 import bl4ckscor3.discord.bl4ckb0t.Main;
@@ -21,19 +21,14 @@ public class Utilities {
 	 * Gets the path of the running jar file
 	 */
 	public static String getJarLocation() {
-		String path = "-";
-
 		try {
-			path = Main.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath();
-
-			if (path.endsWith(".jar"))
-				path = path.substring(0, path.lastIndexOf(File.separator));
+			return Paths.get(Main.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParent().toString();
 		}
 		catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 
-		return path;
+		return "-";
 	}
 
 	/**

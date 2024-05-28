@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -47,7 +48,7 @@ class Reminder {
 		File folder = new File(Utilities.getJarLocation() + "/reminders");
 		ArrayList<String> lines = new ArrayList<>();
 
-		f = new File(Utilities.getJarLocation() + "/reminders/" + id + ".txt");
+		f = Paths.get(Utilities.getJarLocation(), "reminders", id + ".txt").toFile();
 
 		if (!folder.exists())
 			folder.mkdirs();
@@ -149,7 +150,7 @@ class Reminder {
 		if (Main.client() == null)
 			return;
 
-		File folder = new File(Utilities.getJarLocation() + "/reminders");
+		File folder = Paths.get(Utilities.getJarLocation(), "reminders").toFile();
 
 		if (!folder.exists())
 			return;
@@ -165,7 +166,7 @@ class Reminder {
 			if (timeDue <= 0)
 				Files.delete(f.toPath());
 			else if (!f.getName().split(".txt")[0].equals("" + r.getId())) {
-				File newFile = new File(Utilities.getJarLocation() + "/reminders/" + r.getId() + ".txt");
+				File newFile = Paths.get(Utilities.getJarLocation(), "reminders", r.getId() + ".txt").toFile();
 
 				FileUtils.writeLines(newFile, lines);
 				Files.delete(f.toPath());

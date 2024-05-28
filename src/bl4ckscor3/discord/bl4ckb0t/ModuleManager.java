@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class ModuleManager {
 	 * Loads all installed modules
 	 */
 	public void initPublic() throws IOException {
-		File folder = new File(Utilities.getJarLocation() + "/modules");
+		File folder = Paths.get(Utilities.getJarLocation(), "modules").toFile();
 
 		if (!folder.exists())
 			folder.mkdirs();

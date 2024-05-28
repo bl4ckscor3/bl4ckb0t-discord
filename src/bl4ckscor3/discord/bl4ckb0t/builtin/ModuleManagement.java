@@ -8,6 +8,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -29,7 +30,7 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 		MessageChannel channel = event.getChannel();
 
 		if (args.length == 2) {
-			File folder = new File(Utilities.getJarLocation() + "/modules");
+			File folder = new File(Utilities.getJarLocation(), "modules");
 
 			switch (args[0]) {
 				case "disable":
@@ -128,16 +129,16 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 		try {
 			String name = FilenameUtils.getName(args[1].contains("?") ? args[1].substring(0, args[1].indexOf('?')) : args[1]);
 			URL link = new URL(args[1]);
-			File disabled = new File(Utilities.getJarLocation() + "/modules/" + name + ".disabled");
+			File disabled = Paths.get(Utilities.getJarLocation(), "modules", name + ".disabled").toFile();
 
 			if (disabled.exists()) //delete disabled file just in case
 				Files.delete(disabled.toPath());
 
 			//the substring call removes all parameters of the link
-			try (ReadableByteChannel rbc = Channels.newChannel(link.openStream()); FileOutputStream stream = new FileOutputStream(Utilities.getJarLocation() + "/modules/" + name)) {
+			try (ReadableByteChannel rbc = Channels.newChannel(link.openStream()); FileOutputStream stream = new FileOutputStream(Paths.get(Utilities.getJarLocation(), "modules", name).toString())) {
 				stream.getChannel().transferFrom(rbc, 0, Integer.MAX_VALUE); //maximum download of a 2gb file
 
-				int loadState = Main.getModuleManager().loadModule(new URL("file:" + Utilities.getJarLocation() + "/modules/" + name), name.substring(0, name.lastIndexOf('.')));
+				int loadState = Main.getModuleManager().loadModule(new URL(Paths.get("file:" + Utilities.getJarLocation(), "modules", name).toString()), name.substring(0, name.lastIndexOf('.')));
 
 				if (loadState == 1)
 					Utilities.sendMessage(channel, "The module was loaded successfully.");
