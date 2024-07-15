@@ -30,7 +30,7 @@
 		<dependency>
 			<groupId>bl4ckb0t-discord</groupId>
 			<artifactId>bl4ckb0t-discord</artifactId>
-			<version>v3.7.1</version>
+			<version>v3.7.2</version>
 		</dependency>
 	</dependencies>
 </project>

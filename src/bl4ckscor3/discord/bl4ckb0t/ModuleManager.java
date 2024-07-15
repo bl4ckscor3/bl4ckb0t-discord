@@ -70,17 +70,21 @@ public class ModuleManager {
 			return 0;
 
 		String main = "bl4ckscor3.discord.bl4ckb0t.module." + name.toLowerCase() + "." + name;
+		URLClassLoader loader = null;
 
-		try (URLClassLoader loader = URLClassLoader.newInstance(new URL[] {
-				url
-		}, getClass().getClassLoader())) {
+		try {
+			loader = URLClassLoader.newInstance(new URL[] {
+					url
+			}, getClass().getClassLoader());
 			AbstractModule module = Class.forName(main, true, loader).asSubclass(AbstractModule.class).getDeclaredConstructor(String.class).newInstance(name);
 
 			if (MODULES.contains(module)) {
 				System.out.println("Tried to load already loaded module.");
+				loader.close();
 				return 0;
 			}
 
+			module.setLoader(loader);
 			module.onEnable(builder);
 			MODULES.add(module);
 			System.out.println("  Loaded module " + name);
@@ -94,6 +98,14 @@ public class ModuleManager {
 		}
 		catch (Exception e) {
 			System.err.println("  AbstractModule " + name + " could not be loaded due to an error. Is it even a module?");
+			e.printStackTrace();
+		}
+
+		try {
+			if (loader != null)
+				loader.close();
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 

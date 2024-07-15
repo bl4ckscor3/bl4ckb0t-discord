@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>bl4ckb0t-discord</groupId>
 	<artifactId>bl4ckb0t-discord</artifactId>
-	<version>v3.7.1</version>
+	<version>v3.7.2</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>

@@ -79,6 +79,7 @@ public class ModuleManagement extends AbstractModule implements BuiltInModule {
 					if (m.getName().equalsIgnoreCase(name)) {
 						ModuleManager.MODULES.remove(m);
 						m.onDisable();
+						m.closeLoader();
 						break;
 					}
 				}
