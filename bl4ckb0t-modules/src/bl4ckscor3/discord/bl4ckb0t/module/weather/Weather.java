@@ -1,12 +1,15 @@
 package bl4ckscor3.discord.bl4ckb0t.module.weather;
 
 import java.text.DecimalFormat;
-import java.time.ZonedDateTime;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import com.google.gson.Gson;
+
 import bl4ckscor3.discord.bl4ckb0t.AbstractModule;
+import bl4ckscor3.discord.bl4ckb0t.module.weather.GeoResults.Result;
+import bl4ckscor3.discord.bl4ckb0t.module.weather.WeatherResults.Current;
 import bl4ckscor3.discord.bl4ckb0t.util.Utilities;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
@@ -32,10 +35,27 @@ public class Weather extends AbstractModule {
 		}
 
 		try {
-			Document doc = Jsoup.connect("http://api.openweathermap.org/data/2.5/weather?q=" + city.trim() + "&mode=xml&APPID=" + Tokens.OPEN_WEATHER_MAP).ignoreContentType(true).get();
-			String time = doc.select("lastupdate").attr("value");
+			Gson gson = new Gson();
+			Document doc = Jsoup.connect("https://geocoding-api.open-meteo.com/v1/search?name=" + city.trim() + "&count=1&language=en&format=json").ignoreContentType(true).get();
+			Result geoResult = gson.fromJson(doc.text(), GeoResults.class).results().get(0);
+			Current weatherResults;
 
-			Utilities.sendMessage(channel, new EmbedBuilder().setTitle("__" + doc.select("city").attr("name") + ", " + doc.select("country").text() + "__").addField(":sunny: Temperature", getTemperature(doc), false).addField(":droplet: Humidity", doc.select("humidity").attr("value") + doc.select("humidity").attr("unit"), false).addField(":compression: Pressure", doc.select("pressure").attr("value") + doc.select("pressure").attr("unit"), false).addField(":dash: Wind", getWindSpeed(doc), false).addField(":timer: Last updated", time.replace("T", " ") + " UTC", false).setFooter("Powered by OpenWeatherMap").setTimestamp(ZonedDateTime.parse(time + "+00:00[Europe/London]")).build()); //openweathermap supplies UTC time, convert to local time for discord embed timestamp
+			doc = Jsoup.connect("https://api.open-meteo.com/v1/forecast?latitude=" + geoResult.latitude() + "&longitude=" + geoResult.longitude() + "&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,rain,weather_code,wind_speed_10m,wind_direction_10m").ignoreContentType(true).get();
+			weatherResults = gson.fromJson(doc.text(), WeatherResults.class).current();
+
+			//@formatter:off
+			Utilities.sendMessage(channel, new EmbedBuilder()
+					.setTitle("__" + geoResult.name() + ", " + geoResult.country() + "__")
+					.addField(String.format("%s Weather", weatherResults.weatherCodeEmoji()), weatherResults.weatherCodeDescription(), false)
+					.addField(":thermometer: Temperature", String.format("%s°C | %s°F | %sK", formatFloat(weatherResults.temperature_2m()), formatFloat(weatherResults.tempToFahrenheit()), formatFloat(weatherResults.tempToKelvin())), false)
+					.addField(":hot_face: Feels like", String.format("%s°C | %s°F | %sK", formatFloat(weatherResults.apparent_temperature()), formatFloat(weatherResults.apparentTempToFahrenheit()), formatFloat(weatherResults.apparentTempToKelvin())), false)
+					.addField(":droplet: Humidity", weatherResults.relative_humidity_2m() + "%", false)
+					.addField(":dash: Wind", String.format("%s m/s | %s mph %s", formatFloat(weatherResults.wind_speed_10m()), formatFloat(weatherResults.windSpeedToMph()), weatherResults.windDirectionText()), false)
+					.addField(":timer: Last updated", weatherResults.time().replace("T", " ") + " UTC", false)
+					.setFooter("Powered by Open-Meteo")
+					.setTimestamp(weatherResults.discordTimestamp()) //Open-Meteo supplies UTC time, convert to local time for discord embed timestamp
+					.build());
+			//@formatter:on
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -43,27 +63,14 @@ public class Weather extends AbstractModule {
 		}
 	}
 
-	private String getTemperature(Document doc) {
-		double kelvin = Double.parseDouble(doc.select("temperature").attr("value"));
-		String celsius = formatDouble(kelvin - 273.15D);
-
-		return celsius + "°C | " + formatDouble(Double.parseDouble(celsius) * (9D / 5D) + 32D) + "°F | " + kelvin + "K";
-	}
-
-	private String getWindSpeed(Document doc) {
-		double ms = Double.parseDouble(doc.select("speed").attr("value"));
-
-		return ms + " m/s | " + formatDouble(ms * 2.2369362920544) + " mph " + (doc.select("direction").attr("code"));
-	}
-
 	/**
-	 * Formats a double to two decimal places
+	 * Formats a float to two decimal places
 	 *
-	 * @param d The double to format
-	 * @return The formatted double
+	 * @param f The float to format
+	 * @return The formatted float
 	 */
-	public static String formatDouble(double d) {
-		return new DecimalFormat("#.00").format(d).replace(",", ".");
+	private String formatFloat(float f) {
+		return new DecimalFormat("#.00").format(f).replace(",", ".");
 	}
 
 	@Override
