@@ -1,10 +1,11 @@
-v3.7.3:	- Potentially fixed slash commands not updating properly
-		- Added -restart option to -exit command, requires self-restarting script. Exit code will be 43
+v3.7.3:	- Update JDA to 5.1.0
+		- Potentially fix slash commands not updating properly
+		- Add -restart option to -exit command, requires self-restarting script. Exit code will be 43
 
-v3.7.2:	- Fixed modules with more than one class not working
+v3.7.2:	- Fix modules with more than one class not working
 
-v3.7.1:	- Fixed a crash
-		- Fixed "Compiled with" not working in info command
+v3.7.1:	- Fix a crash
+		- Fix "Compiled with" not working in info command
 
 v3.7:	- Update JDA to 5.0.0-beta.24
 		- Add AbstractModule#hasPermission to check if a given user has permission to trigger the module
