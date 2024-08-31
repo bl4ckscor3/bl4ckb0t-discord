@@ -46,12 +46,11 @@ public class Weather extends AbstractModule {
 			//@formatter:off
 			Utilities.sendMessage(channel, new EmbedBuilder()
 					.setTitle("__" + geoResult.name() + ", " + geoResult.country() + "__")
+					.addField(":thermometer: Temperature", String.format("%s°C | %s°F | %sK", formatFloat(weatherResults.temperature_2m()), formatFloat(weatherResults.tempToFahrenheit()), formatFloat(weatherResults.tempToKelvin())), true)
+					.addField(":hot_face: Feels like", String.format("%s°C | %s°F | %sK", formatFloat(weatherResults.apparent_temperature()), formatFloat(weatherResults.apparentTempToFahrenheit()), formatFloat(weatherResults.apparentTempToKelvin())), true)
 					.addField(String.format("%s Weather", weatherResults.weatherCodeEmoji()), weatherResults.weatherCodeDescription(), false)
-					.addField(":thermometer: Temperature", String.format("%s°C | %s°F | %sK", formatFloat(weatherResults.temperature_2m()), formatFloat(weatherResults.tempToFahrenheit()), formatFloat(weatherResults.tempToKelvin())), false)
-					.addField(":hot_face: Feels like", String.format("%s°C | %s°F | %sK", formatFloat(weatherResults.apparent_temperature()), formatFloat(weatherResults.apparentTempToFahrenheit()), formatFloat(weatherResults.apparentTempToKelvin())), false)
-					.addField(":droplet: Humidity", weatherResults.relative_humidity_2m() + "%", false)
-					.addField(":dash: Wind", String.format("%s m/s | %s mph %s", formatFloat(weatherResults.wind_speed_10m()), formatFloat(weatherResults.windSpeedToMph()), weatherResults.windDirectionText()), false)
-					.addField(":timer: Last updated", weatherResults.time().replace("T", " ") + " UTC", false)
+					.addField(":droplet: Humidity", weatherResults.relative_humidity_2m() + "%", true)
+					.addField(":dash: Wind", String.format("%s m/s | %s mph %s", formatFloat(weatherResults.wind_speed_10m()), formatFloat(weatherResults.windSpeedToMph()), weatherResults.windDirectionText()), true)
 					.setFooter("Powered by Open-Meteo")
 					.setTimestamp(weatherResults.discordTimestamp()) //Open-Meteo supplies UTC time, convert to local time for discord embed timestamp
 					.build());
