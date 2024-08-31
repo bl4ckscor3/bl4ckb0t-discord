@@ -14,6 +14,11 @@ public class Exit extends AbstractModule implements IReactable, BuiltInModule {
 
 	@Override
 	public void exe(MessageReceivedEvent event, String[] args) {
+		if (event.getMessage().getContentRaw().equalsIgnoreCase("-restart")) {
+			System.exit(43);
+			return;
+		}
+
 		event.getChannel().sendMessage("Sure?").queue(msg -> {
 			waitForReaction(msg.getIdLong(), event.getAuthor().getIdLong());
 			Utilities.react(msg, "✅", "❌");
@@ -22,7 +27,8 @@ public class Exit extends AbstractModule implements IReactable, BuiltInModule {
 
 	@Override
 	public boolean triggeredBy(MessageReceivedEvent event) {
-		return event.getMessage().getContentRaw().equalsIgnoreCase("-exit") || event.getMessage().getContentRaw().equalsIgnoreCase("-stop");
+		String msg = event.getMessage().getContentRaw();
+		return msg.equalsIgnoreCase("-exit") || msg.equalsIgnoreCase("-stop") || msg.equalsIgnoreCase("-restart");
 	}
 
 	@Override

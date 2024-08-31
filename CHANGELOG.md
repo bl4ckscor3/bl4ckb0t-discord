@@ -1,4 +1,5 @@
 v3.7.3:	- Potentially fixed slash commands not updating properly
+		- Added -restart option to -exit command, requires self-restarting script. Exit code will be 43
 
 v3.7.2:	- Fixed modules with more than one class not working
 
