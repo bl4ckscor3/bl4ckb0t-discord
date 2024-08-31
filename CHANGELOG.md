@@ -1,3 +1,5 @@
+v3.7.3:	- Potentially fixed slash commands not updating properly
+
 v3.7.2:	- Fixed modules with more than one class not working
 
 v3.7.1:	- Fixed a crash
