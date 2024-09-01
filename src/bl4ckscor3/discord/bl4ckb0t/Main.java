@@ -81,7 +81,7 @@ public class Main extends ListenerAdapter {
 		}
 
 		updatePresence();
-		slashCommands.keySet().forEach(guild -> guild.updateCommands().addCommands(slashCommands.get(guild)).complete());
+		slashCommands.entrySet().forEach(entry -> entry.getKey().updateCommands().addCommands(entry.getValue()).queue());
 	}
 
 	@Override
