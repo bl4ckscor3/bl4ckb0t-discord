@@ -1,4 +1,5 @@
 v3.7.4:	- Revert slash command change from previous version
+		- Employ a different fix for slash commands not updating
 
 v3.7.3:	- Update JDA to 5.1.0
 		- Potentially fix slash commands not updating properly
