@@ -80,13 +80,8 @@ public class Main extends ListenerAdapter {
 			}
 		}
 
-		slashCommands.keySet().forEach(guild -> guild.retrieveCommands().queue(list -> {
-			final long botId = client.retrieveApplicationInfo().complete().getIdLong();
-
-			list.stream().filter(cmd -> cmd.getApplicationIdLong() == botId).map(cmd -> cmd.delete().complete());
-			guild.updateCommands().addCommands(slashCommands.get(guild)).complete();
-		}));
 		updatePresence();
+		slashCommands.keySet().forEach(guild -> guild.updateCommands().addCommands(slashCommands.get(guild)).complete());
 	}
 
 	@Override

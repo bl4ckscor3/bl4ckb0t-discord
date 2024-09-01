@@ -1,3 +1,5 @@
+v3.7.4:	- Revert slash command change from previous version
+
 v3.7.3:	- Update JDA to 5.1.0
 		- Potentially fix slash commands not updating properly
 		- Add -restart option to -exit command, requires self-restarting script. Exit code will be 43
