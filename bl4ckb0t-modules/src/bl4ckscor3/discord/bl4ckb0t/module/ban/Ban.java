@@ -48,7 +48,7 @@ public class Ban extends AbstractModule implements IReactable {
 	@Override
 	public long[] allowedChannels() {
 		return new long[] {
-				692486132700676106L
+				692486132700676106L, 1203273797889695744L
 		};
 	}
 
