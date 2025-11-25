@@ -41,8 +41,26 @@ public class Ban extends AbstractModule implements IReactable {
 	public void onReactionAdd(MessageReactionAddEvent event) {
 		BanInfo banInfo = REACTION_INFO.remove(event.getMessageIdLong());
 
-		if (banInfo != null && event.getEmoji().getName().equals("✅"))
-			event.getGuild().ban(UserSnowflake.fromId(banInfo.userId), 0, TimeUnit.DAYS).reason(banInfo.reason).complete();
+		if (banInfo != null) {
+			String emojiName = event.getEmoji().getName();
+
+			if (emojiName.equals("✅")) {
+				//@formatter:off
+				event.getGuild()
+					.ban(UserSnowflake.fromId(banInfo.userId), 0, TimeUnit.DAYS)
+					.reason(banInfo.reason)
+					.queue(
+							unused -> Utilities.sendMessage(event.getChannel(), "User banned."),
+							e -> {
+								Utilities.sendMessage(event.getChannel(), String.format("Ban failed: '%s'. See log for more details.", e.getMessage()));
+								e.printStackTrace();
+							}
+					);
+				//@formatter:on
+			}
+			else if (emojiName.equals("❌"))
+				Utilities.sendMessage(event.getChannel(), "Ban canceled.");
+		}
 	}
 
 	@Override
