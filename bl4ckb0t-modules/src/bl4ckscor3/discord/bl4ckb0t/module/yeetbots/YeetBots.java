@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public class YeetBots extends AbstractModule {
 	private static final long YEET_CHANNEL = 1393518453020823625L;
 	private static final long STAFF_CHANNEL = 692486132700676106L;
-	private static final long LOG_CHANNEL = 1203273797889695744L;
 	private static final long ALLOWED_ROLE = 329137158692798464L;
 
 	public YeetBots(String name) {
@@ -32,8 +31,8 @@ public class YeetBots extends AbstractModule {
 					String mention = author.getAsMention();
 					String attachments = message.getAttachments().stream().map(a -> a.getProxyUrl()).reduce("", (s1, s2) -> s1 + "\n" + s2);
 
-					Utilities.sendMessage(guild.getTextChannelById(LOG_CHANNEL), "Deleted a message by " + mention + ":\n" + message.getContentRaw() + "\n" + attachments);
 					Utilities.sendMessage(guild.getTextChannelById(STAFF_CHANNEL), mention + " stepped into the honeypot and was timed out for one day.");
+					Utilities.sendMessage(guild.getTextChannelById(STAFF_CHANNEL), message.getContentRaw() + "\n" + attachments);
 				}, Throwable::printStackTrace);
 			}, Throwable::printStackTrace);
 		}
