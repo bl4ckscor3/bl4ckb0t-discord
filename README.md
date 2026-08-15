@@ -1,5 +1,5 @@
 # bl4ckb0t-discord
-A Discord version of http://github.com/bl4ckscor3/bl4ckb0t which was made for IRC
+A Discord version of http://github.com/bl4ckscor3/bl4ckb0t (for IRC)
 
 Required libraries (or import as Maven project):
 
